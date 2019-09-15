@@ -116,12 +116,13 @@ public class Movement : MonoBehaviour
         float startSpeed = speed;
         float endSpeed = speed * 1.5f;
 
-        for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
+        while (_speed< maxSpeed)
         {
-            if (!boosted)
-            {
-
-            }
+            //if (!boosted)
+            //{
+            //    break;
+            //}
+            //float x = Mathf.Pow()
             _speed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
