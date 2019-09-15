@@ -7,12 +7,13 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     public float speed;
     private float _speed;
-    public float speedBoostTime;
+    public float maxSpeed;
     public float addSpeed;
     private float _addSpeed;
     public float addingTime;
     [SerializeField]private bool adding = false;
     public float dir;
+    private float speedMultiflier = 1;
     public Transform cam;
     public float cameraMovingTime;
     public bool isClicked;
@@ -56,10 +57,10 @@ public class Movement : MonoBehaviour
             {
                 //StopCoroutine(AddingSpeedCoroutine(addingTime));
                 adding = false;
-                //_addSpeed = 0;
+                _addSpeed = 0;
                 Debug.Log("GetButtonUp");
             }
-            rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
+            rb.velocity = (new Vector2(dir * (speedMultiflier * _speed + _addSpeed), rb.velocity.y));
             //if (rb.velocity.y < 0)
             //{
             //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -108,18 +109,20 @@ public class Movement : MonoBehaviour
         rb.velocity += jumpForce * Vector2.up;
     }
 
-    IEnumerator SpeedLerp (float lerpTime)
+    IEnumerator SpeedLerp()
     {
+        float lerpTime = 3f;
         boosted = true;
         float startSpeed = speed;
         float endSpeed = speed * 1.5f;
+
         for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
         {
             if (!boosted)
             {
 
             }
-            _speed = Mathf.Lerp(startSpeed, endSpeed, t/lerpTime);
+            _speed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -177,7 +180,9 @@ public class Movement : MonoBehaviour
             {
                 ChangeCameraPosition();
             }
-            dir = jumpingDir.x;
+            speedMultiflier = Mathf.Abs(jumpingDir.x);
+            dir = Mathf.Sign(jumpingDir.x);
+            Debug.Log(dir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.velocity += jumpForce * jumpingDir;
             isClicked = false;
@@ -188,7 +193,7 @@ public class Movement : MonoBehaviour
     {
         if (!boosted)
         {
-            StartCoroutine(SpeedLerp(speedBoostTime));
+            StartCoroutine(SpeedLerp());
         }
         if (jumped)
         {
@@ -197,8 +202,7 @@ public class Movement : MonoBehaviour
     }
     public void OnWallEnter()
     {
-        //lastVelocity = rb.velocity.x;
-        StopCoroutine(SpeedLerp(speedBoostTime));
+        StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
         //{
 
