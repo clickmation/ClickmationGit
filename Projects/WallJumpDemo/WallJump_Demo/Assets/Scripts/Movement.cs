@@ -25,7 +25,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] bool wallJumped;
     public bool boosted;
-    bool jumped;
+    bool jumped = true;
     Vector2 jumpingDir;
 
     public float lastVelocity;
@@ -197,6 +197,10 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundFunction()
     {
+        if (col.onWall)
+        {
+            Debug.LogError("Dead");
+        }
         if (!boosted)
         {
             Debug.Log("SpeedLerp Start");
@@ -209,6 +213,10 @@ public class Movement : MonoBehaviour
     }
     public void OnWallEnterFunction()
     {
+        if (col.onGround)
+        {
+            Debug.LogError("Dead");
+        }
         StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
         //{
