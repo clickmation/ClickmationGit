@@ -53,16 +53,16 @@ public class Movement : MonoBehaviour
             {
                 adding = true;
                 StartCoroutine(AddingSpeedCoroutine(addingTime));
-                Debug.Log("GetButtonDown");
+                //Debug.Log("GetButtonDown");
             }
             if (Input.GetButtonUp("AddSpeed") && adding)
             {
                 //StopCoroutine(AddingSpeedCoroutine(addingTime));
                 adding = false;
                 _addSpeed = 0;
-                Debug.Log("GetButtonUp");
+                //Debug.Log("GetButtonUp");
             }
-            rb.velocity = (new Vector2(dir * (speedMultiflier * _speed + _addSpeed), rb.velocity.y));
+            rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
             //if (rb.velocity.y < 0)
             //{
             //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -85,7 +85,7 @@ public class Movement : MonoBehaviour
         {
             if (!col.onGround && !wallJumped)
             {
-                rb.velocity = (new Vector2(rb.velocity.x, -wallSlideSpeed));
+                rb.velocity = (new Vector2(0, -wallSlideSpeed));
             }
         }
         if (!jumped)
@@ -105,6 +105,7 @@ public class Movement : MonoBehaviour
     {
         if (side == -1)
         {
+            if (lastVelocity > maxSpeed) lastVelocity = maxSpeed;
             rb.velocity = new Vector2(-0.75f * lastVelocity, 0);
             dir *= -1f;
         }
@@ -115,16 +116,16 @@ public class Movement : MonoBehaviour
     {
         boosted = true;
         float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
-        float t;
-        //Debug.Log(x);
+        float t = Mathf.Pow(x, _speed);
+        Debug.Log(t);
 
-        while (_speed < maxSpeed)
+        while (t<= boostingTime)
         {
-            //if (!boosted)
-            //{
-            //    break;
-            //}
-            t = Mathf.Pow(x, _speed);
+            if (col.onWall)
+            {
+                Debug.Log("SpeedLerp Break");
+                break;
+            }
             //Debug.Log(t);
             t += Time.deltaTime;
             _speed = Mathf.Log(t, x);
@@ -179,13 +180,13 @@ public class Movement : MonoBehaviour
             wallJumped = true;
             if (col.wall != null) col.wall = null;
             boosted = false;
-            _speed = speed;
             jumpingDir = GetJumpingDirection();
             if (jumpingDir.x * dir < 0)
             {
                 ChangeCameraPosition();
             }
             speedMultiflier = Mathf.Abs(jumpingDir.x);
+            _speed = speed * speedMultiflier;
             dir = Mathf.Sign(jumpingDir.x);
             Debug.Log(dir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
@@ -198,6 +199,7 @@ public class Movement : MonoBehaviour
     {
         if (!boosted)
         {
+            Debug.Log("SpeedLerp Start");
             StartCoroutine(SpeedLerp());
         }
         if (jumped)
@@ -205,7 +207,7 @@ public class Movement : MonoBehaviour
             jumped = false;
         }
     }
-    public void OnWallEnter()
+    public void OnWallEnterFunction()
     {
         StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
@@ -216,6 +218,11 @@ public class Movement : MonoBehaviour
         if (jumped)
         {
             jumped = false;
+        }
+        if (adding)
+        {
+            adding = false;
+            _addSpeed = 0;
         }
     }
     //public void OnWallExit()

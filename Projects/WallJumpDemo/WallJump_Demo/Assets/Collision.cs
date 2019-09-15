@@ -11,7 +11,6 @@ public class Collision : MonoBehaviour
     [Space]
 
     public bool onGround;
-    public bool tmp;
     private bool _onGround;
     public bool onWall;
     private bool _onWall;
