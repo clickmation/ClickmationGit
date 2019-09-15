@@ -7,13 +7,14 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     public float speed;
     private float _speed;
+    public float boostingTime;
     public float maxSpeed;
     public float addSpeed;
     private float _addSpeed;
     public float addingTime;
     [SerializeField]private bool adding = false;
     public float dir;
-    private float speedMultiflier = 1;
+    private float speedMultiflier;
     public Transform cam;
     public float cameraMovingTime;
     public bool isClicked;
@@ -40,6 +41,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         _speed = speed;
+        speedMultiflier = 1f;
         col = GetComponent<Collision>();
     }
     // Update is called once per frame
@@ -111,19 +113,22 @@ public class Movement : MonoBehaviour
 
     IEnumerator SpeedLerp()
     {
-        float lerpTime = 3f;
         boosted = true;
-        float startSpeed = speed;
-        float endSpeed = speed * 1.5f;
+        float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
+        float t;
+        //Debug.Log(x);
 
-        while (_speed< maxSpeed)
+        while (_speed < maxSpeed)
         {
             //if (!boosted)
             //{
             //    break;
             //}
-            //float x = Mathf.Pow()
-            _speed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
+            t = Mathf.Pow(x, _speed);
+            //Debug.Log(t);
+            t += Time.deltaTime;
+            _speed = Mathf.Log(t, x);
+            //Debug.Log(_speed);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -154,7 +159,6 @@ public class Movement : MonoBehaviour
     private void OnMouseDrag()
     {
         Vector2 tmp = GetJumpingDirection();
-        //}
         float r = dir < 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
         jumpDir.rotation = Quaternion.Euler (0, 0, r);
     }
