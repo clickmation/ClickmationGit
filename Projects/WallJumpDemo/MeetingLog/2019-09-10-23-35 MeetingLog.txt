@@ -17,5 +17,5 @@ dash attack
 
 
 벽에 끼이면 "일단"죽게
-Clickmation 프로젝트 폴더 깃허브공유 (주말과제)
+@Clickmation 프로젝트 폴더 깃허브공유 (주말과제)
 clickmation@gmail.com 드라이브 이용, 백업은 여기로

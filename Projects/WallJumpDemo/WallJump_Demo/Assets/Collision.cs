@@ -11,6 +11,7 @@ public class Collision : MonoBehaviour
     [Space]
 
     public bool onGround;
+    public bool tmp;
     private bool _onGround;
     public bool onWall;
     private bool _onWall;
@@ -23,6 +24,7 @@ public class Collision : MonoBehaviour
     [Header("Collision")]
 
     public float collisionRadius = 0.25f;
+    public float capsuleSize;
     public Vector2 bottomOffset, rightOffset, leftOffset;
     private Color debugCollisionColor = Color.red;
 
@@ -55,6 +57,13 @@ public class Collision : MonoBehaviour
 
         onRightWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, groundLayer);
         onLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, groundLayer);
+
+        //onGround = Physics2D.OverlapCapsule((Vector2)transform.position + bottomOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Horizontal, groundLayer);
+        //onWall = Physics2D.OverlapCapsule((Vector2)transform.position + rightOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer)
+        //    || Physics2D.OverlapCapsule((Vector2)transform.position + leftOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer);
+
+        //onRightWall = Physics2D.OverlapCapsule((Vector2)transform.position + rightOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer);
+        //onLeftWall = Physics2D.OverlapCapsule((Vector2)transform.position + leftOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer);
 
         wallSide = onRightWall ? -1 : 1;
 
@@ -108,6 +117,9 @@ public class Collision : MonoBehaviour
     {
         if (onRightWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, groundLayer).transform;
         else if (onLeftWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, groundLayer).transform;
+
+        //if (onRightWall) wall = Physics2D.OverlapCapsule((Vector2)transform.position + rightOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer).transform;
+        //else if (onLeftWall) wall = Physics2D.OverlapCapsule((Vector2)transform.position + leftOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer).transform;
         wallTag = wall.tag;
     }
 }

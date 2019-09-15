@@ -6,8 +6,12 @@ public class Movement : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float speed;
-    public float speedBoostTime;
     private float _speed;
+    public float speedBoostTime;
+    public float addSpeed;
+    private float _addSpeed;
+    public float addingTime;
+    [SerializeField]private bool adding = false;
     public float dir;
     public Transform cam;
     public float cameraMovingTime;
@@ -42,7 +46,20 @@ public class Movement : MonoBehaviour
     {
         if (!col.onWall)
         {
-            rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
+            if (Input.GetButtonDown("AddSpeed") && !adding)
+            {
+                adding = true;
+                StartCoroutine(AddingSpeedCoroutine(addingTime));
+                Debug.Log("GetButtonDown");
+            }
+            if (Input.GetButtonUp("AddSpeed") && adding)
+            {
+                //StopCoroutine(AddingSpeedCoroutine(addingTime));
+                adding = false;
+                //_addSpeed = 0;
+                Debug.Log("GetButtonUp");
+            }
+            rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
             //if (rb.velocity.y < 0)
             //{
             //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -96,11 +113,28 @@ public class Movement : MonoBehaviour
         boosted = true;
         float startSpeed = speed;
         float endSpeed = speed * 1.5f;
-        float t = 0;
-        while (rb.velocity.x < endSpeed)
+        for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
         {
-            t += Time.deltaTime;
+            if (!boosted)
+            {
+
+            }
             _speed = Mathf.Lerp(startSpeed, endSpeed, t/lerpTime);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+    }
+    IEnumerator AddingSpeedCoroutine(float lerpTime)
+    {
+        float startSpeed = 0;
+        float endSpeed = addSpeed;
+        for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
+        {
+            if (!adding)
+            {
+                _addSpeed = 0;
+                break;
+            }
+            _addSpeed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -116,7 +150,8 @@ public class Movement : MonoBehaviour
     private void OnMouseDrag()
     {
         Vector2 tmp = GetJumpingDirection();
-        float r = tmp.x > 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
+        //}
+        float r = dir < 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
         jumpDir.rotation = Quaternion.Euler (0, 0, r);
     }
 
@@ -124,7 +159,7 @@ public class Movement : MonoBehaviour
     {
         Vector3 camPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 tempVector = new Vector3(camPos.x - this.transform.position.x, camPos.y - this.transform.position.y, 0);
-        Vector2 _jumpingDir = new Vector2(tempVector.normalized.x, tempVector.normalized.y);
+        Vector2 _jumpingDir = dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
         return _jumpingDir;
     }
 
