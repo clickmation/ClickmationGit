@@ -5,6 +5,16 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
+    [Space]
+
+    [Header("Dead")]
+
+    [SerializeField] bool dead;
+
+    [Space]
+
+    [Header("Default")]
+
     public Rigidbody2D rb;
     public float speed;
     private float _speed;
@@ -45,9 +55,16 @@ public class Movement : MonoBehaviour
     public float stamina;
     private float oriStamina;
     public float staminaEater;
+    public float staminaAdder;
     public float boostStaminaEater;
     private float curBoostStaminaEater;
+    public float staminaJumpEater;
+    public float staminaWallJumpEater;
+    public float staminaDragJumpEater;
     public Image staminaImage;
+    public Button.ButtonClickedEvent staminaFunction;
+    [SerializeField] private Button.ButtonClickedEvent staminaEat;
+    [SerializeField] private Button.ButtonClickedEvent staminaAdd;
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +84,7 @@ public class Movement : MonoBehaviour
             if (Input.GetButtonDown("AddSpeed") && !adding)
             {
                 adding = true;
+                staminaFunction = staminaEat;
                 StartCoroutine(AddingSpeedCoroutine(addingTime));
                 //Debug.Log("GetButtonDown");
             }
@@ -76,6 +94,7 @@ public class Movement : MonoBehaviour
                 adding = false;
                 _addSpeed = 0;
                 curBoostStaminaEater = 0;
+                staminaFunction = staminaAdd;
                 //Debug.Log("GetButtonUp");
             }
             rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
@@ -95,6 +114,7 @@ public class Movement : MonoBehaviour
             wallJumped = true;
             jumped = true;
             if (col.wall != null) col.wall = null;
+            stamina -= staminaWallJumpEater;
             ChangeCameraPosition();
             Jump(-1);
         }
@@ -109,9 +129,18 @@ public class Movement : MonoBehaviour
         if (!jumped)
         {
             if (Input.GetButtonDown("Jump"))
+            {
                 Jump(1);
-            else if (Input.GetButtonUp("Jump"))
-                jumped = true;
+                stamina -= staminaJumpEater;
+            }
+            //else if (Input.GetButtonUp("Jump"))
+            //    jumped = true;
+
+            if (stamina == 0 && !dead)
+            {
+                dead = true;
+                Debug.LogError("Dead");
+            }
         }
 
         if (Input.GetButtonDown("ChangeDir"))
@@ -144,6 +173,7 @@ public class Movement : MonoBehaviour
             if (col.onWall)
             {
                 //Debug.Log("SpeedLerp Break");
+                boosted = false;
                 break;
             }
             //Debug.Log(t);
@@ -217,14 +247,17 @@ public class Movement : MonoBehaviour
             rb.velocity = new Vector2(lastVelocity, 0);
             rb.velocity += jumpForce * jumpingDir;
             isClicked = false;
-            Debug.Log(rb.velocity);
+            stamina -= staminaDragJumpEater;
+            //Debug.Log(rb.velocity);
         }
     }
-    public void OnGroundFunction()
+    public void OnGroundEnterFunction()
     {
+        staminaFunction = staminaAdd;
         if (col.onWall)
         {
             Debug.LogError("Dead");
+            dead = true;
         }
         if (!boosted)
         {
@@ -236,11 +269,20 @@ public class Movement : MonoBehaviour
             jumped = false;
         }
     }
+    public void OnGroundExitFunction()
+    {
+        staminaFunction = staminaEat;
+        if (!jumped)
+        {
+            jumped = true;
+        }
+    }
     public void OnWallEnterFunction()
     {
         if (col.onGround)
         {
             Debug.LogError("Dead");
+            dead = true;
         }
         StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
@@ -258,8 +300,13 @@ public class Movement : MonoBehaviour
             _addSpeed = 0;
             curBoostStaminaEater = 0;
         }
+        if (stamina == 0)
+        {
+            dead = true;
+            Debug.LogError("Dead");
+        }
     }
-    //public void OnWallExit()
+    //public void OnWallExitFuntion()
     //{
     //    wallJumped = false;
     //}
@@ -303,16 +350,28 @@ public class Movement : MonoBehaviour
     }
     IEnumerator StaminaCoroutine ()
     {
-        while (stamina > 0)
+        while (!dead)
         {
-            stamina -= (staminaEater + curBoostStaminaEater);
-            staminaImage.rectTransform.localScale = new Vector3(1, stamina / oriStamina, 1);
-            if (stamina <= 0)
-            {
-                Debug.LogError("Dead");
-                break;
-            }
+            staminaFunction.Invoke();
+            staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
+            //if (stamina <= 0)
+            //{
+            //    Debug.LogError("Dead");
+            //    dead = true;
+            //    break;
+            //}
             yield return null;
         }
+    }
+
+    public void StaminaEat ()
+    {
+        stamina -= (staminaEater + curBoostStaminaEater);
+        if (stamina <= 0) stamina = 0;
+    }
+    public void StaminaAdd()
+    {
+        stamina += staminaAdder;
+        if (stamina >= oriStamina) stamina = oriStamina;
     }
 }

@@ -37,7 +37,7 @@ public class Collision : MonoBehaviour
     [Space]
 
     public Button.ButtonClickedEvent[] onGroundEnter;
-    //public Button.ButtonClickedEvent[] onGroundExit;
+    public Button.ButtonClickedEvent[] onGroundExit;
     public Button.ButtonClickedEvent[] onWallEnter;
     //public Button.ButtonClickedEvent[] onWallExit;
 
@@ -73,14 +73,14 @@ public class Collision : MonoBehaviour
                 onGroundEnter[i].Invoke();
             }
         }
-        //else
-        //if (onGround == false && _onGround == true)
-        //{
-        //    for (int i = 0; i < onGroundExit.Length; i++)
-        //    {
-        //        onGroundExit[i].Invoke();
-        //    }
-        //}
+        else
+        if (onGround == false && _onGround == true)
+        {
+            for (int i = 0; i < onGroundExit.Length; i++)
+            {
+                onGroundExit[i].Invoke();
+            }
+        }
         if (onWall == true && _onWall == false)
         {
             for (int i = 0; i < onWallEnter.Length; i++)
