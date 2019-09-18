@@ -290,10 +290,10 @@ public class Movement : MonoBehaviour
 
         //}
         //else
-        if (jumped)
-        {
-            jumped = false;
-        }
+        //if (jumped)
+        //{
+        //    jumped = false;
+        //}
         if (adding)
         {
             adding = false;
