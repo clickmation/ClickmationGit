@@ -47,6 +47,7 @@ public class Movement : MonoBehaviour
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
+    private bool jumpable;
 
     [Space]
 
@@ -110,12 +111,13 @@ public class Movement : MonoBehaviour
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
+            else if (Input.GetButtonUp("Jump"))
+                jumped = false;
             if (!wallJumped) lastVelocity = rb.velocity.x;
         }
         else if (Input.GetButtonDown("Jump") && col.wallTag == "UnWallJumpable")
         {
             wallJumped = true;
-            jumped = true;
             if (col.wall != null) col.wall = null;
             stamina -= staminaWallJumpEater;
             ChangeCameraPosition();
@@ -139,8 +141,6 @@ public class Movement : MonoBehaviour
                 Jump(1);
                 stamina -= staminaJumpEater;
             }
-            //else if (Input.GetButtonUp("Jump"))
-            //    jumped = true;
 
             if (stamina == 0 && !dead)
             {
@@ -157,14 +157,19 @@ public class Movement : MonoBehaviour
 
     public void Jump(int side)
     {
-        if (side == -1)
+        if (jumpable && !jumped)
         {
-            lastVelocity *= -1f;
-            if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
-            rb.velocity = new Vector2(0.75f * lastVelocity, 0);
-            dir *= -1f;
+            jumped = true;
+            jumpable = false;
+            if (side == -1)
+            {
+                lastVelocity *= -1f;
+                if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
+                rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                dir *= -1f;
+            }
+            rb.velocity += jumpForce * Vector2.up;
         }
-        rb.velocity += jumpForce * Vector2.up;
     }
 
     IEnumerator SpeedLerp()
@@ -276,6 +281,7 @@ public class Movement : MonoBehaviour
         {
             jumped = false;
         }
+        jumpable = true;
     }
     public void OnGroundExitFunction()
     {
@@ -292,6 +298,7 @@ public class Movement : MonoBehaviour
             Debug.LogError("Dead");
             dead = true;
         }
+        if (col.wallTag == "WallJumpable") jumpable = true;
         _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
         wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         StopCoroutine(SpeedLerp());
