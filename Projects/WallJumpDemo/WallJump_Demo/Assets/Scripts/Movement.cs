@@ -31,7 +31,7 @@ public class Movement : MonoBehaviour
     public bool isClicked;
     [SerializeField] private float jumpForce;
     private Collision col;
-    [SerializeField] private float wallSlideSpeed;
+    public float wallSlideSpeed;
     [SerializeField] private Transform jumpDir;
 
     [SerializeField] bool wallJumped;
@@ -55,6 +55,7 @@ public class Movement : MonoBehaviour
     public float stamina;
     private float oriStamina;
     public float staminaEater;
+    private float _staminaEater;
     public float staminaAdder;
     public float boostStaminaEater;
     private float curBoostStaminaEater;
@@ -65,11 +66,13 @@ public class Movement : MonoBehaviour
     public Button.ButtonClickedEvent staminaFunction;
     [SerializeField] private Button.ButtonClickedEvent staminaEat;
     [SerializeField] private Button.ButtonClickedEvent staminaAdd;
+    //[SerializeField] private GameObject lightningParticle;
 
     // Start is called before the first frame update
     void Start()
     {
         _speed = speed;
+        _staminaEater = staminaEater;
         speedMultiflier = 1f;
         col = GetComponent<Collision>();
         oriStamina = stamina;
@@ -117,12 +120,15 @@ public class Movement : MonoBehaviour
             stamina -= staminaWallJumpEater;
             ChangeCameraPosition();
             Jump(-1);
+            //lightningParticle.SetActive(false);
         }
         else
         {
             if (!col.onGround && !wallJumped)
             {
-                rb.velocity = (new Vector2(0, -wallSlideSpeed));
+                rb.velocity = Input.GetButton("AddSpeed") ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
+                //if (Input.GetButtonDown("AddSpeed")) lightningParticle.SetActive(true);
+                //else if (Input.GetButtonUp("AddSpeed")) lightningParticle.SetActive(false);
             }
         }
 
@@ -229,6 +235,7 @@ public class Movement : MonoBehaviour
     {
         if (isClicked)
         {
+            //lightningParticle.SetActive(false);
             jumpDir.gameObject.SetActive(false);
             wallJumped = true;
             if (col.wall != null) col.wall = null;
@@ -253,6 +260,7 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundEnterFunction()
     {
+        _staminaEater = staminaEater;
         staminaFunction = staminaAdd;
         if (col.onWall)
         {
@@ -284,6 +292,8 @@ public class Movement : MonoBehaviour
             Debug.LogError("Dead");
             dead = true;
         }
+        _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
+        wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
         //{
@@ -366,7 +376,7 @@ public class Movement : MonoBehaviour
 
     public void StaminaEat ()
     {
-        stamina -= (staminaEater + curBoostStaminaEater);
+        stamina -= (_staminaEater + curBoostStaminaEater);
         if (stamina <= 0) stamina = 0;
     }
     public void StaminaAdd()
