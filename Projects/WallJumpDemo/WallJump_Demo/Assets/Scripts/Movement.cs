@@ -110,7 +110,7 @@ public class Movement : MonoBehaviour
             //else
             if (!jumping && rb.velocity.y > 0 && !dragJumped && !Input.GetButton("Jump"))
             {
-                rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+                rb.velocity 0+= Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (Input.GetButtonUp("Jump"))
                 jumping = false;
@@ -178,12 +178,35 @@ public class Movement : MonoBehaviour
 
     IEnumerator SpeedLerp()
     {
+        //Log Function
+        //boosted = true;
+        //float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
+        //float t = Mathf.Pow(x, _speed);
+        ////Debug.Log(t);
+
+        //while (t<= boostingTime)
+        //{
+        //    if (col.onWall)
+        //    {
+        //        //Debug.Log("SpeedLerp Break");
+        //        boosted = false;
+        //        break;
+        //    }
+        //    //Debug.Log(t);
+        //    t += Time.deltaTime;
+        //    _speed = Mathf.Log(t, x);
+        //    //Debug.Log(_speed);
+        //    if (t > boostingTime) boosted = false;
+        //    yield return new WaitForSeconds(Time.deltaTime);
+        //}
+
+        //Ellipse Function
         boosted = true;
         float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
         float t = Mathf.Pow(x, _speed);
         //Debug.Log(t);
 
-        while (t<= boostingTime)
+        while (t <= boostingTime)
         {
             if (col.onWall)
             {
