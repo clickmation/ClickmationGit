@@ -34,9 +34,10 @@ public class Movement : MonoBehaviour
     public float wallSlideSpeed;
     [SerializeField] private Transform jumpDir;
 
-    [SerializeField] bool wallJumped;
+    public bool dragJumped;
+    public bool wallJumped;
     [SerializeField] private bool boosted;
-    [SerializeField] private bool jumped = true;
+    [SerializeField] private bool jumping = true;
     Vector2 jumpingDir;
 
     public float lastVelocity;
@@ -107,15 +108,15 @@ public class Movement : MonoBehaviour
             //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
             //}
             //else
-            if (!jumped && rb.velocity.y > 0 && !wallJumped && !Input.GetButton("Jump"))
+            if (!jumping && rb.velocity.y > 0 && !dragJumped && !Input.GetButton("Jump"))
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (Input.GetButtonUp("Jump"))
-                jumped = false;
-            if (!wallJumped) lastVelocity = rb.velocity.x;
+                jumping = false;
+            if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
         }
-        else if (Input.GetButtonDown("Jump") && col.wallTag == "UnWallJumpable")
+        else if (Input.GetButtonDown("Jump") && col.wallTag == "WallJump")
         {
             wallJumped = true;
             if (col.wall != null) col.wall = null;
@@ -126,15 +127,18 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            if (!col.onGround && !wallJumped)
+            if (!col.onGround && !wallJumped && !dragJumped)
             {
-                rb.velocity = Input.GetButton("AddSpeed") ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
+                if (col.wallTag == "DragJump")
+                    rb.velocity = Input.GetButton("AddSpeed") ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
+                else if (col.wallTag == "WallJump")
+                    rb.velocity = new Vector2(0, -wallSlideSpeed);
                 //if (Input.GetButtonDown("AddSpeed")) lightningParticle.SetActive(true);
                 //else if (Input.GetButtonUp("AddSpeed")) lightningParticle.SetActive(false);
             }
         }
 
-        if (!jumped)
+        if (!jumping)
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -157,9 +161,9 @@ public class Movement : MonoBehaviour
 
     public void Jump(int side)
     {
-        if (jumpable && !jumped)
+        if (jumpable && !jumping)
         {
-            jumped = true;
+            jumping = true;
             jumpable = false;
             if (side == -1)
             {
@@ -191,6 +195,7 @@ public class Movement : MonoBehaviour
             t += Time.deltaTime;
             _speed = Mathf.Log(t, x);
             //Debug.Log(_speed);
+            if (t > boostingTime) boosted = false;
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -214,7 +219,7 @@ public class Movement : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (col.onWall && col.wallTag == "WallJumpable")
+        if (col.onWall && col.wallTag == "DragJump")
         {
             isClicked = true;
             jumpDir.gameObject.SetActive(true);
@@ -242,7 +247,7 @@ public class Movement : MonoBehaviour
         {
             //lightningParticle.SetActive(false);
             jumpDir.gameObject.SetActive(false);
-            wallJumped = true;
+            dragJumped = true;
             if (col.wall != null) col.wall = null;
             boosted = false;
             jumpingDir = GetJumpingDirection();
@@ -277,18 +282,20 @@ public class Movement : MonoBehaviour
             //Debug.Log("SpeedLerp Start");
             StartCoroutine(SpeedLerp());
         }
-        if (jumped)
+        if (jumping)
         {
-            jumped = false;
+            jumping = false;
         }
         jumpable = true;
+        if (wallJumped) wallJumped = false;
+        if (dragJumped) dragJumped = false;
     }
     public void OnGroundExitFunction()
     {
         staminaFunction = staminaEat;
-        if (!jumped)
+        if (!jumping)
         {
-            jumped = true;
+            jumping = true;
         }
     }
     public void OnWallEnterFunction()
@@ -298,7 +305,7 @@ public class Movement : MonoBehaviour
             Debug.LogError("Dead");
             dead = true;
         }
-        if (col.wallTag == "UnWallJumpable") jumpable = true;
+        if (col.wallTag == "WallJump") jumpable = true;
         _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
         wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         StopCoroutine(SpeedLerp());
@@ -307,10 +314,10 @@ public class Movement : MonoBehaviour
 
         //}
         //else
-        //if (jumped)
-        //{
-        //    jumped = false;
-        //}
+        if (jumping)
+        {
+            jumping = false;
+        }
         if (adding)
         {
             adding = false;
@@ -322,15 +329,17 @@ public class Movement : MonoBehaviour
             dead = true;
             Debug.LogError("Dead");
         }
+        if (wallJumped) wallJumped = false;
+        if (dragJumped) dragJumped = false;
     }
     //public void OnWallExitFuntion()
     //{
     //    wallJumped = false;
     //}
-    public void WallJumpedFalse()
-    {
-        wallJumped = false;
-    }
+    //public void WallJumpedFalse()
+    //{
+    //    wallJumped = false;
+    //}
 
     void ChangeDirection ()
     {

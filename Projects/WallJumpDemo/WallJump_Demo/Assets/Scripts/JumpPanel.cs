@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class JumpPanel : MonoBehaviour
 {
+    [SerializeField] int dir;
     private Movement movement;
     void OnCollisionEnter2D (Collision2D other)
     {
@@ -11,7 +12,14 @@ public class JumpPanel : MonoBehaviour
         {
 
             movement = other.transform.GetComponent<Movement>();
-            movement.Jump(1);
+            if (dir == -1)
+            {
+                movement.wallJumped = true;
+                if (movement.GetComponent<Collision>().wall != null) movement.GetComponent<Collision>().wall = null;
+                movement.stamina -= movement.staminaWallJumpEater;
+                movement.ChangeCameraPosition();
+            }
+            movement.Jump(dir);
         }
     }
 }
