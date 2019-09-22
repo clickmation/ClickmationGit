@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
-    private bool jumpable;
+    [SerializeField] private bool jumpable;
 
     [Space]
 
@@ -98,7 +98,7 @@ public class Movement : MonoBehaviour
                 adding = false;
                 _addSpeed = 0;
                 curBoostStaminaEater = 0;
-                staminaFunction = staminaAdd;
+                if (jumpable) staminaFunction = staminaAdd;
                 //Debug.Log("GetButtonUp");
             }
             rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
@@ -298,7 +298,7 @@ public class Movement : MonoBehaviour
             Debug.LogError("Dead");
             dead = true;
         }
-        if (col.wallTag == "WallJumpable") jumpable = true;
+        if (col.wallTag == "UnWallJumpable") jumpable = true;
         _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
         wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         StopCoroutine(SpeedLerp());
