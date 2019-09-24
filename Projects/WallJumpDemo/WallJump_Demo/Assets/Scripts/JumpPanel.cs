@@ -10,7 +10,6 @@ public class JumpPanel : MonoBehaviour
     {
         if (other.transform.GetComponent<Movement>() != null)
         {
-
             movement = other.transform.GetComponent<Movement>();
             if (dir == -1)
             {
@@ -20,6 +19,7 @@ public class JumpPanel : MonoBehaviour
                 movement.ChangeCameraPosition();
             }
             movement.Jump(dir);
+            //movement.jumpButtonDown = true;
         }
     }
 }
