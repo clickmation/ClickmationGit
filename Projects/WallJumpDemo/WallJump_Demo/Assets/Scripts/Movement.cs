@@ -71,6 +71,17 @@ public class Movement : MonoBehaviour
     [SerializeField] private Button.ButtonClickedEvent staminaMaintain;
     //[SerializeField] private GameObject lightningParticle;
 
+    [Space]
+
+    [Header("Fever")]
+
+    public float fever;
+    private float oriFever;
+    [SerializeField] private float feverEater;
+    [SerializeField] private bool fevered;
+    public Image feverImage;
+    public GameObject feverEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,7 +90,10 @@ public class Movement : MonoBehaviour
         speedMultiflier = 1f;
         col = GetComponent<Collision>();
         oriStamina = stamina;
+        oriFever = fever;
+        fever = 0;
         StartCoroutine(StaminaCoroutine());
+        StartCoroutine(FeverCoroutine());
         //Time.timeScale = 0.2f;
     }
     // Update is called once per frame
@@ -302,12 +316,19 @@ public class Movement : MonoBehaviour
         {
             StartCoroutine(SpeedLerp());
         }
-        if (jumpButtonDown)
-        {
-            jumpButtonDown = false;
-        }
+        //if (jumpButtonDown)
+        //{
+        //    jumpButtonDown = false;
+        //}
         if (wallJumped) wallJumped = false;
         if (dragJumped) dragJumped = false;
+        if (!fevered) fever += stamina;
+        if (fever >= oriFever)
+        {
+            fever = oriFever;
+            fevered = true;
+            feverEffect.SetActive(true);
+        }
     }
     public void OnGroundExitFunction()
     {
@@ -403,6 +424,21 @@ public class Movement : MonoBehaviour
             //    dead = true;
             //    break;
             //}
+            yield return null;
+        }
+    }
+    IEnumerator FeverCoroutine()
+    {
+        while (!dead)
+        {
+            fever -= feverEater;
+            if (fever <= 0)
+            {
+                fever = 0;
+                fevered = false;
+                feverEffect.SetActive(false);
+            }
+            feverImage.rectTransform.localScale = new Vector3(fever / oriFever, 1, 1);
             yield return null;
         }
     }
