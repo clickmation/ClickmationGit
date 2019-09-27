@@ -21,7 +21,10 @@ public class Stamina : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D other)
     {
-        other.GetComponent<Movement>().stamina += staminaAddAmount;
-        Destroy(this.gameObject);
+        if (other.tag != "Collider")
+        {
+            other.GetComponent<Movement>().stamina += staminaAddAmount;
+            Destroy(this.gameObject);
+        }
     }
 }

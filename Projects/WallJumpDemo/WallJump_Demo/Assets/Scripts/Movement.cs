@@ -82,6 +82,14 @@ public class Movement : MonoBehaviour
     public Image feverImage;
     public GameObject feverEffect;
 
+    [Space]
+
+    [Header("Input")]
+
+    public bool jump;
+    public bool boost;
+    public Transform inputColliders;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -120,7 +128,7 @@ public class Movement : MonoBehaviour
             //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
             //}
             //else
-            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !Input.GetButton("Jump"))
+            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !Input.GetButtonDown("Jump"))
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
@@ -129,7 +137,7 @@ public class Movement : MonoBehaviour
                 if (jumpButtonDown) jumpButtonDown = false;
                 if (!jumpable) jumpable = true;
             }
-            else if (Input.GetButtonUp("Jump"))
+            else if (Input.GetButtonDown("Jump"))
                 jumpButtonDown = false;
             if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
         }
@@ -395,6 +403,7 @@ public class Movement : MonoBehaviour
     Vector3 destination;
     IEnumerator ChangeCameraPositionCoroutine ()
     {
+        inputColliders.localRotation = Quaternion.Euler (inputColliders.localRotation.x, inputColliders.localRotation.y + 180, inputColliders.localRotation.z);
         startPosition = cam.localPosition;
         destination = new Vector3(-dir * 3, 2f, -10);
         float elapsedTime = 0f;
