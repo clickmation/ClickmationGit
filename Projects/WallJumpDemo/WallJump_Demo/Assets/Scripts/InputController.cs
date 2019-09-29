@@ -8,6 +8,7 @@ public class InputController : MonoBehaviour
     public Movement movement;
     [SerializeField] private Collision col;
     [SerializeField] private Camera camera;
+    [SerializeField] GameObject touchEffect;
 
     [Space]
 
@@ -49,6 +50,7 @@ public class InputController : MonoBehaviour
             Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
             Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
             RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one);
+            Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
             if (hit)
             {
                 tmp = hit.collider;
@@ -68,6 +70,7 @@ public class InputController : MonoBehaviour
                 else if (tmp == jump)
                 {
                     movement.jump = true;
+                    jumpDown.Invoke();
                 }
             }
         }
@@ -88,6 +91,7 @@ public class InputController : MonoBehaviour
             else if (tmp == jump)
             {
                 movement.jump = false;
+                jumpUp.Invoke();
             }
         }
         else if (Input.GetMouseButton(0))

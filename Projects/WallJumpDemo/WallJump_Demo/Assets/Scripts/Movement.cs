@@ -46,7 +46,7 @@ public class Movement : MonoBehaviour
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
-    [SerializeField] private bool jumpable;
+    public bool jumpable;
 
     [Space]
 
@@ -121,12 +121,8 @@ public class Movement : MonoBehaviour
             //    if (jumpable) staminaFunction = staminaAdd;
             //}
             rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
-            //if (rb.velocity.y < 0)
-            //{
-            //    rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-            //}
-            //else
-            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !Input.GetButtonDown("Jump"))
+            // && !Input.GetButtonDown("Jump")
+            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
@@ -135,19 +131,19 @@ public class Movement : MonoBehaviour
                 if (jumpButtonDown) jumpButtonDown = false;
                 if (!jumpable) jumpable = true;
             }
-            else if (Input.GetButtonUp("Jump"))
-                jumpButtonDown = false;
+            //else if (Input.GetButtonUp("Jump"))
+            //    jumpButtonDown = false;
             if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
         }
-        else if (Input.GetButtonDown("Jump") && col.wallTag == "WallJump")
-        {
-            wallJumped = true;
-            if (col.wall != null) col.wall = null;
-            stamina -= staminaWallJumpEater;
-            ChangeCameraPosition();
-            Jump(-1);
-            //lightningParticle.SetActive(false);
-        }
+        //else if (Input.GetButtonDown("Jump") && col.wallTag == "WallJump")
+        //{
+        //    wallJumped = true;
+        //    if (col.wall != null) col.wall = null;
+        //    stamina -= staminaWallJumpEater;
+        //    ChangeCameraPosition();
+        //    Jump(-1);
+        //    //lightningParticle.SetActive(false);
+        //}
         else
         {
             if (!col.onGround && !wallJumped && !dragJumped)
@@ -205,15 +201,27 @@ public class Movement : MonoBehaviour
 
     public void JumpButtonDown()
     {
-        if (!jumpButtonDown && col.onGround)
+        if (col.onGround && !jumpButtonDown)
         {
             Jump(1);
             stamina -= staminaJumpEater;
         }
+        else if (col.onWall && col.wallTag == "WallJump")
+        {
+            wallJumped = true;
+            if (col.wall != null) col.wall = null;
+            stamina -= staminaWallJumpEater;
+            Jump(-1);
+            //lightningParticle.SetActive(false);
+        }
     }
     public void JumpButtonUp()
     {
+        if (!col.onWall)
+        {
 
+            jumpButtonDown = false;
+        }
     }
 
     public void Jump(int side)
@@ -229,6 +237,7 @@ public class Movement : MonoBehaviour
                 if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 rb.velocity = new Vector2(0.75f * lastVelocity, 0);
                 dir *= -1f;
+                ChangeCameraPosition();
             }
             rb.velocity += jumpForce * Vector2.up;
         }
@@ -302,13 +311,13 @@ public class Movement : MonoBehaviour
         if (col.wall != null) col.wall = null;
         boosted = false;
         jumpingDir = GetJumpingDirection();
-        if (jumpingDir.x * dir < 0)
-        {
-            ChangeCameraPosition();
-        }
+        //if (jumpingDir.x * dir < 0)
+        //{
+        //}
         speedMultiflier = Mathf.Abs(jumpingDir.x);
         _speed = speed * speedMultiflier;
         dir = Mathf.Sign(jumpingDir.x);
+        ChangeCameraPosition();
         lastVelocity *= -1f;
         rb.velocity = new Vector2(lastVelocity, 0);
         rb.velocity += jumpForce * jumpingDir;
@@ -402,11 +411,13 @@ public class Movement : MonoBehaviour
 
     void ChangeDirection ()
     {
-        ChangeCameraPosition();
         dir *= -1f;
+        ChangeCameraPosition();
     }
     public void ChangeCameraPosition()
     {
+        float tmp = dir == 1 ? 0 : 180;
+        inputColliders.localRotation = Quaternion.Euler(inputColliders.localRotation.x, tmp, inputColliders.localRotation.z);
         StopCoroutine(ChangeCameraPositionCoroutine());
         StartCoroutine(ChangeCameraPositionCoroutine());
     }
@@ -415,9 +426,8 @@ public class Movement : MonoBehaviour
     Vector3 destination;
     IEnumerator ChangeCameraPositionCoroutine ()
     {
-        inputColliders.localRotation = Quaternion.Euler (inputColliders.localRotation.x, inputColliders.localRotation.y + 180, inputColliders.localRotation.z);
         startPosition = cam.localPosition;
-        destination = new Vector3(-dir * 3, 2f, -10);
+        destination = new Vector3(dir * 3, 2f, -10);
         float elapsedTime = 0f;
         float t;
         while(true)

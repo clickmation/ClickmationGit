@@ -13,6 +13,8 @@ public class JumpPanel : MonoBehaviour
             movement = other.transform.GetComponent<Movement>();
             if (dir == -1)
             {
+                movement.jumpable = true;
+                movement.jumpButtonDown = false;
                 movement.wallJumped = true;
                 if (movement.GetComponent<Collision>().wall != null) movement.GetComponent<Collision>().wall = null;
                 movement.stamina -= movement.staminaWallJumpEater;
