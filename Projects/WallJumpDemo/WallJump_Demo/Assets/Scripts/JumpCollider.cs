@@ -9,7 +9,7 @@ public class JumpCollider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Hoo...");
+        //Debug.Log("Hoo...");
     }
     // Update is called once per frame
     void Update()

@@ -28,11 +28,9 @@ public class Movement : MonoBehaviour
     private float speedMultiflier;
     public Transform cam;
     public float cameraMovingTime;
-    public bool isClicked;
     [SerializeField] private float jumpForce;
     private Collision col;
     public float wallSlideSpeed;
-    [SerializeField] private Transform jumpDir;
 
     public bool dragJumped;
     public bool wallJumped;
@@ -173,6 +171,7 @@ public class Movement : MonoBehaviour
 
             if (stamina <= 0 && !dead)
             {
+                staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
                 dead = true;
                 Debug.LogError("Dead");
             }
@@ -262,59 +261,39 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    public void DragJump ()
     {
-        if (col.onWall && col.wallTag == "DragJump")
+        //jumpDir.gameObject.SetActive(false);
+        //isClicked = false;
+        dragJumped = true;
+        if (col.wall != null) col.wall = null;
+        boosted = false;
+        jumpingDir = GetJumpingDirection();
+        if (jumpingDir.x * dir < 0)
         {
-            isClicked = true;
-            jumpDir.gameObject.SetActive(true);
+            ChangeCameraPosition();
         }
+        speedMultiflier = Mathf.Abs(jumpingDir.x);
+        _speed = speed * speedMultiflier;
+        dir = Mathf.Sign(jumpingDir.x);
+        lastVelocity *= -1f;
+        rb.velocity = new Vector2(lastVelocity, 0);
+        rb.velocity += jumpForce * jumpingDir;
+        stamina -= staminaDragJumpEater;
+        staminaFunction = staminaMaintain;
     }
-
-    private void OnMouseDrag()
-    {
-        Vector2 tmp = GetJumpingDirection();
-        float r = dir < 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
-        jumpDir.rotation = Quaternion.Euler (0, 0, r);
-    }
-
-    Vector2 GetJumpingDirection ()
+    Vector2 GetJumpingDirection()
     {
         Vector3 camPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 tempVector = new Vector3(camPos.x - this.transform.position.x, camPos.y - this.transform.position.y, 0);
         Vector2 _jumpingDir = dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
         return _jumpingDir;
     }
-
-    private void OnMouseUp()
-    {
-        if (isClicked)
-        {
-            //lightningParticle.SetActive(false);
-            jumpDir.gameObject.SetActive(false);
-            dragJumped = true;
-            if (col.wall != null) col.wall = null;
-            boosted = false;
-            jumpingDir = GetJumpingDirection();
-            if (jumpingDir.x * dir < 0)
-            {
-                ChangeCameraPosition();
-            }
-            speedMultiflier = Mathf.Abs(jumpingDir.x);
-            _speed = speed * speedMultiflier;
-            dir = Mathf.Sign(jumpingDir.x);
-            lastVelocity *= -1f;
-            rb.velocity = new Vector2(lastVelocity, 0);
-            rb.velocity += jumpForce * jumpingDir;
-            isClicked = false;
-            stamina -= staminaDragJumpEater;
-            staminaFunction = staminaMaintain;
-        }
-    }
     public void OnGroundEnterFunction()
     {
         _staminaEater = staminaEater;
-        staminaFunction = staminaAdd;
+        if (adding) staminaFunction = staminaEat;
+        else staminaFunction = staminaAdd;
         if (col.onWall)
         {
             Debug.LogError("Dead");
