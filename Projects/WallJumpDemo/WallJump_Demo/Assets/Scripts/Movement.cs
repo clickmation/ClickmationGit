@@ -107,19 +107,19 @@ public class Movement : MonoBehaviour
     {
         if (!col.onWall)
         {
-            if (Input.GetButtonDown("AddSpeed") && !adding)
-            {
-                adding = true;
-                staminaFunction = staminaEat;
-                StartCoroutine(AddingSpeedCoroutine(addingTime));
-            }
-            if (Input.GetButtonUp("AddSpeed") && adding)
-            {
-                adding = false;
-                _addSpeed = 0;
-                curBoostStaminaEater = 0;
-                if (jumpable) staminaFunction = staminaAdd;
-            }
+            //if (Input.GetButtonDown("AddSpeed") && !adding)
+            //{
+            //    adding = true;
+            //    staminaFunction = staminaEat;
+            //    StartCoroutine(AddingSpeedCoroutine(addingTime));
+            //}
+            //if (Input.GetButtonUp("AddSpeed") && adding)
+            //{
+            //    adding = false;
+            //    _addSpeed = 0;
+            //    curBoostStaminaEater = 0;
+            //    if (jumpable) staminaFunction = staminaAdd;
+            //}
             rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
             //if (rb.velocity.y < 0)
             //{
@@ -153,7 +153,7 @@ public class Movement : MonoBehaviour
             if (!col.onGround && !wallJumped && !dragJumped)
             {
                 if (col.wallTag == "DragJump")
-                    rb.velocity = Input.GetButton("AddSpeed") ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
+                    rb.velocity = boost ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
                 else if (col.wallTag == "WallJump")
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
                 //if (Input.GetButtonDown("AddSpeed")) lightningParticle.SetActive(true);
@@ -163,11 +163,11 @@ public class Movement : MonoBehaviour
 
         if (!jumpButtonDown)
         {
-            if (Input.GetButtonDown("Jump") && col.onGround)
-            {
-                Jump(1);
-                stamina -= staminaJumpEater;
-            }
+            //if (Input.GetButtonDown("Jump") && col.onGround)
+            //{
+            //    Jump(1);
+            //    stamina -= staminaJumpEater;
+            //}
 
             if (stamina <= 0 && !dead)
             {
@@ -181,6 +181,39 @@ public class Movement : MonoBehaviour
         {
             ChangeDirection();
         }
+    }
+
+    public void Boost()
+    {
+        if (!col.onWall)
+        {
+            if (!adding)
+            {
+                adding = true;
+                staminaFunction = staminaEat;
+                StartCoroutine(AddingSpeedCoroutine(addingTime));
+            }
+            else if (adding)
+            {
+                adding = false;
+                _addSpeed = 0;
+                curBoostStaminaEater = 0;
+                if (jumpable) staminaFunction = staminaAdd;
+            }
+        }
+    }
+
+    public void JumpButtonDown()
+    {
+        if (!jumpButtonDown && col.onGround)
+        {
+            Jump(1);
+            stamina -= staminaJumpEater;
+        }
+    }
+    public void JumpButtonUp()
+    {
+
     }
 
     public void Jump(int side)

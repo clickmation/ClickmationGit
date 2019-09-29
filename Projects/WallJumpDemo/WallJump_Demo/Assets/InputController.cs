@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
@@ -17,12 +18,22 @@ public class InputController : MonoBehaviour
 
     [Space]
 
-    [Header("Dead")]
+    [Header("Colliders")]
 
     [SerializeField] private Collider2D dragJump;
     [SerializeField] private Collider2D boost;
     [SerializeField] private Collider2D jump;
     private Collider2D tmp;
+
+    [Space]
+
+    [Header("Functions")]
+
+    [SerializeField] private Button.ButtonClickedEvent dragjumpDown;
+    [SerializeField] private Button.ButtonClickedEvent dragjumpUp;
+    [SerializeField] private Button.ButtonClickedEvent boostFunction;
+    [SerializeField] private Button.ButtonClickedEvent jumpUp;
+    [SerializeField] private Button.ButtonClickedEvent jumpDown;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +63,7 @@ public class InputController : MonoBehaviour
                 else if (tmp == boost)
                 {
                     movement.boost = true;
+                    boostFunction.Invoke();
                 }
                 else if (tmp == jump)
                 {
@@ -71,6 +83,7 @@ public class InputController : MonoBehaviour
             else if (tmp == boost)
             {
                 movement.boost = false;
+                boostFunction.Invoke();
             }
             else if (tmp == jump)
             {
