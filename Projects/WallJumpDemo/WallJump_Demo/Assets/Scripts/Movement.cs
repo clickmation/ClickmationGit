@@ -137,7 +137,7 @@ public class Movement : MonoBehaviour
                 if (jumpButtonDown) jumpButtonDown = false;
                 if (!jumpable) jumpable = true;
             }
-            else if (Input.GetButtonDown("Jump"))
+            else if (Input.GetButtonUp("Jump"))
                 jumpButtonDown = false;
             if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
         }
