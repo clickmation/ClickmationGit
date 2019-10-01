@@ -15,7 +15,7 @@ public class InputController : MonoBehaviour
     [Header("DragJump")]
 
     public bool isClicked;
-    [SerializeField] private Transform jumpDir;
+    public Transform jumpDir;
 
     [Space]
 

@@ -12,9 +12,10 @@ public class Enemy : MonoBehaviour
     {
         if (other.transform.GetComponent<Movement>() != null)
         {
-            if (other.transform.position.y - this.transform.position.y <= 1.1f)
+            Movement mov = other.transform.GetComponent<Movement>();
+            if (!mov.attacking && other.transform.position.y - this.transform.position.y <= 1.1f)
             {
-                other.transform.GetComponent<Movement>().stamina -= damage;
+                mov.stamina -= damage;
             }
 			GameObject clone;
 			clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;

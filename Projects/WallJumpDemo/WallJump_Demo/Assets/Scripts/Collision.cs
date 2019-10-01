@@ -39,7 +39,7 @@ public class Collision : MonoBehaviour
     public Button.ButtonClickedEvent[] onGroundEnter;
     public Button.ButtonClickedEvent[] onGroundExit;
     public Button.ButtonClickedEvent[] onWallEnter;
-    //public Button.ButtonClickedEvent[] onWallExit;
+    public Button.ButtonClickedEvent[] onWallExit;
 
     // Start is called before the first frame update
     void Start()
@@ -88,14 +88,14 @@ public class Collision : MonoBehaviour
                 onWallEnter[i].Invoke();
             }
         }
-        //else
-        //if (onWall == false && _onWall == true)
-        //{
-        //    for (int i = 0; i < onWallExit.Length; i++)
-        //    {
-        //        onWallExit[i].Invoke();
-        //    }
-        //}
+        else
+        if (onWall == false && _onWall == true)
+        {
+            for (int i = 0; i < onWallExit.Length; i++)
+            {
+                onWallExit[i].Invoke();
+            }
+        }
 
         _onGround = onGround;
         _onWall = onWall;

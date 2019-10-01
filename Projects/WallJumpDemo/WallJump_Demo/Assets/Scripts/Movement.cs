@@ -10,6 +10,14 @@ public class Movement : MonoBehaviour
     [Header("Dead")]
 
     [SerializeField] bool dead;
+    [SerializeField] Transform map;
+
+    //[Space]
+
+    //[Header("Bool")]
+
+    //[SerializeField] bool onGround;
+    //[SerializeField] bool onWall;
 
     [Space]
 
@@ -31,6 +39,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float jumpForce;
     private Collision col;
     public float wallSlideSpeed;
+    public bool attacking;
 
     public bool dragJumped;
     public bool wallJumped;
@@ -87,6 +96,17 @@ public class Movement : MonoBehaviour
     public bool jump;
     public bool boost;
     public Transform inputColliders;
+    [SerializeField] InputController inputController;
+
+    [Space]
+
+    [Header("Effects")]
+
+    [SerializeField] GameObject playerParticle;
+    [SerializeField] GameObject deathParticle;
+    [SerializeField] GameObject jumpParticle;
+    [SerializeField] GameObject dragParticle;
+    [SerializeField] GameObject attackTrail;
 
     // Start is called before the first frame update
     void Start()
@@ -105,6 +125,10 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Attack") && !attacking)
+        {
+            StartCoroutine(AttackCoroutine());
+        }
         if (!col.onWall)
         {
             //if (Input.GetButtonDown("AddSpeed") && !adding)
@@ -170,6 +194,10 @@ public class Movement : MonoBehaviour
                 staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
                 dead = true;
                 Debug.LogError("Dead");
+                cam.SetParent(map);
+                GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+                Destroy(_deathParticle, 3f);
+                Destroy(this.gameObject);
             }
         }
 
@@ -177,6 +205,20 @@ public class Movement : MonoBehaviour
         {
             ChangeDirection();
         }
+    }
+
+    IEnumerator AttackCoroutine ()
+    {
+        attacking = true;
+        //attackParticle.SetActive(true);
+        attackTrail.GetComponent<TrailRenderer>().emitting = true;
+        float tmp = _speed;
+        _speed = 100;
+        yield return new WaitForSeconds(0.1f);
+        attacking = false;
+        _speed = tmp;
+        //attackParticle.SetActive(false);
+        attackTrail.GetComponent<TrailRenderer>().emitting = false;
     }
 
     public void Boost()
@@ -194,7 +236,7 @@ public class Movement : MonoBehaviour
                 adding = false;
                 _addSpeed = 0;
                 curBoostStaminaEater = 0;
-                if (jumpable) staminaFunction = staminaAdd;
+                if (jumpable && col.onGround) staminaFunction = staminaAdd;
             }
         }
     }
@@ -240,6 +282,8 @@ public class Movement : MonoBehaviour
                 ChangeCameraPosition();
             }
             rb.velocity += jumpForce * Vector2.up;
+            GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
+            Destroy(_jumpParticle, 3f);
         }
     }
 
@@ -279,9 +323,12 @@ public class Movement : MonoBehaviour
                 boosted = false;
                 break;
             }
-            t += Time.deltaTime;
-            _speed = Mathf.Log(t, x);
-            if (t > boostingTime) boosted = false;
+            if (!attacking)
+            {
+                t += Time.deltaTime;
+                _speed = Mathf.Log(t, x);
+                if (t > boostingTime) boosted = false;
+            }
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -305,24 +352,22 @@ public class Movement : MonoBehaviour
 
     public void DragJump ()
     {
-        //jumpDir.gameObject.SetActive(false);
-        //isClicked = false;
-        dragJumped = true;
-        if (col.wall != null) col.wall = null;
-        boosted = false;
-        jumpingDir = GetJumpingDirection();
-        //if (jumpingDir.x * dir < 0)
-        //{
-        //}
-        speedMultiflier = Mathf.Abs(jumpingDir.x);
-        _speed = speed * speedMultiflier;
-        dir = Mathf.Sign(jumpingDir.x);
-        ChangeCameraPosition();
-        lastVelocity *= -1f;
-        rb.velocity = new Vector2(lastVelocity, 0);
-        rb.velocity += jumpForce * jumpingDir;
-        stamina -= staminaDragJumpEater;
-        staminaFunction = staminaMaintain;
+        if (col.onWall)
+        {
+            dragJumped = true;
+            if (col.wall != null) col.wall = null;
+            boosted = false;
+            jumpingDir = GetJumpingDirection();
+            speedMultiflier = Mathf.Abs(jumpingDir.x);
+            _speed = speed * speedMultiflier;
+            dir = Mathf.Sign(jumpingDir.x);
+            ChangeCameraPosition();
+            lastVelocity *= -1f;
+            rb.velocity = new Vector2(lastVelocity, 0);
+            rb.velocity += jumpForce * jumpingDir;
+            stamina -= staminaDragJumpEater;
+            staminaFunction = staminaMaintain;
+        }
     }
     Vector2 GetJumpingDirection()
     {
@@ -340,6 +385,10 @@ public class Movement : MonoBehaviour
         {
             Debug.LogError("Dead");
             dead = true;
+            cam.SetParent(map);
+            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+            Destroy(_deathParticle, 3f);
+            Destroy(this.gameObject);
         }
         if (!boosted)
         {
@@ -366,10 +415,17 @@ public class Movement : MonoBehaviour
     }
     public void OnWallEnterFunction()
     {
+        dragParticle.SetActive(true);
+        dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
+        playerParticle.SetActive(false);
         if (col.onGround)
         {
             Debug.LogError("Dead");
             dead = true;
+            cam.SetParent(map);
+            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+            Destroy(_deathParticle, 3f);
+            Destroy(this.gameObject);
         }
         staminaFunction = staminaEat;
         if (col.wallTag == "WallJump") jumpable = true;
@@ -381,10 +437,6 @@ public class Movement : MonoBehaviour
 
         //}
         //else
-        if (jumpButtonDown)
-        {
-            jumpButtonDown = false;
-        }
         if (adding)
         {
             adding = false;
@@ -395,15 +447,23 @@ public class Movement : MonoBehaviour
         {
             dead = true;
             Debug.LogError("Dead");
+            cam.SetParent(map);
+            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+            Destroy(_deathParticle, 3f);
+            Destroy(this.gameObject);
         }
+        if (jumpButtonDown) jumpButtonDown = false;
         if (wallJumped) wallJumped = false;
         if (dragJumped) dragJumped = false;
     }
 
-    //public void OnWallExitFuntion()
-    //{
-    //    wallJumped = false;
-    //}
+    public void OnWallExitFuntion()
+    {
+        inputController.jumpDir.gameObject.SetActive(false);
+        dragParticle.SetActive(false);
+        playerParticle.SetActive(true);
+    }
+
     //public void WallJumpedFalse()
     //{
     //    wallJumped = false;
