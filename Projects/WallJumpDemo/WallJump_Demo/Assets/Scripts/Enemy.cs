@@ -17,6 +17,10 @@ public class Enemy : MonoBehaviour
             {
                 mov.stamina -= damage;
             }
+            else
+            {
+                mov.Ripple(1f);
+            }
 			GameObject clone;
 			clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
 			Destroy(clone, 3f);

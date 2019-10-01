@@ -1,7 +1,7 @@
 소리 맵 -김정민 할 일
 
-터치인풋
-공격
+@터치인풋
+@공격
 카메라
 
 장기적 플레이 요소
@@ -11,8 +11,8 @@
 	1000 뭘 레어한거 열어준다 (트레일도 좀 있고 브금, 배경)
 	500개 광고없이 리스폰
 
-드래그 파티클은 particle system의 shape에서 position.x를 우측은 0.5, 좌측은 -0.5로 조절 or 2개 만들어서 껐다켰다
-trail에서 renderer면 emiting을 끄고 파티클이면 setactive
-jumpparticle은 점프할때 생성, t초 후 사라짐
-rippleeffect 스크립트 수정해서 원하는 위치에 원하는 강도로 ripple할 수 있게
-적 죽일때 크게ripple, 점프할때 작게 ripple
+@드래그 파티클은 particle system의 shape에서 position.x를 우측은 0.5, 좌측은 -0.5로 조절 or 2개 만들어서 껐다켰다
+@trail에서 renderer면 emiting을 끄고 파티클이면 setactive
+@jumpparticle은 점프할때 생성, t초 후 사라짐
+#rippleeffect 스크립트 수정해서 원하는 위치에 원하는 강도로 ripple할 수 있게
+#적 죽일때 크게ripple, 점프할때 작게 ripple

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
+    [SerializeField] RippleEffect ripple;
+
     [Space]
 
     [Header("Dead")]
@@ -207,6 +209,14 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public void Ripple (float str)
+    {
+        Camera c = Camera.main;
+        Vector3 v = c.WorldToScreenPoint(this.transform.position);
+        //Debug.Log(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight));
+        ripple.DropIt(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight), str);
+    }
+
     IEnumerator AttackCoroutine ()
     {
         attacking = true;
@@ -282,6 +292,7 @@ public class Movement : MonoBehaviour
                 ChangeCameraPosition();
             }
             rb.velocity += jumpForce * Vector2.up;
+            Ripple(0.015f);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
         }

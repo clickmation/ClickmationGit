@@ -44,11 +44,11 @@ public class RippleEffect : MonoBehaviour
             time = 1000;
         }
 
-        public void Reset()
-        {
-            position = new Vector2(Random.value, Random.value);
-            time = 0;
-        }
+        //public void Reset()
+        //{
+        //    position = new Vector2(Random.value, Random.value);
+        //    time = 0;
+        //}
 
         public void Update()
         {
@@ -59,13 +59,19 @@ public class RippleEffect : MonoBehaviour
         {
             return new Vector4(position.x * aspect, position.y, time, 0);
         }
+
+        public void PosSet (Vector2 pos)
+        {
+            position = pos;
+            time = 0;
+        }
     }
 
-    Droplet[] droplets;
+    [SerializeField] Droplet[] droplets;
     Texture2D gradTexture;
     Material material;
-    float timer;
-    int dropCount;
+    [SerializeField] float timer;
+    [SerializeField] int dropCount;
 
     void UpdateShaderParameters()
     {
@@ -107,15 +113,15 @@ public class RippleEffect : MonoBehaviour
 
     void Update()
     {
-        if (dropInterval > 0)
-        {
-            timer += Time.deltaTime;
-            while (timer > dropInterval)
-            {
-                Emit();
-                timer -= dropInterval;
-            }
-        }
+        //if (dropInterval > 0)
+        //{
+        //    timer += Time.deltaTime;
+        //    while (timer > dropInterval)
+        //    {
+        //        Emit();
+        //        timer -= dropInterval;
+        //    }
+        //}
 
         foreach (var d in droplets) d.Update();
 
@@ -127,8 +133,19 @@ public class RippleEffect : MonoBehaviour
         Graphics.Blit(source, destination, material);
     }
 
-    public void Emit()
+    //public void Emit()
+    //{
+    //    droplets[dropCount++ % droplets.Length].Reset();
+    //}
+
+    public void DropIt(Vector2 pos, float str)
     {
-        droplets[dropCount++ % droplets.Length].Reset();
+        refractionStrength = str;
+
+        droplets[dropCount++ % droplets.Length].PosSet(pos);
+
+        foreach (var d in droplets) d.Update();
+
+        UpdateShaderParameters();
     }
 }
