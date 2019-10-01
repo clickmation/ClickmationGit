@@ -5,6 +5,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float damage;
+	[SerializeField]
+	public GameObject deathParticle;
 
     void OnCollisionEnter2D (Collision2D other)
     {
@@ -14,6 +16,9 @@ public class Enemy : MonoBehaviour
             {
                 other.transform.GetComponent<Movement>().stamina -= damage;
             }
+			GameObject clone;
+			clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+			Destroy(clone, 3f);
             Destroy(this.gameObject);
         }
     }
