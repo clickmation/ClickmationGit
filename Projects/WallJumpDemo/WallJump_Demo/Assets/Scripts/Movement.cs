@@ -269,19 +269,17 @@ public class Movement : MonoBehaviour
     }
     public void JumpButtonUp()
     {
-        if (!col.onWall)
-        {
-
-            jumpButtonDown = false;
-        }
+        jumpButtonDown = false;
     }
 
     public void Jump(int side)
     {
+        //Debug.Log(jumpable + ", " + jumpButtonDown);
         if (jumpable && !jumpButtonDown)
         {
-            jumpButtonDown = true;
+            //Debug.Log(dir);
             jumpable = false;
+            jumpButtonDown = true;
             staminaFunction = staminaMaintain;
             if (side == -1)
             {
@@ -292,6 +290,7 @@ public class Movement : MonoBehaviour
                 ChangeCameraPosition();
             }
             rb.velocity += jumpForce * Vector2.up;
+            //Debug.Log("Jumped, " + dir);
             Ripple(0.015f);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
@@ -440,8 +439,11 @@ public class Movement : MonoBehaviour
         }
         staminaFunction = staminaEat;
         if (col.wallTag == "WallJump") jumpable = true;
-        _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
-        wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
+        if (col.wall.GetComponent<Wall>() != null)
+        {
+            _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
+            wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
+        }
         StopCoroutine(SpeedLerp());
         //if (col.wallTag == "WallJumpable")
         //{

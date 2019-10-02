@@ -24,7 +24,7 @@ public class InputController : MonoBehaviour
     [SerializeField] private Collider2D dragJump;
     [SerializeField] private Collider2D boost;
     [SerializeField] private Collider2D jump;
-    private Collider2D tmp;
+    private Collider2D colType;
 
     [Space]
 
@@ -53,8 +53,8 @@ public class InputController : MonoBehaviour
             Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
             if (hit)
             {
-                tmp = hit.collider;
-                if (tmp == dragJump)
+                colType = hit.collider;
+                if (colType == dragJump)
                 {
                     if (col.onWall && col.wallTag == "DragJump")
                     {
@@ -62,12 +62,12 @@ public class InputController : MonoBehaviour
                         jumpDir.gameObject.SetActive(true);
                     }
                 }
-                else if (tmp == boost)
+                else if (colType == boost)
                 {
                     movement.boost = true;
                     boostFunction.Invoke();
                 }
-                else if (tmp == jump)
+                else if (colType == jump)
                 {
                     movement.jump = true;
                     jumpDown.Invoke();
@@ -76,19 +76,19 @@ public class InputController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            if (tmp == dragJump)
+            if (colType == dragJump)
             {
                 //lightningParticle.SetActive(false);
                 jumpDir.gameObject.SetActive(false);
                 isClicked = false;
                 movement.DragJump();
             }
-            else if (tmp == boost)
+            else if (colType == boost)
             {
                 movement.boost = false;
                 boostFunction.Invoke();
             }
-            else if (tmp == jump)
+            else if (colType == jump)
             {
                 movement.jump = false;
                 jumpUp.Invoke();
@@ -96,7 +96,7 @@ public class InputController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-            if (tmp == dragJump)
+            if (colType == dragJump)
             {
                 Vector2 tmp = GetJumpingDirection();
                 float r = movement.dir < 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;

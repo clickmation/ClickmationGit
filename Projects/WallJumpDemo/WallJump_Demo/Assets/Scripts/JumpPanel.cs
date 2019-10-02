@@ -11,6 +11,7 @@ public class JumpPanel : MonoBehaviour
         if (other.transform.GetComponent<Movement>() != null)
         {
             movement = other.transform.GetComponent<Movement>();
+            //Debug.Log(movement.jumpable + ", " + movement.jumpButtonDown);
             if (type == -1)
             {
                 movement.jumpable = true;
@@ -19,9 +20,10 @@ public class JumpPanel : MonoBehaviour
                 if (movement.GetComponent<Collision>().wall != null) movement.GetComponent<Collision>().wall = null;
                 movement.stamina -= movement.staminaWallJumpEater;
                 movement.ChangeCameraPosition();
+                //Debug.Log(movement.jumpable + ", " + movement.jumpButtonDown);
             }
+            //Debug.Log(movement.jumpable + ", " + movement.jumpButtonDown);
             movement.Jump(type);
-            //movement.jumpButtonDown = true;
         }
     }
 }
