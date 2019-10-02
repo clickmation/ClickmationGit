@@ -18,7 +18,7 @@ public class JumpPanel : MonoBehaviour
                 movement.jumpButtonDown = false;
                 movement.wallJumped = true;
                 if (movement.GetComponent<Collision>().wall != null) movement.GetComponent<Collision>().wall = null;
-                movement.stamina -= movement.staminaWallJumpEater;
+                //movement.stamina -= movement.staminaWallJumpEater;
                 movement.ChangeCameraPosition();
                 //Debug.Log(movement.jumpable + ", " + movement.jumpButtonDown);
             }

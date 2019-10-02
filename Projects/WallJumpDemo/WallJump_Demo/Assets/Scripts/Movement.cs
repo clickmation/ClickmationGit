@@ -438,7 +438,6 @@ public class Movement : MonoBehaviour
             Destroy(this.gameObject);
         }
         staminaFunction = staminaEat;
-        if (col.wallTag == "WallJump") jumpable = true;
         if (col.wall.GetComponent<Wall>() != null)
         {
             _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
@@ -468,6 +467,16 @@ public class Movement : MonoBehaviour
         if (jumpButtonDown) jumpButtonDown = false;
         if (wallJumped) wallJumped = false;
         if (dragJumped) dragJumped = false;
+        if (col.wallTag == "WallJump") jumpable = true;
+        else if (col.wallTag == "WallPanel")
+        {
+            jumpable = true;
+            //jumpButtonDown = false;
+            wallJumped = true;
+            if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
+            ChangeCameraPosition();
+            Jump(-1);
+        }
     }
 
     public void OnWallExitFuntion()
