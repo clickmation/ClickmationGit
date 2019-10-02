@@ -58,6 +58,7 @@ public class Movement : MonoBehaviour
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public bool jumpable;
+    public bool panelJumped;
 
     [Space]
 
@@ -269,7 +270,7 @@ public class Movement : MonoBehaviour
     }
     public void JumpButtonUp()
     {
-        jumpButtonDown = false;
+        if (!panelJumped) jumpButtonDown = false;
     }
 
     public void Jump(int side)
@@ -388,6 +389,7 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundEnterFunction()
     {
+        panelJumped = false;
         _staminaEater = staminaEater;
         if (adding) staminaFunction = staminaEat;
         else staminaFunction = staminaAdd;
@@ -444,11 +446,6 @@ public class Movement : MonoBehaviour
             wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         }
         StopCoroutine(SpeedLerp());
-        //if (col.wallTag == "WallJumpable")
-        //{
-
-        //}
-        //else
         if (adding)
         {
             adding = false;
@@ -483,6 +480,7 @@ public class Movement : MonoBehaviour
     {
         inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);
+        //dragParticle.GetComponent<ParticleSystem>().emission.enabled = false;
         playerParticle.SetActive(true);
     }
 
