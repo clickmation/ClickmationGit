@@ -195,12 +195,7 @@ public class Movement : MonoBehaviour
             if (stamina <= 0 && !dead)
             {
                 staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-                dead = true;
-                Debug.LogError("Dead");
-                cam.SetParent(map);
-                GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
-                Destroy(_deathParticle, 3f);
-                Destroy(this.gameObject);
+                Dead();
             }
         }
 
@@ -395,12 +390,7 @@ public class Movement : MonoBehaviour
         else staminaFunction = staminaAdd;
         if (col.onWall)
         {
-            Debug.LogError("Dead");
-            dead = true;
-            cam.SetParent(map);
-            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
-            Destroy(_deathParticle, 3f);
-            Destroy(this.gameObject);
+            Dead();
         }
         if (!boosted)
         {
@@ -432,12 +422,7 @@ public class Movement : MonoBehaviour
         playerParticle.SetActive(false);
         if (col.onGround)
         {
-            Debug.LogError("Dead");
-            dead = true;
-            cam.SetParent(map);
-            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
-            Destroy(_deathParticle, 3f);
-            Destroy(this.gameObject);
+            Dead();
         }
         staminaFunction = staminaEat;
         if (col.wall.GetComponent<Wall>() != null)
@@ -454,22 +439,21 @@ public class Movement : MonoBehaviour
         }
         if (stamina == 0)
         {
-            dead = true;
-            Debug.LogError("Dead");
-            cam.SetParent(map);
-            GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
-            Destroy(_deathParticle, 3f);
-            Destroy(this.gameObject);
+            Dead();
         }
         if (jumpButtonDown) jumpButtonDown = false;
         if (wallJumped) wallJumped = false;
         if (dragJumped) dragJumped = false;
-        if (col.wallTag == "WallJump") jumpable = true;
+        if (col.wallTag == "WallJump")
+        {
+            jumpable = true;
+            panelJumped = false;
+        }
         else if (col.wallTag == "WallPanel")
         {
             jumpable = true;
-            //jumpButtonDown = false;
             wallJumped = true;
+            panelJumped = true;
             if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
             ChangeCameraPosition();
             Jump(-1);
@@ -567,5 +551,15 @@ public class Movement : MonoBehaviour
     public void StaminaMaintain()
     {
         //stamina += 0;
+    }
+
+    public void Dead ()
+    {
+        dead = true;
+        Debug.LogError("Dead");
+        cam.SetParent(map);
+        GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+        Destroy(_deathParticle, 3f);
+        Destroy(this.gameObject);
     }
 }
