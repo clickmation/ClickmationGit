@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Camera2DFollow : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class Camera2DFollow : MonoBehaviour
     public float lookAheadFactor = 3;
     public float lookAheadReturnSpeed = 0.5f;
     public float lookAheadMoveThreshold = 0.1f;
-    public float yPosRestriction = -1;
+    //public float yPosRestriction = -1;
+    private bool updateLookAheadTarget;
+    public float dir;
 
     private float offsetZ;
     private Vector3 lastTargetPosition;
@@ -36,9 +39,9 @@ public class Camera2DFollow : MonoBehaviour
         //}
 
         // only update lookahead pos if accelerating or changed direction
-        float xMoveDelta = (target.position - lastTargetPosition).x;
+        float xMoveDelta = dir * Mathf.Abs((target.position - lastTargetPosition).x);
 
-        bool updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
+        updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
 
         if (updateLookAheadTarget)
         {
@@ -52,7 +55,7 @@ public class Camera2DFollow : MonoBehaviour
         Vector3 aheadTargetPos = target.position + lookAheadPos + Vector3.forward * offsetZ;
         Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref currentVelocity, damping);
 
-        newPos = new Vector3(newPos.x, Mathf.Clamp(newPos.y, yPosRestriction, Mathf.Infinity), newPos.z);
+        //newPos = new Vector3(newPos.x, Mathf.Clamp(newPos.y, yPosRestriction, Mathf.Infinity), newPos.z);
 
         transform.position = newPos;
 
@@ -70,5 +73,10 @@ public class Camera2DFollow : MonoBehaviour
             }
             nextTimeToSearch = Time.time + 0.5f;
         }
+    }
+
+    public void ReGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

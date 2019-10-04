@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] bool dead;
     [SerializeField] Transform map;
+    [SerializeField] GameObject reGame;
 
     //[Space]
 
@@ -124,6 +125,7 @@ public class Movement : MonoBehaviour
         oriStamina = stamina;
         oriFever = fever;
         fever = 0;
+        camFol.dir = dir;
         StartCoroutine(StaminaCoroutine());
         StartCoroutine(FeverCoroutine());
         //Time.timeScale = 0.2f;
@@ -289,8 +291,8 @@ public class Movement : MonoBehaviour
                 lastVelocity *= -1f;
                 if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 rb.velocity = new Vector2(0.75f * lastVelocity, 0);
-                dir *= -1f;
-                ChangeCameraPosition();
+                //dir *= -1f;
+                //ChangeCameraPosition();
             }
             rb.velocity += jumpForce * Vector2.up;
             //Debug.Log("Jumped, " + dir);
@@ -434,6 +436,8 @@ public class Movement : MonoBehaviour
             Dead();
         }
         staminaFunction = staminaEat;
+        //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
+        ChangeDirection();
         if (col.wall.GetComponent<Wall>() != null)
         {
             _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
@@ -464,7 +468,6 @@ public class Movement : MonoBehaviour
             wallJumped = true;
             panelJumped = true;
             if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
-            ChangeCameraPosition();
             AudioManager.PlaySound("wallPanel");
             Jump(-1);
         }
@@ -486,6 +489,7 @@ public class Movement : MonoBehaviour
     void ChangeDirection ()
     {
         dir *= -1f;
+        camFol.dir = dir;
         ChangeCameraPosition();
     }
     public void ChangeCameraPosition()
@@ -567,9 +571,9 @@ public class Movement : MonoBehaviour
     {
         dead = true;
         AudioManager.PlaySound("death");
-        AudioManager.PlaySound("FuckYou");
         camFol.enabled = false;
-        cam.SetParent(map);
+        reGame.SetActive(true);
+        //cam.SetParent(map);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
         Destroy(this.gameObject);
