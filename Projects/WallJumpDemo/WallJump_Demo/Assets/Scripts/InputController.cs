@@ -24,6 +24,7 @@ public class InputController : MonoBehaviour
     [SerializeField] private Collider2D dragJump;
     [SerializeField] private Collider2D boost;
     [SerializeField] private Collider2D jump;
+    [SerializeField] private Collider2D attack;
     private Collider2D colType;
 
     [Space]
@@ -72,6 +73,10 @@ public class InputController : MonoBehaviour
                     movement.jump = true;
                     jumpDown.Invoke();
                 }
+                else if (colType == attack)
+                {
+                    movement.Attack();
+                }
             }
         }
         else if (Input.GetMouseButtonUp(0))
@@ -93,6 +98,10 @@ public class InputController : MonoBehaviour
                 movement.jump = false;
                 jumpUp.Invoke();
             }
+            //else if (colType == attack)
+            //{
+                
+            //}
         }
         else if (Input.GetMouseButton(0))
         {
@@ -109,6 +118,10 @@ public class InputController : MonoBehaviour
             //else if (tmp == jump)
             //{
 
+            //}
+            //else if (colType == attack)
+            //{
+            //
             //}
         }
      }

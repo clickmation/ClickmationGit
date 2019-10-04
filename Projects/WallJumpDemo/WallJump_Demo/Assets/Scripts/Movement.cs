@@ -135,7 +135,7 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetButtonDown("Attack") && !attacking)
         {
-            StartCoroutine(AttackCoroutine());
+            Attack();
         }
         if (!col.onWall)
         {
@@ -217,6 +217,11 @@ public class Movement : MonoBehaviour
     //    //Debug.Log(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight));
     //    ripple.DropIt(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight), str);
     //}
+
+    public void Attack()
+    {
+        StartCoroutine(AttackCoroutine());
+    }
 
     IEnumerator AttackCoroutine ()
     {
@@ -572,7 +577,7 @@ public class Movement : MonoBehaviour
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        reGame.SetActive(true);
+        //reGame.SetActive(true);
         //cam.SetParent(map);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
