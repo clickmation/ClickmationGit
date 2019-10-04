@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-	[SerializeField] public static AudioClip groundJumpSound;
-	public static AudioClip landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound;
 	
-	
+	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound;
 	static AudioSource audioSrc;
 	
     void Start()
     {
+        groundJumpSound = Sounds.Load<AudioClip> ("Jump2");
+		landingSound = Sounds.Load<AudioClip> ("Land");
+		attackSound = Sounds.Load<AudioClip> ("Impact2");
+		killSound = Sounds.Load<AudioClip> ("Impact1");
+		deathSound = Sounds.Load<AudioClip> ("Death");
+		coinSound = Sounds.Load<AudioClip> ("Coin4");
+		jumpPanelSound = Sounds.Load<AudioClip> ("Boing2");
+		wallPanelSound = Sounds.Load<AudioClip> ("Boing1");
+		
 		audioSrc = GetComponent<AudioSource> ();
     }
 
