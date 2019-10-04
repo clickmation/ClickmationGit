@@ -12,6 +12,7 @@ public class JumpPanel : MonoBehaviour
             movement = other.transform.GetComponent<Movement>();
             movement.panelJumped = true;
             movement.Jump(1);
+            AudioManager.PlaySound("jumpPanel");
         }
     }
 }

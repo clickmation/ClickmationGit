@@ -19,9 +19,10 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                mov.Ripple(1f);
+                //mov.Ripple(1f);
+                AudioManager.PlaySound("kill");
             }
-			GameObject clone;
+            GameObject clone;
 			clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
 			Destroy(clone, 3f);
             Destroy(this.gameObject);

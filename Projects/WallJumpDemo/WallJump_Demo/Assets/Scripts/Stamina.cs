@@ -12,6 +12,7 @@ public class Stamina : MonoBehaviour
         if (other.tag != "Collider")
         {
             other.transform.parent.GetComponent<InputController>().movement.stamina += staminaAddAmount;
+            AudioManager.PlaySound("coin");
             Destroy(this.gameObject);
         }
     }

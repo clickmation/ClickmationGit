@@ -10,14 +10,14 @@ public class AudioManager : MonoBehaviour
 	
     void Start()
     {
-        groundJumpSound = Sounds.Load<AudioClip> ("Jump2");
-		landingSound = Sounds.Load<AudioClip> ("Land");
-		attackSound = Sounds.Load<AudioClip> ("Impact2");
-		killSound = Sounds.Load<AudioClip> ("Impact1");
-		deathSound = Sounds.Load<AudioClip> ("Death");
-		coinSound = Sounds.Load<AudioClip> ("Coin4");
-		jumpPanelSound = Sounds.Load<AudioClip> ("Boing2");
-		wallPanelSound = Sounds.Load<AudioClip> ("Boing1");
+        groundJumpSound = Resources.Load<AudioClip> ("Jump2");
+		landingSound = Resources.Load<AudioClip> ("Land");
+		attackSound = Resources.Load<AudioClip> ("Clash");
+		killSound = Resources.Load<AudioClip> ("Impact1");
+		deathSound = Resources.Load<AudioClip> ("Death");
+		coinSound = Resources.Load<AudioClip> ("Coin4");
+		jumpPanelSound = Resources.Load<AudioClip> ("Boing2");
+		wallPanelSound = Resources.Load<AudioClip> ("Boing1");
 		
 		audioSrc = GetComponent<AudioSource> ();
     }
@@ -30,7 +30,7 @@ public class AudioManager : MonoBehaviour
 	
 	public static void PlaySound (string clip)
 	{
-		switch(clip){
+		switch(clip) {
 			case "groundJump":
 				audioSrc.PlayOneShot (groundJumpSound);
 				break;
@@ -55,7 +55,10 @@ public class AudioManager : MonoBehaviour
 			case "wallPanel":
 				audioSrc.PlayOneShot (wallPanelSound);
 				break;
-		}
+            default:
+                Debug.LogError("AudioManager : no corresponding audio of name \"" + clip + "\"");
+                break;
+        }
 		
 	}
 }
