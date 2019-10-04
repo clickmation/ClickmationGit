@@ -42,6 +42,8 @@ public class Movement : MonoBehaviour
     private Collision col;
     public float wallSlideSpeed;
     public bool attacking;
+    public float attackTime;
+    public float attackDelay;
 
     public bool dragJumped;
     public bool wallJumped;
@@ -220,11 +222,12 @@ public class Movement : MonoBehaviour
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         float tmp = _speed;
         _speed = 100;
-        yield return new WaitForSeconds(0.1f);
-        attacking = false;
+        yield return new WaitForSeconds(attackTime);
         _speed = tmp;
         //attackParticle.SetActive(false);
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
+        yield return new WaitForSeconds(attackDelay);
+        attacking = false;
     }
 
     public void Boost()
@@ -482,8 +485,8 @@ public class Movement : MonoBehaviour
     {
         float tmp = dir == 1 ? 0 : 180;
         inputColliders.localRotation = Quaternion.Euler(inputColliders.localRotation.x, tmp, inputColliders.localRotation.z);
-        StopCoroutine(ChangeCameraPositionCoroutine());
-        StartCoroutine(ChangeCameraPositionCoroutine());
+        //StopCoroutine(ChangeCameraPositionCoroutine());
+        //StartCoroutine(ChangeCameraPositionCoroutine());
     }
 
     Vector3 startPosition;
