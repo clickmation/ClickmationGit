@@ -264,7 +264,7 @@ public class Movement : MonoBehaviour
         if (col.onGround && !jumpButtonDown)
         {
             AudioManager.PlaySound("groundJump");
-            Jump(1);
+            Jump(1, Vector2.zero);
             stamina -= staminaJumpEater;
         }
         else if (col.onWall && col.wallTag == "WallJump")
@@ -272,7 +272,7 @@ public class Movement : MonoBehaviour
             wallJumped = true;
             stamina -= staminaWallJumpEater;
             AudioManager.PlaySound("groundJump");
-            Jump(-1);
+            Jump(-1, Vector2.zero);
             //lightningParticle.SetActive(false);
         }
     }
@@ -281,7 +281,7 @@ public class Movement : MonoBehaviour
         if (!panelJumped) jumpButtonDown = false;
     }
 
-    public void Jump(int side)
+    public void Jump(int side, Vector2 vec)
     {
         //Debug.Log(jumpable + ", " + jumpButtonDown);
         if (jumpable && !jumpButtonDown)
@@ -293,7 +293,7 @@ public class Movement : MonoBehaviour
             if (side == -1)
             {
                 lastVelocity *= -1f;
-                if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
+                if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 if (panelJumped)
                 {
                     rb.velocity = new Vector2(lastVelocity, 0);
@@ -309,8 +309,17 @@ public class Movement : MonoBehaviour
                 //ChangeCameraPosition();
             }else
             {
-                rb.velocity = new Vector2(lastVelocity, 0);
-                rb.velocity += jumpForce * Vector2.up;
+                if (vec == Vector2.zero)
+                {
+                    rb.velocity = new Vector2(lastVelocity, 0);
+                    rb.velocity += jumpForce * Vector2.up;
+                }
+                else
+                {
+                    rb.velocity = new Vector2(0, 0);
+                    _speed = Mathf.Abs(vec.x);
+                    rb.velocity += vec;
+                }
             }
             //Debug.Log("Jumped, " + dir);
             //Ripple(0.015f);
@@ -488,7 +497,7 @@ public class Movement : MonoBehaviour
             panelJumped = true;
             //if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
             AudioManager.PlaySound("wallPanel");
-            Jump(-1);
+            Jump(-1, Vector2.zero);
         }
     }
 

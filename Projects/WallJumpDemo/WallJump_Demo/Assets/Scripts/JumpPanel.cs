@@ -5,7 +5,8 @@ using UnityEngine;
 public class JumpPanel : MonoBehaviour
 {
     private Movement mov;
-    //public float 
+    public float xVel;
+    public float height;
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player")
@@ -14,8 +15,14 @@ public class JumpPanel : MonoBehaviour
             mov.jumpButtonDown = false;
             mov.jumpable = true;
             mov.panelJumped = true;
-            mov.Jump(1);
+            mov.Jump(1, SetVec());
             AudioManager.PlaySound("jumpPanel");
         }
+    }
+
+    public Vector2 SetVec()
+    {
+        Vector2 tmp = new Vector2(mov.dir * Mathf.Abs(xVel), height);
+        return tmp;
     }
 }
