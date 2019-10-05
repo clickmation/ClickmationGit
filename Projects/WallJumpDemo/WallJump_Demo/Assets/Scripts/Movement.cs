@@ -158,11 +158,11 @@ public class Movement : MonoBehaviour
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
-            else if (rb.velocity.y < 0)
-            {
-                if (jumpButtonDown) jumpButtonDown = false;
-                if (!jumpable) jumpable = true;
-            }
+            //else if (rb.velocity.y < 0)
+            //{
+            //    if (jumpButtonDown) jumpButtonDown = false;
+            //    if (!jumpable) jumpable = true;
+            //}
             //else if (Input.GetButtonUp("Jump"))
             //    jumpButtonDown = false;
             if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
@@ -297,17 +297,21 @@ public class Movement : MonoBehaviour
                 if (panelJumped)
                 {
                     rb.velocity = new Vector2(lastVelocity, 0);
-                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir) - jumpForce * Vector2.up;
+                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir);
                 }
                 else
                 {
                     rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                    rb.velocity += jumpForce * Vector2.up;
                 }
                 if (col.wall != null) col.wall = null;
                 //dir *= -1f;
                 //ChangeCameraPosition();
+            }else
+            {
+                rb.velocity = new Vector2(lastVelocity, 0);
+                rb.velocity += jumpForce * Vector2.up;
             }
-            rb.velocity += jumpForce * Vector2.up;
             //Debug.Log("Jumped, " + dir);
             //Ripple(0.015f);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
@@ -406,6 +410,8 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundEnterFunction()
     {
+        if (jumpButtonDown) jumpButtonDown = false;
+        if (!jumpable) jumpable = true;
         panelJumped = false;
         _staminaEater = staminaEater;
         if (adding) staminaFunction = staminaEat;

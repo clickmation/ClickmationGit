@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class JumpPanel : MonoBehaviour
 {
-    private Movement movement;
+    private Movement mov;
+    //public float 
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player")
         {
-            movement = other.transform.parent.parent.GetComponent<Movement>();
-            movement.panelJumped = true;
-            movement.Jump(1);
+            mov = other.transform.parent.parent.GetComponent<Movement>();
+            mov.jumpButtonDown = false;
+            mov.jumpable = true;
+            mov.panelJumped = true;
+            mov.Jump(1);
             AudioManager.PlaySound("jumpPanel");
         }
     }

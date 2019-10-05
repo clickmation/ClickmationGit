@@ -6,9 +6,9 @@ public class Wall : MonoBehaviour
 {
     public float wallStaminaEater;
     public float wallSlideSpeed;
-    public float vecX;
-    public float vecY;
-    public float force;
+    [SerializeField] float vecX;
+    [SerializeField] float vecY;
+    [SerializeField] float force;
 
     public Vector2 SetVec (float dir)
     {
