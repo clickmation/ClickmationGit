@@ -14,7 +14,7 @@ public class JumpPanel : MonoBehaviour
             mov = other.transform.parent.parent.GetComponent<Movement>();
             mov.jumpButtonDown = false;
             mov.jumpable = true;
-            mov.panelJumped = true;
+            //mov.panelJumped = true;
             mov.Jump(1, SetVec());
             AudioManager.PlaySound("jumpPanel");
         }

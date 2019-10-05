@@ -159,11 +159,12 @@ public class Movement : MonoBehaviour
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
-            //else if (rb.velocity.y < 0)
-            //{
-            //    if (jumpButtonDown) jumpButtonDown = false;
-            //    if (!jumpable) jumpable = true;
-            //}
+            else if (rb.velocity.y < 0)
+            {
+                //if (jumpButtonDown) jumpButtonDown = false;
+                //if (!jumpable) jumpable = true;
+                if (panelJumped) panelJumped = false;
+            }
             //else if (Input.GetButtonUp("Jump"))
             //    jumpButtonDown = false;
             if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
@@ -284,10 +285,8 @@ public class Movement : MonoBehaviour
 
     public void Jump(int side, Vector2 vec)
     {
-        //Debug.Log(jumpable + ", " + jumpButtonDown);
         if (jumpable && !jumpButtonDown)
         {
-            //Debug.Log(dir);
             jumpable = false;
             jumpButtonDown = true;
             staminaFunction = staminaMaintain;
@@ -317,10 +316,14 @@ public class Movement : MonoBehaviour
                 }
                 else
                 {
-                    rb.velocity = new Vector2(0, 0);
+                    panelJumped = true;
+                    adding = false;
+                    _addSpeed = 0;
                     lastSpeed = _speed;
                     _speed = Mathf.Abs(vec.x);
+                    rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
+                    Debug.Log("Jumped");
                 }
             }
             //Debug.Log("Jumped, " + dir);
@@ -366,7 +369,7 @@ public class Movement : MonoBehaviour
                 boosted = false;
                 break;
             }
-            if (!attacking)
+            if (!attacking && !panelJumped)
             {
                 t += Time.deltaTime;
                 _speed = Mathf.Log(t, x);
@@ -421,35 +424,39 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundEnterFunction()
     {
-        if (jumpButtonDown) jumpButtonDown = false;
-        if (!jumpable) jumpable = true;
-        panelJumped = false;
-        _staminaEater = staminaEater;
-        if (adding) staminaFunction = staminaEat;
-        else staminaFunction = staminaAdd;
-        if (col.onWall)
+        if (!panelJumped)
         {
-            Dead();
+            if (jumpButtonDown) jumpButtonDown = false;
+            if (!jumpable) jumpable = true;
+            panelJumped = false;
+            _staminaEater = staminaEater;
+            if (adding) staminaFunction = staminaEat;
+            else staminaFunction = staminaAdd;
+            if (col.onWall)
+            {
+                Dead();
+            }
+            if (!boosted)
+            {
+                StartCoroutine(SpeedLerp());
+            }
+            //if (jumpButtonDown)
+            //{
+            //    jumpButtonDown = false;
+            //}
+            if (wallJumped) wallJumped = false;
+            if (dragJumped) dragJumped = false;
+            if (!fevered) fever += stamina;
+            if (fever >= oriFever)
+            {
+                fever = oriFever;
+                fevered = true;
+                feverEffect.SetActive(true);
+            }
+            _speed = lastSpeed;
+            AudioManager.PlaySound("landing");
+            Debug.Log("OnGroundEntered");
         }
-        if (!boosted)
-        {
-            StartCoroutine(SpeedLerp());
-        }
-        //if (jumpButtonDown)
-        //{
-        //    jumpButtonDown = false;
-        //}
-        if (wallJumped) wallJumped = false;
-        if (dragJumped) dragJumped = false;
-        if (!fevered) fever += stamina;
-        if (fever >= oriFever)
-        {
-            fever = oriFever;
-            fevered = true;
-            feverEffect.SetActive(true);
-        }
-        _speed = lastSpeed;
-        AudioManager.PlaySound("landing");
     }
     public void OnGroundExitFunction()
     {
