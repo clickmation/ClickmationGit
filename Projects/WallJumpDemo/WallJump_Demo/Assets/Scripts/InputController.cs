@@ -83,10 +83,13 @@ public class InputController : MonoBehaviour
         {
             if (colType == dragJump)
             {
-                //lightningParticle.SetActive(false);
-                jumpDir.gameObject.SetActive(false);
-                isClicked = false;
-                movement.DragJump();
+                if (isClicked)
+                {
+                    //lightningParticle.SetActive(false);
+                    jumpDir.gameObject.SetActive(false);
+                    isClicked = false;
+                    movement.DragJump();
+                }
             }
             else if (colType == boost)
             {

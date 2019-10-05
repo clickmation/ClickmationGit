@@ -270,7 +270,6 @@ public class Movement : MonoBehaviour
         else if (col.onWall && col.wallTag == "WallJump")
         {
             wallJumped = true;
-            if (col.wall != null) col.wall = null;
             stamina -= staminaWallJumpEater;
             AudioManager.PlaySound("groundJump");
             Jump(-1);
@@ -295,7 +294,16 @@ public class Movement : MonoBehaviour
             {
                 lastVelocity *= -1f;
                 if (Mathf.Abs(lastVelocity) > maxSpeed) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
-                rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                if (panelJumped)
+                {
+                    rb.velocity = new Vector2(lastVelocity, 0);
+                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir) - jumpForce * Vector2.up;
+                }
+                else
+                {
+                    rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                }
+                if (col.wall != null) col.wall = null;
                 //dir *= -1f;
                 //ChangeCameraPosition();
             }
@@ -472,7 +480,7 @@ public class Movement : MonoBehaviour
             jumpable = true;
             wallJumped = true;
             panelJumped = true;
-            if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
+            //if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
             AudioManager.PlaySound("wallPanel");
             Jump(-1);
         }
