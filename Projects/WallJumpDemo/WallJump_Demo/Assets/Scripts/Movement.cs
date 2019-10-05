@@ -154,7 +154,7 @@ public class Movement : MonoBehaviour
             //}
             rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
             // && !Input.GetButtonDown("Jump")
-            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped)
+            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !panelJumped)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
@@ -393,7 +393,7 @@ public class Movement : MonoBehaviour
     {
         Vector3 camPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 tempVector = new Vector3(camPos.x - this.transform.position.x, camPos.y - this.transform.position.y, 0);
-        Vector2 _jumpingDir = dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
+        Vector2 _jumpingDir = dir > 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
         return _jumpingDir;
     }
     public void OnGroundEnterFunction()

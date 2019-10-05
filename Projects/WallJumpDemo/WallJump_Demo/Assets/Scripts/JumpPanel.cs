@@ -5,11 +5,11 @@ using UnityEngine;
 public class JumpPanel : MonoBehaviour
 {
     private Movement movement;
-    void OnCollisionEnter2D (Collision2D other)
+    void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.transform.GetComponent<Movement>() != null)
+        if (other.tag == "Player")
         {
-            movement = other.transform.GetComponent<Movement>();
+            movement = other.transform.parent.parent.GetComponent<Movement>();
             movement.panelJumped = true;
             movement.Jump(1);
             AudioManager.PlaySound("jumpPanel");

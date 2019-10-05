@@ -108,7 +108,7 @@ public class InputController : MonoBehaviour
             if (colType == dragJump)
             {
                 Vector2 tmp = GetJumpingDirection();
-                float r = movement.dir < 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
+                float r = movement.dir > 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
                 jumpDir.rotation = Quaternion.Euler(0, 0, r);
             }
             //else if (tmp == boost)
