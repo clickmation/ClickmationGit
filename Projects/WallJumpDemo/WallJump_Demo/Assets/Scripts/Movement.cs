@@ -54,6 +54,7 @@ public class Movement : MonoBehaviour
     Vector2 jumpingDir;
 
     public float lastVelocity;
+    public float lastSpeed;
 
     [Space]
 
@@ -317,6 +318,7 @@ public class Movement : MonoBehaviour
                 else
                 {
                     rb.velocity = new Vector2(0, 0);
+                    lastSpeed = _speed;
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity += vec;
                 }
@@ -446,7 +448,7 @@ public class Movement : MonoBehaviour
             fevered = true;
             feverEffect.SetActive(true);
         }
-        //if (!)
+        _speed = lastSpeed;
         AudioManager.PlaySound("landing");
     }
     public void OnGroundExitFunction()
