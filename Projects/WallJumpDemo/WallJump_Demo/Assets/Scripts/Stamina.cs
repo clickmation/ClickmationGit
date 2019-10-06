@@ -9,9 +9,9 @@ public class Stamina : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.tag != "Collider")
+        if (other.tag == "Player")
         {
-            other.transform.parent.GetComponent<InputController>().movement.stamina += staminaAddAmount;
+            other.transform.GetComponent<Movement>().stamina += staminaAddAmount;
             AudioManager.PlaySound("coin");
             Destroy(this.gameObject);
         }

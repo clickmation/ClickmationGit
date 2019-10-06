@@ -11,7 +11,7 @@ public class JumpPanel : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            mov = other.transform.parent.parent.GetComponent<Movement>();
+            mov = other.transform.GetComponent<Movement>();
             mov.jumpButtonDown = false;
             mov.jumpable = true;
             //mov.panelJumped = true;

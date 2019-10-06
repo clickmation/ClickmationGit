@@ -103,8 +103,8 @@ public class Movement : MonoBehaviour
 
     public bool jump;
     public bool boost;
-    public Transform inputColliders;
-    [SerializeField] InputController inputController;
+    //public Transform inputColliders;
+    //[SerializeField] InputController inputController;
 
     [Space]
 
@@ -233,10 +233,9 @@ public class Movement : MonoBehaviour
         //attackParticle.SetActive(true);
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
-        float tmp = _speed;
         _speed = 100;
         yield return new WaitForSeconds(attackTime);
-        _speed = tmp;
+        _speed = speed;
         //attackParticle.SetActive(false);
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
         yield return new WaitForSeconds(attackDelay);
@@ -492,7 +491,7 @@ public class Movement : MonoBehaviour
 
     public void OnWallExitFuntion()
     {
-        inputController.jumpDir.gameObject.SetActive(false);
+        //inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);
         //dragParticle.GetComponent<ParticleSystem>().emission.enabled = false;
         playerParticle.SetActive(true);
@@ -512,7 +511,7 @@ public class Movement : MonoBehaviour
     public void ChangeCameraPosition()
     {
         float tmp = dir == 1 ? 0 : 180;
-        inputColliders.localRotation = Quaternion.Euler(inputColliders.localRotation.x, tmp, inputColliders.localRotation.z);
+        //inputColliders.localRotation = Quaternion.Euler(inputColliders.localRotation.x, tmp, inputColliders.localRotation.z);
         //StopCoroutine(ChangeCameraPositionCoroutine());
         //StartCoroutine(ChangeCameraPositionCoroutine());
     }
