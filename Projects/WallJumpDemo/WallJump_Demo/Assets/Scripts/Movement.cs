@@ -30,12 +30,12 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     public float speed;
     private float _speed;
-    public float boostingTime;
-    public float maxSpeed;
-    public float addSpeed;
-    private float _addSpeed;
-    public float addingTime;
-    [SerializeField]private bool adding = false;
+    //public float boostingTime;
+    //public float maxSpeed;
+    //public float addSpeed;
+    //private float _addSpeed;
+    //public float addingTime;
+    //[SerializeField]private bool adding = false;
     public float dir;
     private float speedMultiflier;
     public Transform cam;
@@ -127,12 +127,14 @@ public class Movement : MonoBehaviour
         oriFever = fever;
         fever = 0;
         camFol.dir = dir;
+        GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+        Destroy(_deathParticle, 3f);
         StartCoroutine(StaminaCoroutine());
         StartCoroutine(FeverCoroutine());
         //Time.timeScale = 0.2f;
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetButtonDown("Attack") && !attacking)
         {
@@ -153,7 +155,7 @@ public class Movement : MonoBehaviour
             //    curBoostStaminaEater = 0;
             //    if (jumpable) staminaFunction = staminaAdd;
             //}
-            rb.velocity = (new Vector2(dir * (_speed + _addSpeed), rb.velocity.y));
+            rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
             // && !Input.GetButtonDown("Jump")
             if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !panelJumped)
             {
@@ -241,25 +243,25 @@ public class Movement : MonoBehaviour
         attacking = false;
     }
 
-    public void Boost()
-    {
-        if (!col.onWall)
-        {
-            if (!adding)
-            {
-                adding = true;
-                staminaFunction = staminaEat;
-                StartCoroutine(AddingSpeedCoroutine(addingTime));
-            }
-            else if (adding)
-            {
-                adding = false;
-                _addSpeed = 0;
-                curBoostStaminaEater = 0;
-                if (jumpable && col.onGround) staminaFunction = staminaAdd;
-            }
-        }
-    }
+    //public void Boost()
+    //{
+    //    if (!col.onWall)
+    //    {
+    //        if (!adding)
+    //        {
+    //            adding = true;
+    //            staminaFunction = staminaEat;
+    //            StartCoroutine(AddingSpeedCoroutine(addingTime));
+    //        }
+    //        else if (adding)
+    //        {
+    //            adding = false;
+    //            _addSpeed = 0;
+    //            curBoostStaminaEater = 0;
+    //            if (jumpable && col.onGround) staminaFunction = staminaAdd;
+    //        }
+    //    }
+    //}
 
     public void JumpButtonDown()
     {
@@ -293,7 +295,7 @@ public class Movement : MonoBehaviour
             if (side == -1)
             {
                 lastVelocity *= -1f;
-                if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
+                //if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 if (panelJumped)
                 {
                     rb.velocity = new Vector2(lastVelocity, 0);
@@ -317,13 +319,13 @@ public class Movement : MonoBehaviour
                 else
                 {
                     panelJumped = true;
-                    adding = false;
-                    _addSpeed = 0;
-                    lastSpeed = _speed;
+                    //adding = false;
+                    //_addSpeed = 0;
+                    //lastSpeed = _speed;
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    Debug.Log("Jumped");
+                    //Debug.Log("Jumped");
                 }
             }
             //Debug.Log("Jumped, " + dir);
@@ -333,68 +335,45 @@ public class Movement : MonoBehaviour
         }
     }
 
-    IEnumerator SpeedLerp()
-    {
-        //Log Function
-        //boosted = true;
-        //float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
-        //float t = Mathf.Pow(x, _speed);
-        ////Debug.Log(t);
+    //IEnumerator SpeedLerp()
+    //{
+    //    boosted = true;
+    //    float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
+    //    float t = Mathf.Pow(x, _speed);
 
-        //while (t<= boostingTime)
-        //{
-        //    if (col.onWall)
-        //    {
-        //        //Debug.Log("SpeedLerp Break");
-        //        boosted = false;
-        //        break;
-        //    }
-        //    //Debug.Log(t);
-        //    t += Time.deltaTime;
-        //    _speed = Mathf.Log(t, x);
-        //    //Debug.Log(_speed);
-        //    if (t > boostingTime) boosted = false;
-        //    yield return new WaitForSeconds(Time.deltaTime);
-        //}
-
-        //Ellipse Function
-        boosted = true;
-        float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
-        float t = Mathf.Pow(x, _speed);
-
-        while (t <= boostingTime)
-        {
-            if (col.onWall)
-            {
-                boosted = false;
-                break;
-            }
-            if (!attacking && !panelJumped)
-            {
-                t += Time.deltaTime;
-                _speed = Mathf.Log(t, x);
-                if (t > boostingTime) boosted = false;
-            }
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-    }
-    IEnumerator AddingSpeedCoroutine(float lerpTime)
-    {
-        curBoostStaminaEater = boostStaminaEater;
-        float startSpeed = 0;
-        float endSpeed = addSpeed;
-        for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
-        {
-            if (!adding)
-            {
-                _addSpeed = 0;
-                curBoostStaminaEater = 0;
-                break;
-            }
-            _addSpeed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-    }
+    //    while (t <= boostingTime)
+    //    {
+    //        if (col.onWall)
+    //        {
+    //            boosted = false;
+    //            break;
+    //        }
+    //        if (!attacking && !panelJumped)
+    //        {
+    //            t += Time.deltaTime;
+    //            _speed = Mathf.Log(t, x);
+    //            if (t > boostingTime) boosted = false;
+    //        }
+    //        yield return new WaitForSeconds(Time.deltaTime);
+    //    }
+    //}
+    //IEnumerator AddingSpeedCoroutine(float lerpTime)
+    //{
+    //    curBoostStaminaEater = boostStaminaEater;
+    //    float startSpeed = 0;
+    //    float endSpeed = addSpeed;
+    //    for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
+    //    {
+    //        if (!adding)
+    //        {
+    //            _addSpeed = 0;
+    //            curBoostStaminaEater = 0;
+    //            break;
+    //        }
+    //        _addSpeed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
+    //        yield return new WaitForSeconds(Time.deltaTime);
+    //    }
+    //}
 
     public void DragJump ()
     {
@@ -430,16 +409,17 @@ public class Movement : MonoBehaviour
             if (!jumpable) jumpable = true;
             panelJumped = false;
             _staminaEater = staminaEater;
-            if (adding) staminaFunction = staminaEat;
-            else staminaFunction = staminaAdd;
+            //if (adding) staminaFunction = staminaEat;
+            //else
+                staminaFunction = staminaAdd;
             if (col.onWall)
             {
                 Dead();
             }
-            if (!boosted)
-            {
-                StartCoroutine(SpeedLerp());
-            }
+            //if (!boosted)
+            //{
+            //    StartCoroutine(SpeedLerp());
+            //}
             //if (jumpButtonDown)
             //{
             //    jumpButtonDown = false;
@@ -453,13 +433,13 @@ public class Movement : MonoBehaviour
                 fevered = true;
                 feverEffect.SetActive(true);
             }
-            _speed = lastSpeed;
+            _speed = speed;
             AudioManager.PlaySound("landing");
-            Debug.Log("OnGroundEntered");
         }
     }
     public void OnGroundExitFunction()
     {
+        lastSpeed = _speed;
         //staminaFunction = staminaEat;
         //staminaFunction = staminaMaintain;
     }
@@ -480,13 +460,13 @@ public class Movement : MonoBehaviour
             _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
             wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         }
-        StopCoroutine(SpeedLerp());
-        if (adding)
-        {
-            adding = false;
-            _addSpeed = 0;
-            curBoostStaminaEater = 0;
-        }
+        //StopCoroutine(SpeedLerp());
+        //if (adding)
+        //{
+        //    adding = false;
+        //    _addSpeed = 0;
+        //    curBoostStaminaEater = 0;
+        //}
         if (stamina == 0)
         {
             Dead();
