@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
-    public Movement movement;
+    public Movement mov;
     [SerializeField] private Collision col;
     [SerializeField] private Camera camera;
     [SerializeField] GameObject touchEffect;
+    private LayerMask layer;
 
     [Space]
 
@@ -21,10 +22,10 @@ public class InputController : MonoBehaviour
 
     [Header("Colliders")]
 
-    [SerializeField] private Collider2D dragJump;
-    [SerializeField] private Collider2D boost;
-    [SerializeField] private Collider2D jump;
-    [SerializeField] private Collider2D attack;
+    public Collider2D touchJump;
+    //[SerializeField] private Collider2D boost;
+    public Collider2D jump;
+    public Collider2D attack;
     private Collider2D colType;
 
     [Space]
@@ -40,7 +41,7 @@ public class InputController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -50,55 +51,60 @@ public class InputController : MonoBehaviour
         {
             Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
             Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
-            RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one);
+            RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 <<  LayerMask.NameToLayer("TouchCollider"));
             Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
             if (hit)
             {
                 colType = hit.collider;
-                if (colType == dragJump)
+                if (colType == touchJump)
                 {
-                    if (col.onWall && col.wallTag == "DragJump")
-                    {
-                        isClicked = true;
-                        jumpDir.gameObject.SetActive(true);
-                    }
+                    //if (col.onWall && col.wallTag == "TouchJump")
+                    //{
+                        //isClicked = true;
+                        //jumpDir.gameObject.SetActive(true);
+                    Vector2 vec = GetJumpingDirection();
+                    Debug.Log(vec);
+                    mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(mov.dir, vec.x, vec.y));
+                    //}
                 }
-                else if (colType == boost)
-                {
-                    movement.boost = true;
-                    boostFunction.Invoke();
-                }
+                //else if (colType == boost)
+                //{
+                //    movement.boost = true;
+                //    boostFunction.Invoke();
+                //}
                 else if (colType == jump)
                 {
-                    movement.jump = true;
+                    mov.jump = true;
                     jumpDown.Invoke();
                 }
                 else if (colType == attack)
                 {
-                    movement.Attack();
+                    mov.Attack();
                 }
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            if (colType == dragJump)
+            //if (colType == touchJump)
+            //{
+            //    if (isClicked)
+            //    {
+            //        //lightningParticle.SetActive(false);
+            //        jumpDir.gameObject.SetActive(false);
+            //        isClicked = false;
+            //        movement.DragJump();
+            //    }
+            //}
+            //else
+            //if (colType == boost)
+            //{
+            //    movement.boost = false;
+            //    boostFunction.Invoke();
+            //}
+            //else
+            if (colType == jump)
             {
-                if (isClicked)
-                {
-                    //lightningParticle.SetActive(false);
-                    jumpDir.gameObject.SetActive(false);
-                    isClicked = false;
-                    movement.DragJump();
-                }
-            }
-            else if (colType == boost)
-            {
-                movement.boost = false;
-                boostFunction.Invoke();
-            }
-            else if (colType == jump)
-            {
-                movement.jump = false;
+                mov.jump = false;
                 jumpUp.Invoke();
             }
             //else if (colType == attack)
@@ -108,12 +114,12 @@ public class InputController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-            if (colType == dragJump)
-            {
-                Vector2 tmp = GetJumpingDirection();
-                float r = movement.dir > 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
-                jumpDir.rotation = Quaternion.Euler(0, 0, r);
-            }
+            //if (colType == touchJump)
+            //{
+            //    Vector2 tmp = GetJumpingDirection();
+            //    float r = movement.dir > 0 ? Mathf.Asin(tmp.y) * Mathf.Rad2Deg : (Mathf.PI - Mathf.Asin(tmp.y)) * Mathf.Rad2Deg;
+            //    jumpDir.rotation = Quaternion.Euler(0, 0, r);
+            //}
             //else if (tmp == boost)
             //{
 
@@ -132,8 +138,8 @@ public class InputController : MonoBehaviour
     Vector2 GetJumpingDirection()
     {
         Vector3 mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 tempVector = new Vector3(mPos.x - this.transform.position.x, mPos.y - this.transform.position.y, 0);
-        Vector2 _jumpingDir = movement.dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
-        return _jumpingDir;
+        Vector2 tempVector = new Vector2(mPos.x - mov.transform.position.x, mPos.y - mov.transform.position.y);
+        //Vector2 _jumpingDir = movement.dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
+        return tempVector;
     }
 }

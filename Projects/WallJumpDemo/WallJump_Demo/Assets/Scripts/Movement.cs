@@ -44,10 +44,11 @@ public class Movement : MonoBehaviour
     private Collision col;
     public float wallSlideSpeed;
     public bool attacking;
+    public bool attackable;
     public float attackTime;
     public float attackDelay;
 
-    public bool dragJumped;
+    public bool touchJumped;
     public bool wallJumped;
     [SerializeField] private bool boosted;
     public bool jumpButtonDown = true;
@@ -78,7 +79,7 @@ public class Movement : MonoBehaviour
     private float curBoostStaminaEater;
     public float staminaJumpEater;
     public float staminaWallJumpEater;
-    public float staminaDragJumpEater;
+    public float staminaTouchJumpEater;
     public Image staminaImage;
     public Button.ButtonClickedEvent staminaFunction;
     [SerializeField] private Button.ButtonClickedEvent staminaEat;
@@ -103,8 +104,8 @@ public class Movement : MonoBehaviour
 
     public bool jump;
     public bool boost;
-    //public Transform inputColliders;
-    //[SerializeField] InputController inputController;
+    //public Transform inputController;
+    public InputController inputController;
 
     [Space]
 
@@ -136,7 +137,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetButtonDown("Attack") && !attacking)
+        if (Input.GetButtonDown("Attack") && attackable)
         {
             Attack();
         }
@@ -157,19 +158,19 @@ public class Movement : MonoBehaviour
             //}
             rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
             // && !Input.GetButtonDown("Jump")
-            if (!jumpButtonDown && rb.velocity.y > 0 && !dragJumped && !panelJumped)
+            if (!jumpButtonDown && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (rb.velocity.y < 0)
             {
-                //if (jumpButtonDown) jumpButtonDown = false;
-                //if (!jumpable) jumpable = true;
+                if (jumpButtonDown) jumpButtonDown = false;
+                if (!jumpable) jumpable = true;
                 if (panelJumped) panelJumped = false;
             }
             //else if (Input.GetButtonUp("Jump"))
             //    jumpButtonDown = false;
-            if (!wallJumped && !dragJumped) lastVelocity = rb.velocity.x;
+            if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
         //else if (Input.GetButtonDown("Jump") && col.wallTag == "WallJump")
         //{
@@ -182,11 +183,11 @@ public class Movement : MonoBehaviour
         //}
         else
         {
-            if (!col.onGround && !wallJumped && !dragJumped)
+            if (!col.onGround && !wallJumped && !touchJumped)
             {
-                if (col.wallTag == "DragJump")
-                    rb.velocity = boost ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
-                else if (col.wallTag == "WallJump")
+                //if (col.wallTag == "TouchJump")
+                //    rb.velocity = boost ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
+                //else if (col.wallTag == "WallJump")
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
                 //if (Input.GetButtonDown("AddSpeed")) lightningParticle.SetActive(true);
                 //else if (Input.GetButtonUp("AddSpeed")) lightningParticle.SetActive(false);
@@ -230,16 +231,17 @@ public class Movement : MonoBehaviour
     IEnumerator AttackCoroutine ()
     {
         attacking = true;
-        //attackParticle.SetActive(true);
+        attackable = false;
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
         _speed = 100;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
-        //attackParticle.SetActive(false);
+        attacking = false;
+        rb.gravityScale = 6;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
         yield return new WaitForSeconds(attackDelay);
-        attacking = false;
+        attackable = true;
     }
 
     //public void Boost()
@@ -274,8 +276,8 @@ public class Movement : MonoBehaviour
         {
             wallJumped = true;
             stamina -= staminaWallJumpEater;
-            AudioManager.PlaySound("groundJump");
             Jump(-1, Vector2.zero);
+            AudioManager.PlaySound("groundJump");
             //lightningParticle.SetActive(false);
         }
     }
@@ -298,16 +300,29 @@ public class Movement : MonoBehaviour
                 if (panelJumped)
                 {
                     rb.velocity = new Vector2(lastVelocity, 0);
-                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir);
+                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir, 0, 0);
                 }
                 else
                 {
-                    rb.velocity = new Vector2(0.75f * lastVelocity, 0);
-                    rb.velocity += jumpForce * Vector2.up;
+                    if (vec == Vector2.zero)
+                    {
+                        rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                        rb.velocity += jumpForce * Vector2.up;
+                    }
+                    else
+                    {
+                        touchJumped = true;
+                        if (col.wall != null) col.wall = null;
+                        panelJumped = true;
+                        //adding = false;
+                        //_addSpeed = 0;
+                        //lastSpeed = _speed;
+                        _speed = Mathf.Abs(vec.x);
+                        rb.velocity = new Vector2(0, 0);
+                        rb.velocity += vec;
+                    }
                 }
                 if (col.wall != null) col.wall = null;
-                //dir *= -1f;
-                //ChangeCameraPosition();
             }else
             {
                 if (vec == Vector2.zero)
@@ -324,7 +339,6 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    //Debug.Log("Jumped");
                 }
             }
             //Debug.Log("Jumped, " + dir);
@@ -378,7 +392,7 @@ public class Movement : MonoBehaviour
     {
         if (col.onWall)
         {
-            dragJumped = true;
+            touchJumped = true;
             if (col.wall != null) col.wall = null;
             boosted = false;
             jumpingDir = GetJumpingDirection();
@@ -389,7 +403,7 @@ public class Movement : MonoBehaviour
             lastVelocity *= -1f;
             rb.velocity = new Vector2(lastVelocity, 0);
             rb.velocity += jumpForce * jumpingDir;
-            stamina -= staminaDragJumpEater;
+            stamina -= staminaTouchJumpEater;
             staminaFunction = staminaMaintain;
         }
     }
@@ -404,8 +418,8 @@ public class Movement : MonoBehaviour
     {
         if (!panelJumped)
         {
-            if (jumpButtonDown) jumpButtonDown = false;
-            if (!jumpable) jumpable = true;
+            //if (jumpButtonDown) jumpButtonDown = false;
+            //if (!jumpable) jumpable = true;
             panelJumped = false;
             _staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
@@ -424,7 +438,7 @@ public class Movement : MonoBehaviour
             //    jumpButtonDown = false;
             //}
             if (wallJumped) wallJumped = false;
-            if (dragJumped) dragJumped = false;
+            if (touchJumped) touchJumped = false;
             if (!fevered) fever += stamina;
             if (fever >= oriFever)
             {
@@ -434,6 +448,7 @@ public class Movement : MonoBehaviour
             }
             _speed = speed;
             AudioManager.PlaySound("landing");
+            //Debug.Log("Entered");
         }
     }
     public void OnGroundExitFunction()
@@ -441,6 +456,7 @@ public class Movement : MonoBehaviour
         lastSpeed = _speed;
         //staminaFunction = staminaEat;
         //staminaFunction = staminaMaintain;
+        //Debug.Log("Exited");
     }
     public void OnWallEnterFunction()
     {
@@ -472,11 +488,19 @@ public class Movement : MonoBehaviour
         }
         if (jumpButtonDown) jumpButtonDown = false;
         if (wallJumped) wallJumped = false;
-        if (dragJumped) dragJumped = false;
+        if (touchJumped) touchJumped = false;
         if (col.wallTag == "WallJump")
         {
             jumpable = true;
             panelJumped = false;
+        }
+        else if (col.wallTag == "TouchJump")
+        {
+            jumpable = true;
+            panelJumped = false;
+            inputController.touchJump.gameObject.SetActive(true);
+            inputController.jump.gameObject.SetActive(false);
+            inputController.attack.gameObject.SetActive(false);
         }
         else if (col.wallTag == "WallPanel")
         {
@@ -491,6 +515,12 @@ public class Movement : MonoBehaviour
 
     public void OnWallExitFuntion()
     {
+        //if (col.tag == "TouchJump")
+        //{
+        inputController.touchJump.gameObject.SetActive(false);
+        inputController.jump.gameObject.SetActive(true);
+        inputController.attack.gameObject.SetActive(true);
+        //}
         //inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);
         //dragParticle.GetComponent<ParticleSystem>().emission.enabled = false;

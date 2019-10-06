@@ -10,8 +10,13 @@ public class Wall : MonoBehaviour
     [SerializeField] float vecY;
     [SerializeField] float force;
 
-    public Vector2 SetVec (float dir)
+    public Vector2 SetVec (float dir, float x, float y)
     {
+        if (x != 0 && y != 0)
+        {
+            vecX = x;
+            vecY = y;
+        }
         Vector2 tmp = new Vector2 (Mathf.Abs(vecX), vecY);
         tmp = new Vector2(dir * tmp.normalized.x, tmp.normalized.y) * force;
         return tmp;
