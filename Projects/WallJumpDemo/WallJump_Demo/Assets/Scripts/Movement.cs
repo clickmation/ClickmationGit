@@ -13,8 +13,8 @@ public class Movement : MonoBehaviour
     [Header("Dead")]
 
     [SerializeField] bool dead;
-    [SerializeField] Transform map;
-    [SerializeField] GameObject reGame;
+    [SerializeField] GameObject deadPanel;
+    [SerializeField] GameObject pausePanel;
 
     //[Space]
 
@@ -53,6 +53,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private bool boosted;
     public bool jumpButtonDown = true;
     Vector2 jumpingDir;
+    public GameObject jumpingArrow;
 
     public float lastVelocity;
     public float lastSpeed;
@@ -501,6 +502,8 @@ public class Movement : MonoBehaviour
             inputController.touchJump.gameObject.SetActive(true);
             inputController.jump.gameObject.SetActive(false);
             inputController.attack.gameObject.SetActive(false);
+            jumpingArrow.SetActive(true);
+            jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 - dir * 90, 0);
         }
         else if (col.wallTag == "WallPanel")
         {
@@ -525,6 +528,7 @@ public class Movement : MonoBehaviour
         dragParticle.SetActive(false);
         //dragParticle.GetComponent<ParticleSystem>().emission.enabled = false;
         playerParticle.SetActive(true);
+        jumpingArrow.SetActive(false);
     }
 
     //public void WallJumpedFalse()
@@ -579,7 +583,7 @@ public class Movement : MonoBehaviour
             //    dead = true;
             //    break;
             //}
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
     IEnumerator FeverCoroutine()
@@ -594,7 +598,7 @@ public class Movement : MonoBehaviour
                 feverEffect.SetActive(false);
             }
             feverImage.rectTransform.localScale = new Vector3(fever / oriFever, 1, 1);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
 
@@ -618,10 +622,25 @@ public class Movement : MonoBehaviour
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        //reGame.SetActive(true);
         //cam.SetParent(map);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
+        deadPanel.SetActive(true);
         Destroy(this.gameObject);
+    }
+
+
+    public void Pause ()
+    {
+        inputController.gameObject.SetActive(false);
+        pausePanel.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void Resume ()
+    {
+        inputController.gameObject.SetActive(true);
+        pausePanel.SetActive(false);
+        Time.timeScale = 1;
     }
 }

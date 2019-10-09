@@ -139,7 +139,6 @@ public class InputController : MonoBehaviour
     {
         Vector3 mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 tempVector = new Vector2(mPos.x - mov.transform.position.x, mPos.y - mov.transform.position.y);
-        //Vector2 _jumpingDir = movement.dir < 0 ? new Vector2(Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y) : new Vector2(-Mathf.Abs(tempVector.normalized.x), tempVector.normalized.y);
         return tempVector;
     }
 }

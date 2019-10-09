@@ -75,8 +75,21 @@ public class Camera2DFollow : MonoBehaviour
         }
     }
 
-    public void ReGame()
+    public void ReTry()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void MainMenu ()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+    //IEnumerator DeadCoroutine()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //    deadPanel.SetActive(true);
+    //    Destroy(this.gameObject);
+    //}
 }
