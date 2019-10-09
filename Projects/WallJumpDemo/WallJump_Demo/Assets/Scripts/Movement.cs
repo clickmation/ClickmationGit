@@ -118,6 +118,17 @@ public class Movement : MonoBehaviour
     [SerializeField] GameObject dragParticle;
     [SerializeField] GameObject attackTrail;
 
+    [Space]
+
+    [Header("Score")]
+
+    public int score;
+    public int scoreAdd;
+    public Text scoreText;
+    public float scoreAddDelay;
+    public Text deadPanelScore;
+    public Text pausePanelScore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,6 +142,7 @@ public class Movement : MonoBehaviour
         camFol.dir = dir;
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
+        StartCoroutine(ScoreCoroutine());
         StartCoroutine(StaminaCoroutine());
         StartCoroutine(FeverCoroutine());
         //Time.timeScale = 0.2f;
@@ -228,7 +240,7 @@ public class Movement : MonoBehaviour
 
     public void Attack()
     {
-        StartCoroutine(AttackCoroutine());
+        if (attackable) StartCoroutine(AttackCoroutine());
     }
 
     IEnumerator AttackCoroutine ()
@@ -538,6 +550,17 @@ public class Movement : MonoBehaviour
     //{
     //    wallJumped = false;
     //}
+    IEnumerator ScoreCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        scoreText.text = score.ToString();
+        while (!dead)
+        {
+            yield return new WaitForSeconds(scoreAddDelay);
+            score += scoreAdd;
+            scoreText.text = score.ToString();
+        }
+    }
     IEnumerator StaminaCoroutine ()
     {
         while (!dead)
@@ -593,6 +616,8 @@ public class Movement : MonoBehaviour
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
         deadPanel.SetActive(true);
+        scoreText.gameObject.SetActive(false);
+        deadPanelScore.text = score.ToString();
         Destroy(this.gameObject);
     }
 
@@ -601,6 +626,7 @@ public class Movement : MonoBehaviour
     {
         inputController.gameObject.SetActive(false);
         pausePanel.SetActive(true);
+        pausePanelScore.text = score.ToString();
         Time.timeScale = 0;
     }
 
