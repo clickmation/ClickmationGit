@@ -645,4 +645,19 @@ public class Movement : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
     }
+
+    public void OnCollisionEnter2D (Collision2D other)
+    {
+        if (!col.onGround)
+        {
+            _speed = 0;
+        }
+    }
+
+    public void OnCollisionExit2D(Collision2D other)
+    {
+        if (_speed == 0) {
+            _speed = speed;
+        }
+    }
 }

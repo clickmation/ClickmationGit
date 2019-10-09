@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 	[SerializeField]
 	public GameObject deathParticle;
 
-    void OnCollisionEnter2D (Collision2D other)
+    void OnTriggerEnter2D (Collider2D other)
     {
         if (other.transform.GetComponent<Movement>() != null)
         {
