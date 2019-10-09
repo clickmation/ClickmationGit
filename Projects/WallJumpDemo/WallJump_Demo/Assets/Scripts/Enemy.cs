@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float damage;
 	[SerializeField]
 	public GameObject deathParticle;
 
@@ -15,7 +14,7 @@ public class Enemy : MonoBehaviour
             Movement mov = other.transform.GetComponent<Movement>();
             if (!mov.attacking && other.transform.position.y - this.transform.position.y <= 1.1f)
             {
-                mov.stamina -= damage;
+                mov.Dead();
             }
             else
             {

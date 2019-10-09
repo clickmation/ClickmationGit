@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -158,7 +158,6 @@ public class Movement : MonoBehaviour
             //    if (jumpable) staminaFunction = staminaAdd;
             //}
             rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
-            //transform.position += new Vector3 (_speed * dir * Time.deltaTime, 0, 0);
             // && !Input.GetButtonDown("Jump")
             if (!jumpButtonDown && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
             {

@@ -7,6 +7,7 @@ public class Collision : MonoBehaviour
 {
     [Header("Layers")]
     public LayerMask groundLayer;
+    public LayerMask wallLayer;
 
     [Space]
 
@@ -51,11 +52,11 @@ public class Collision : MonoBehaviour
     void Update()
     {
         onGround = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, collisionRadius, groundLayer);
-        onWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, groundLayer)
-            || Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, groundLayer);
+        onWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer)
+            || Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, wallLayer);
 
-        onRightWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, groundLayer);
-        onLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, groundLayer);
+        onRightWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer);
+        onLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, wallLayer);
 
         //onGround = Physics2D.OverlapCapsule((Vector2)transform.position + bottomOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Horizontal, groundLayer);
         //onWall = Physics2D.OverlapCapsule((Vector2)transform.position + rightOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer)
@@ -114,8 +115,8 @@ public class Collision : MonoBehaviour
 
     public void OnWallEnter()
     {
-        if (onRightWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, groundLayer).transform;
-        else if (onLeftWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, groundLayer).transform;
+        if (onRightWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer).transform;
+        else if (onLeftWall) wall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, wallLayer).transform;
 
         //if (onRightWall) wall = Physics2D.OverlapCapsule((Vector2)transform.position + rightOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer).transform;
         //else if (onLeftWall) wall = Physics2D.OverlapCapsule((Vector2)transform.position + leftOffset, new Vector2(capsuleSize, collisionRadius), CapsuleDirection2D.Vertical, groundLayer).transform;
