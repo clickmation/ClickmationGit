@@ -213,7 +213,8 @@ public class Movement : MonoBehaviour
 
         if (Input.GetButtonDown("ChangeDir"))
         {
-            ChangeDirection();
+            dir *= -1f;
+            camFol.dir = dir;
         }
     }
 
@@ -298,6 +299,7 @@ public class Movement : MonoBehaviour
             if (side == -1)
             {
                 lastVelocity *= -1f;
+                dir *= -1f;
                 //if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 if (panelJumped)
                 {
@@ -390,25 +392,24 @@ public class Movement : MonoBehaviour
     //    }
     //}
 
-    public void DragJump ()
-    {
-        if (col.onWall)
-        {
-            touchJumped = true;
-            if (col.wall != null) col.wall = null;
-            boosted = false;
-            jumpingDir = GetJumpingDirection();
-            speedMultiflier = Mathf.Abs(jumpingDir.x);
-            _speed = speed * speedMultiflier;
-            dir = Mathf.Sign(jumpingDir.x);
-            ChangeCameraPosition();
-            lastVelocity *= -1f;
-            rb.velocity = new Vector2(lastVelocity, 0);
-            rb.velocity += jumpForce * jumpingDir;
-            stamina -= staminaTouchJumpEater;
-            staminaFunction = staminaMaintain;
-        }
-    }
+    //public void DragJump ()
+    //{
+    //    if (col.onWall)
+    //    {
+    //        touchJumped = true;
+    //        if (col.wall != null) col.wall = null;
+    //        boosted = false;
+    //        jumpingDir = GetJumpingDirection();
+    //        speedMultiflier = Mathf.Abs(jumpingDir.x);
+    //        _speed = speed * speedMultiflier;
+    //        dir = Mathf.Sign(jumpingDir.x);
+    //        lastVelocity *= -1f;
+    //        rb.velocity = new Vector2(lastVelocity, 0);
+    //        rb.velocity += jumpForce * jumpingDir;
+    //        stamina -= staminaTouchJumpEater;
+    //        staminaFunction = staminaMaintain;
+    //    }
+    //}
     Vector2 GetJumpingDirection()
     {
         Vector3 camPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -462,17 +463,17 @@ public class Movement : MonoBehaviour
     }
     public void OnWallEnterFunction()
     {
-        Debug.Log("OnWallEnter");
+        //Debug.Log("OnWallEnter");
         dragParticle.SetActive(true);
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
         playerParticle.SetActive(false);
+        camFol.dir = -dir;
         if (col.onGround)
         {
             Dead();
         }
         staminaFunction = staminaEat;
         //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
-        ChangeDirection();
         if (col.wall.GetComponent<Wall>() != null)
         {
             _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
@@ -505,7 +506,7 @@ public class Movement : MonoBehaviour
             inputController.jump.gameObject.SetActive(false);
             inputController.attack.gameObject.SetActive(false);
             jumpingArrow.SetActive(true);
-            jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 - dir * 90, 0);
+            jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
         }
         else if (col.wallTag == "WallPanel")
         {
@@ -537,42 +538,6 @@ public class Movement : MonoBehaviour
     //{
     //    wallJumped = false;
     //}
-
-    void ChangeDirection ()
-    {
-        dir *= -1f;
-        camFol.dir = dir;
-        ChangeCameraPosition();
-    }
-    public void ChangeCameraPosition()
-    {
-        float tmp = dir == 1 ? 0 : 180;
-        //inputColliders.localRotation = Quaternion.Euler(inputColliders.localRotation.x, tmp, inputColliders.localRotation.z);
-        //StopCoroutine(ChangeCameraPositionCoroutine());
-        //StartCoroutine(ChangeCameraPositionCoroutine());
-    }
-
-    Vector3 startPosition;
-    Vector3 destination;
-    IEnumerator ChangeCameraPositionCoroutine ()
-    {
-        startPosition = cam.localPosition;
-        destination = new Vector3(dir * 3, 2f, -10);
-        float elapsedTime = 0f;
-        float t;
-        while(true)
-        {
-            if (cam.localPosition == destination)
-            {
-                break;
-            }
-            elapsedTime += Time.deltaTime;
-            t = Mathf.Clamp(elapsedTime / cameraMovingTime, 0f, 1f);
-            //t = Mathf.Sin(elapsedTime / cameraMovingTime * Mathf.PI * 0.5f);
-            cam.localPosition = Vector3.Lerp(startPosition, destination, t);
-            yield return null;
-        }
-    }
     IEnumerator StaminaCoroutine ()
     {
         while (!dead)
