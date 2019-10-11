@@ -25,7 +25,7 @@ public class InputController : MonoBehaviour
     public Collider2D touchJump;
     //[SerializeField] private Collider2D boost;
     public Collider2D jump;
-    public Collider2D attack;
+    public GameObject attackButton;
     private Collider2D colType;
 
     [Space]
@@ -76,10 +76,6 @@ public class InputController : MonoBehaviour
                 {
                     mov.jump = true;
                     jumpDown.Invoke();
-                }
-                else if (colType == attack)
-                {
-                    mov.Attack();
                 }
             }
         }

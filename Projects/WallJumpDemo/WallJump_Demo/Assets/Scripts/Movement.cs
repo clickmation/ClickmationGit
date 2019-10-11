@@ -13,6 +13,8 @@ public class Movement : MonoBehaviour
     [Header("UI")]
 
     [SerializeField] GameObject[] trails;
+    [SerializeField] SpriteRenderer sprite;
+    [SerializeField] Sprite[] sprites;
     public int coin;
     public Text coinText;
 
@@ -20,7 +22,7 @@ public class Movement : MonoBehaviour
 
     [Header("Dead")]
 
-    [SerializeField] bool dead;
+    public bool dead;
     [SerializeField] GameObject deadPanel;
     [SerializeField] GameObject pausePanel;
 
@@ -140,7 +142,8 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerParticle = Instantiate(trails[PlayerPrefs.GetInt("TrailIndex")], transform);
+        playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
+        sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
         _speed = speed;
         //_staminaEater = staminaEater;
         speedMultiflier = 1f;
@@ -256,11 +259,19 @@ public class Movement : MonoBehaviour
     {
         attacking = true;
         attackable = false;
+        float tmpV = rb.velocity.y;
+        float tmpG = rb.gravityScale;
+        rb.velocity = (new Vector2(dir * _speed, 0));
+        rb.gravityScale = 0;
+        _speed = 0;
+        yield return new WaitForSeconds(0.1f);
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
         _speed = 100;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
+        rb.velocity = (new Vector2(dir * _speed, tmpV));
+        rb.gravityScale = tmpG;
         attacking = false;
         rb.gravityScale = 6;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
@@ -525,7 +536,7 @@ public class Movement : MonoBehaviour
             panelJumped = false;
             inputController.touchJump.gameObject.SetActive(true);
             inputController.jump.gameObject.SetActive(false);
-            inputController.attack.gameObject.SetActive(false);
+            inputController.attackButton.SetActive(false);
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
         }
@@ -546,7 +557,7 @@ public class Movement : MonoBehaviour
         //{
         inputController.touchJump.gameObject.SetActive(false);
         inputController.jump.gameObject.SetActive(true);
-        inputController.attack.gameObject.SetActive(true);
+        inputController.attackButton.SetActive(true);
         //}
         //inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);

@@ -6,6 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [Space]
+
+    [Header("SaveLoad")]
+
+    public int curTrailIndex;
+    public int curCharacterIndex;
+    public int[] trailsArray = new int[20];
+    public int[] charactersArray = new int[20];
+    public int[] bgmsArray = new int[20];
+    public List<int> availableTrails;
+    public List<int> availableCharacters;
+    public List<int> availableBGMs;
 
     [Space]
 
@@ -69,10 +81,9 @@ public class MainMenu : MonoBehaviour
     [Header("Customization")]
 
     public int trailIndex;
-    public Image trailImage;
+    public GameObject curTrail;
     public Text trailName;
     public Transform show;
-    public GameObject curTrail;
     public Trail[] trails;
     [System.Serializable]
     public struct Trail
@@ -82,14 +93,14 @@ public class MainMenu : MonoBehaviour
     }
 
     public int characterIndex;
-    public Image characterImage;
+    public SpriteRenderer curSprite;
     public Text characterName;
     public Character[] characters;
     [System.Serializable]
     public struct Character
     {
         public string name;
-        public Image image;
+        public Sprite sprite;
     }
 
     public int bgmIndex;
@@ -107,7 +118,28 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SaveLoad.saveload.Load();
+        CoinScript.coinScript.coin = PlayerPrefs.GetInt("Coin");
+        curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
+        curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+        PlayerPrefs.SetInt("TrailsArray0", 1);
+        PlayerPrefs.SetInt("CharactersArray0", 1);
+        PlayerPrefs.SetInt("BGMsArray0", 1);
+
+        PlayerPrefs.SetInt("TrailsArray1", 1);
+        PlayerPrefs.SetInt("TrailsArray2", 1);
+        PlayerPrefs.SetInt("CharactersArray1", 1);
+
+        for (int i = 0; i < 20; i++)
+        {
+            trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+            charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
+            bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+            if (trailsArray[i] == 1) availableTrails.Add(i);
+            if (charactersArray[i] == 1) availableCharacters.Add(i);
+            if (bgmsArray[i] == 1) availableBGMs.Add(i);
+        }
+        SaveLoad.saveload.Save();
     }
 
     public void Shop ()
@@ -164,9 +196,37 @@ public class MainMenu : MonoBehaviour
         if (!customization)
         {
             customization = true;
-            trailIndex = PlayerPrefs.GetInt("TrailIndex");
+            SaveLoad.saveload.Load();
+            trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
+            characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+            for (int i = 0; i < availableTrails.Count; i++)
+            {
+                if (availableTrails[i] == trailIndex)
+                {
+                    trailIndex = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < availableCharacters.Count; i++)
+            {
+                if (availableCharacters[i] == characterIndex)
+                {
+                    characterIndex = i;
+                    break;
+                }
+            }
+            //for (int i = 0; i < availableBGMs.Count; i++)
+            //{
+            //    if (availableBGMs[i] == bgmIndex)
+            //    {
+            //        bgmIndex = i;
+            //        break;
+            //    }
+            //}
+            SaveLoad.saveload.Save();
             trailName.text = trails[trailIndex].name;
             curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            curSprite.sprite = characters[characterIndex].sprite;
             characterName.text = characters[characterIndex].name;
             //characterImage = characters[characterIndex].image;
             //bgmName.text = bgms[bgmIndex].name;
@@ -215,12 +275,12 @@ public class MainMenu : MonoBehaviour
 
     public void TrailNext()
     {
-        if (trailIndex < trails.Length - 1)
+        if (trailIndex < availableTrails.Count - 1)
         {
-            trailName.text = trails[++trailIndex].name;
+            trailName.text = trails[availableTrails[++trailIndex]].name;
             Destroy(curTrail);
-            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            PlayerPrefs.SetInt("TrailIndex", trailIndex);
+            curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
         }
     }
 
@@ -228,19 +288,20 @@ public class MainMenu : MonoBehaviour
     {
         if (trailIndex > 0)
         {
-            trailName.text = trails[--trailIndex].name;
+            trailName.text = trails[availableTrails[--trailIndex]].name;
             Destroy(curTrail);
-            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            PlayerPrefs.SetInt("TrailIndex", trailIndex);
+            curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
         }
     }
 
     public void CharacterNext()
     {
-        if (characterIndex < characters.Length - 1)
+        if (characterIndex < availableCharacters.Count - 1)
         {
             characterName.text = characters[++characterIndex].name;
-            //characterImage = characters[characterIndex].image;
+            curSprite.sprite = characters[characterIndex].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
         }
     }
 
@@ -249,7 +310,8 @@ public class MainMenu : MonoBehaviour
         if (characterIndex > 0)
         {
             characterName.text = characters[--characterIndex].name;
-            //characterImage = characters[characterIndex].image;
+            curSprite.sprite = characters[characterIndex].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
         }
     }
 

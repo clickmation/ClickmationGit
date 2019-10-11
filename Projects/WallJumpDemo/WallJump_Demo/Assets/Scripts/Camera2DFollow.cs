@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Camera2DFollow : MonoBehaviour
 {
+    [SerializeField] Movement mov;
     public Transform target;
     public float damping = 1;
     public float lookAheadFactor = 3;
@@ -79,12 +80,20 @@ public class Camera2DFollow : MonoBehaviour
     public void ReTry()
     {
         Time.timeScale = 1;
+        if (mov.dead)
+        {
+            CoinScript.coinScript.PlusCoin(mov.coin);
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void MainMenu ()
     {
         Time.timeScale = 1;
+        if (mov.dead)
+        {
+            CoinScript.coinScript.PlusCoin(mov.coin);
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
     //IEnumerator DeadCoroutine()
