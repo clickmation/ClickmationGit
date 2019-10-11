@@ -10,6 +10,14 @@ public class Movement : MonoBehaviour
 
     [Space]
 
+    [Header("UI")]
+
+    [SerializeField] GameObject[] trails;
+    public int coin;
+    public Text coinText;
+
+    [Space]
+
     [Header("Dead")]
 
     [SerializeField] bool dead;
@@ -67,25 +75,25 @@ public class Movement : MonoBehaviour
     public bool jumpable;
     public bool panelJumped;
 
-    [Space]
+    //[Space]
 
-    [Header("Stamina")]
+    //[Header("Stamina")]
 
-    public float stamina;
-    private float oriStamina;
-    public float staminaEater;
-    private float _staminaEater;
-    public float staminaAdder;
-    public float boostStaminaEater;
-    private float curBoostStaminaEater;
-    public float staminaJumpEater;
-    public float staminaWallJumpEater;
-    public float staminaTouchJumpEater;
-    public Image staminaImage;
-    public Button.ButtonClickedEvent staminaFunction;
-    [SerializeField] private Button.ButtonClickedEvent staminaEat;
-    [SerializeField] private Button.ButtonClickedEvent staminaAdd;
-    [SerializeField] private Button.ButtonClickedEvent staminaMaintain;
+    //public float stamina;
+    //private float oriStamina;
+    //public float staminaEater;
+    //private float _staminaEater;
+    //public float staminaAdder;
+    //public float boostStaminaEater;
+    //private float curBoostStaminaEater;
+    //public float staminaJumpEater;
+    //public float staminaWallJumpEater;
+    //public float staminaTouchJumpEater;
+    //public Image staminaImage;
+    //public Button.ButtonClickedEvent staminaFunction;
+    //[SerializeField] private Button.ButtonClickedEvent staminaEat;
+    //[SerializeField] private Button.ButtonClickedEvent staminaAdd;
+    //[SerializeField] private Button.ButtonClickedEvent staminaMaintain;
     //[SerializeField] private GameObject lightningParticle;
 
     [Space]
@@ -132,11 +140,12 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerParticle = Instantiate(trails[PlayerPrefs.GetInt("TrailIndex")], transform);
         _speed = speed;
-        _staminaEater = staminaEater;
+        //_staminaEater = staminaEater;
         speedMultiflier = 1f;
         col = GetComponent<Collision>();
-        oriStamina = stamina;
+        //oriStamina = stamina;
         oriFever = fever;
         fever = 0;
         camFol.dir = dir;
@@ -216,11 +225,11 @@ public class Movement : MonoBehaviour
             //    stamina -= staminaJumpEater;
             //}
 
-            if (stamina <= 0 && !dead)
-            {
-                staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-                Dead();
-            }
+            //if (stamina <= 0 && !dead)
+            //{
+            //    staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
+            //    Dead();
+            //}
         }
 
         if (Input.GetButtonDown("ChangeDir"))
@@ -285,12 +294,12 @@ public class Movement : MonoBehaviour
         {
             AudioManager.PlaySound("groundJump");
             Jump(1, Vector2.zero);
-            stamina -= staminaJumpEater;
+            //stamina -= staminaJumpEater;
         }
         else if (col.onWall && col.wallTag == "WallJump")
         {
             wallJumped = true;
-            stamina -= staminaWallJumpEater;
+            //stamina -= staminaWallJumpEater;
             Jump(-1, Vector2.zero);
             AudioManager.PlaySound("groundJump");
             //lightningParticle.SetActive(false);
@@ -307,7 +316,7 @@ public class Movement : MonoBehaviour
         {
             jumpable = false;
             jumpButtonDown = true;
-            staminaFunction = staminaMaintain;
+            //staminaFunction = staminaMaintain;
             if (side == -1)
             {
                 lastVelocity *= -1f;
@@ -436,10 +445,10 @@ public class Movement : MonoBehaviour
             //if (jumpButtonDown) jumpButtonDown = false;
             //if (!jumpable) jumpable = true;
             panelJumped = false;
-            _staminaEater = staminaEater;
+            ///_staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
             //else
-                staminaFunction = staminaAdd;
+                //staminaFunction = staminaAdd;
             if (col.onWall)
             {
                 Dead();
@@ -454,7 +463,7 @@ public class Movement : MonoBehaviour
             //}
             if (wallJumped) wallJumped = false;
             if (touchJumped) touchJumped = false;
-            if (!fevered) fever += stamina;
+            //if (!fevered) fever += stamina;
             if (fever >= oriFever)
             {
                 fever = oriFever;
@@ -484,11 +493,11 @@ public class Movement : MonoBehaviour
         {
             Dead();
         }
-        staminaFunction = staminaEat;
+        //staminaFunction = staminaEat;
         //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
         if (col.wall.GetComponent<Wall>() != null)
         {
-            _staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
+            //_staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
             wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         }
         //StopCoroutine(SpeedLerp());
@@ -498,10 +507,10 @@ public class Movement : MonoBehaviour
         //    _addSpeed = 0;
         //    curBoostStaminaEater = 0;
         //}
-        if (stamina == 0)
-        {
-            Dead();
-        }
+        //if (stamina == 0)
+        //{
+        //    Dead();
+        //}
         if (jumpButtonDown) jumpButtonDown = false;
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
@@ -565,8 +574,8 @@ public class Movement : MonoBehaviour
     {
         while (!dead)
         {
-            staminaFunction.Invoke();
-            staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
+            //staminaFunction.Invoke();
+            //staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
             //if (stamina <= 0)
             //{
             //    Debug.LogError("Dead");
@@ -592,16 +601,16 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public void StaminaEat ()
-    {
-        stamina -= (_staminaEater + curBoostStaminaEater);
-        if (stamina <= 0) stamina = 0;
-    }
-    public void StaminaAdd()
-    {
-        stamina += staminaAdder;
-        if (stamina >= oriStamina) stamina = oriStamina;
-    }
+    //public void StaminaEat ()
+    //{
+    //    stamina -= (_staminaEater + curBoostStaminaEater);
+    //    if (stamina <= 0) stamina = 0;
+    //}
+    //public void StaminaAdd()
+    //{
+    //    stamina += staminaAdder;
+    //    if (stamina >= oriStamina) stamina = oriStamina;
+    //}
     public void StaminaMaintain()
     {
         //stamina += 0;
@@ -621,6 +630,11 @@ public class Movement : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    public void AddCoin (int c)
+    {
+        coin += c;
+        coinText.text = coin.ToString();
+    }
 
     public void Pause ()
     {

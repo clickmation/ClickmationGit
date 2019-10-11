@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 
-public class Stamina : MonoBehaviour
+public class Coin : MonoBehaviour
 {
-    public float staminaAddAmount;
+    public int coinAddAmount;
 
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player")
         {
-            other.transform.GetComponent<Movement>().stamina += staminaAddAmount;
+            other.transform.GetComponent<Movement>().AddCoin(coinAddAmount);
             AudioManager.PlaySound("coin");
             Destroy(this.gameObject);
         }

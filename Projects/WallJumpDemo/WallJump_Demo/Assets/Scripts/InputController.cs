@@ -83,7 +83,8 @@ public class InputController : MonoBehaviour
                 }
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+
+        if (Input.GetMouseButtonUp(0))
         {
             //if (colType == touchJump)
             //{
@@ -112,7 +113,8 @@ public class InputController : MonoBehaviour
                 
             //}
         }
-        else if (Input.GetMouseButton(0))
+
+        if (Input.GetMouseButton(0))
         {
             //if (colType == touchJump)
             //{

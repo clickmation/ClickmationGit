@@ -19,6 +19,7 @@ public class MainMenu : MonoBehaviour
 
     [Header("Panels")]
 
+    [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject shopObj;
     [SerializeField] GameObject howToObj;
     [SerializeField] GameObject cusObj;
@@ -70,12 +71,14 @@ public class MainMenu : MonoBehaviour
     public int trailIndex;
     public Image trailImage;
     public Text trailName;
+    public Transform show;
+    public GameObject curTrail;
     public Trail[] trails;
     [System.Serializable]
     public struct Trail
     {
         public string name;
-        public Image image;
+        public GameObject trail;
     }
 
     public int characterIndex;
@@ -112,6 +115,7 @@ public class MainMenu : MonoBehaviour
         if (!shop)
         {
             shop = true;
+            mainMenu.SetActive(false);
             shopObj.SetActive(true);
             howToButton.interactable = false;
             gameStartButton.interactable = false;
@@ -120,6 +124,7 @@ public class MainMenu : MonoBehaviour
         else
         {
             shop = false;
+            mainMenu.SetActive(true);
             shopObj.SetActive(false);
             howToButton.interactable = true;
             gameStartButton.interactable = true;
@@ -132,6 +137,7 @@ public class MainMenu : MonoBehaviour
         if (!howTo)
         {
             howTo = true;
+            mainMenu.SetActive(false);
             howToObj.SetActive(true);
             shopButton.interactable = false;
             gameStartButton.interactable = false;
@@ -140,6 +146,7 @@ public class MainMenu : MonoBehaviour
         else
         {
             howTo = false;
+            mainMenu.SetActive(true);
             howToObj.SetActive(false);
             shopButton.interactable = true;
             gameStartButton.interactable = true;
@@ -157,13 +164,15 @@ public class MainMenu : MonoBehaviour
         if (!customization)
         {
             customization = true;
+            trailIndex = PlayerPrefs.GetInt("TrailIndex");
             trailName.text = trails[trailIndex].name;
-            //trailImage = trails[trailIndex].image;
+            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             characterName.text = characters[characterIndex].name;
             //characterImage = characters[characterIndex].image;
-            bgmName.text = bgms[bgmIndex].name;
+            //bgmName.text = bgms[bgmIndex].name;
             //bgmImage = bgms[bgmIndex].image;
             //bgmsetting;
+            mainMenu.SetActive(false);
             cusObj.SetActive(true);
             shopButton.interactable = false;
             howToButton.interactable = false;
@@ -171,8 +180,10 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
+            Destroy(curTrail);
             customization = false;
             cusObj.SetActive(false);
+            mainMenu.SetActive(true);
             shopButton.interactable = true;
             howToButton.interactable = true;
             gameStartButton.interactable = true;
@@ -207,7 +218,9 @@ public class MainMenu : MonoBehaviour
         if (trailIndex < trails.Length - 1)
         {
             trailName.text = trails[++trailIndex].name;
-            //trailImage = trails[trailIndex].image;
+            Destroy(curTrail);
+            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            PlayerPrefs.SetInt("TrailIndex", trailIndex);
         }
     }
 
@@ -216,7 +229,9 @@ public class MainMenu : MonoBehaviour
         if (trailIndex > 0)
         {
             trailName.text = trails[--trailIndex].name;
-            //trailImage = trails[trailIndex].image;
+            Destroy(curTrail);
+            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            PlayerPrefs.SetInt("TrailIndex", trailIndex);
         }
     }
 
