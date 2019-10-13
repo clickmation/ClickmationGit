@@ -333,41 +333,15 @@ public class Movement : MonoBehaviour
                 lastVelocity *= -1f;
                 dir *= -1f;
                 //if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
-                if (panelJumped)
-                {
-                    rb.velocity = new Vector2(lastVelocity, 0);
-                    rb.velocity += col.wall.GetComponent<Wall>().SetVec(dir, 0, 0);
-                }
-                else
-                {
-                    if (vec == Vector2.zero)
-                    {
-                        rb.velocity = new Vector2(0.75f * lastVelocity, 0);
-                        rb.velocity += jumpForce * Vector2.up;
-                    }
-                    else
-                    {
-                        touchJumped = true;
-                        if (col.wall != null) col.wall = null;
-                        panelJumped = true;
-                        //adding = false;
-                        //_addSpeed = 0;
-                        //lastSpeed = _speed;
-                        _speed = Mathf.Abs(vec.x);
-                        rb.velocity = new Vector2(0, 0);
-                        rb.velocity += vec;
-                    }
-                }
-                if (col.wall != null) col.wall = null;
-            }else
-            {
                 if (vec == Vector2.zero)
                 {
-                    rb.velocity = new Vector2(lastVelocity, 0);
+                    rb.velocity = new Vector2(0.75f * lastVelocity, 0);
                     rb.velocity += jumpForce * Vector2.up;
                 }
                 else
                 {
+                    touchJumped = true;
+                    if (col.wall != null) col.wall = null;
                     panelJumped = true;
                     //adding = false;
                     //_addSpeed = 0;
@@ -375,9 +349,34 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
+                 }
+            if (col.wall != null) col.wall = null;
+            }
+            else
+            {
+                if (panelJumped)
+                {
+                    dir = Mathf.Sign(vec.x);
+                    camFol.dir = dir;
+                    rb.velocity = new Vector2(0, 0);
+                    rb.velocity += vec;
+                }
+                else
+                {
+                    if (vec == Vector2.zero)
+                    {
+                        rb.velocity = new Vector2(lastVelocity, 0);
+                        rb.velocity += jumpForce * Vector2.up;
+                    }
+                    else
+                    {
+                        panelJumped = true;
+                        _speed = Mathf.Abs(vec.x);
+                        rb.velocity = new Vector2(0, 0);
+                        rb.velocity += vec;
+                    }
                 }
             }
-            //Debug.Log("Jumped, " + dir);
             //Ripple(0.015f);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
@@ -540,15 +539,14 @@ public class Movement : MonoBehaviour
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
         }
-        else if (col.wallTag == "WallPanel")
-        {
-            jumpable = true;
-            wallJumped = true;
-            panelJumped = true;
-            //if (GetComponent<Collision>().wall != null) GetComponent<Collision>().wall = null;
-            AudioManager.PlaySound("wallPanel");
-            Jump(-1, Vector2.zero);
-        }
+        //else if (col.wallTag == "WallPanel")
+        //{
+        //    jumpable = true;
+        //    wallJumped = true;
+        //    panelJumped = true;
+        //    AudioManager.PlaySound("wallPanel");
+        //    Jump(-1, Vector2.zero);
+        //}
     }
 
     public void OnWallExitFuntion()

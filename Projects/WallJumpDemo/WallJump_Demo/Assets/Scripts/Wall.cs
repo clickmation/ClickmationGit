@@ -16,9 +16,13 @@ public class Wall : MonoBehaviour
         {
             vecX = x;
             vecY = y;
+            Vector2 tmp = new Vector2(Mathf.Abs(vecX), vecY);
+            tmp = new Vector2(dir * tmp.normalized.x, tmp.normalized.y) * force;
+            return tmp;
         }
-        Vector2 tmp = new Vector2 (Mathf.Abs(vecX), vecY);
-        tmp = new Vector2(dir * tmp.normalized.x, tmp.normalized.y) * force;
-        return tmp;
+        else
+        {
+            return Vector2.zero;
+        }
     }
 }
