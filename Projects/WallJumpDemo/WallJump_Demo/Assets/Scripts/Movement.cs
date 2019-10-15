@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    //[SerializeField] RippleEffect ripple;
     [SerializeField] Camera2DFollow camFol;
+    [SerializeField] CanvasGroup overlayCanvas;
 
     [Space]
 
@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     [SerializeField] GameObject[] trails;
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] Sprite[] sprites;
+    [SerializeField] GameObject shockWave;
     public int coin;
     public Text coinText;
 
@@ -267,6 +268,7 @@ public class Movement : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
+        ShockWaveSpawnFunction(0.5f);
         _speed = 100;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
@@ -377,7 +379,7 @@ public class Movement : MonoBehaviour
                     }
                 }
             }
-            //Ripple(0.015f);
+            ShockWaveSpawnFunction(0.35f);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
         }
@@ -579,6 +581,13 @@ public class Movement : MonoBehaviour
             scoreText.text = score.ToString();
         }
     }
+
+    public void ShockWaveSpawnFunction (float scale)
+    {
+        GameObject sw = Instantiate(shockWave, transform.position, Quaternion.Euler(0, 0, 0));
+        sw.transform.localScale = 10 * scale * Vector3.one;
+    }
+
     IEnumerator StaminaCoroutine ()
     {
         while (!dead)
@@ -620,22 +629,23 @@ public class Movement : MonoBehaviour
     //    stamina += staminaAdder;
     //    if (stamina >= oriStamina) stamina = oriStamina;
     //}
-    public void StaminaMaintain()
-    {
-        //stamina += 0;
-    }
+    //public void StaminaMaintain()
+    //{
+    //    //stamina += 0;
+    //}
 
     public void Dead ()
     {
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        //cam.SetParent(map);
+        ShockWaveSpawnFunction(1);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
         deadPanel.SetActive(true);
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
+        overlayCanvas.alpha = 0.2f;
         Destroy(this.gameObject);
     }
 
@@ -649,6 +659,7 @@ public class Movement : MonoBehaviour
     {
         inputController.gameObject.SetActive(false);
         pausePanel.SetActive(true);
+        overlayCanvas.alpha = 0.2f;
         pausePanelScore.text = score.ToString();
         Time.timeScale = 0;
     }
@@ -658,6 +669,7 @@ public class Movement : MonoBehaviour
         inputController.gameObject.SetActive(true);
         pausePanel.SetActive(false);
         Time.timeScale = 1;
+        overlayCanvas.alpha = 1.0f;
     }
 
     public void OnCollisionEnter2D (Collision2D other)
