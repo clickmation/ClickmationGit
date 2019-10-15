@@ -66,15 +66,9 @@ public class MainMenu : MonoBehaviour
     [Header("HowTo")]
 
     public int howToIndex;
-    public Image howToImage;
-    public Text howToInfo;
-    public HowToScene[] scenes;
-    [System.Serializable]
-    public struct HowToScene
-    {
-        public Image image;
-        public string info;
-    }
+    public GameObject backButton;
+    public GameObject nextButton;
+    public GameObject[] scenes;
 
     [Space]
 
@@ -259,8 +253,10 @@ public class MainMenu : MonoBehaviour
     {
         if (howToIndex < scenes.Length - 1)
         {
-            howToImage = scenes[++howToIndex].image;
-            howToInfo.text = scenes[howToIndex].info;
+            if (howToIndex == 0) backButton.SetActive(true);
+            scenes[howToIndex++].SetActive(false);
+            scenes[howToIndex].SetActive(true);
+            if (howToIndex == scenes.Length - 1) nextButton.SetActive(false);
         }
     }
 
@@ -268,8 +264,10 @@ public class MainMenu : MonoBehaviour
     {
         if (howToIndex > 0)
         {
-            howToImage = scenes[--howToIndex].image;
-            howToInfo.text = scenes[howToIndex].info;
+            if (howToIndex == scenes.Length - 1) nextButton.SetActive(true);
+            scenes[howToIndex--].SetActive(false);
+            scenes[howToIndex].SetActive(true);
+            if (howToIndex == 0) backButton.SetActive(false);
         }
     }
 
