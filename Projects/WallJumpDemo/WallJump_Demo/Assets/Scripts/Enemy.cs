@@ -26,7 +26,8 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                mov.ShockWaveSpawnFunction(1);
+                    mov.ShockWaveSpawnFunction(1);
+                    mov.camShake.Shake(10);
                     AudioManager.PlaySound("kill");
                     GameObject clone;
                     clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;

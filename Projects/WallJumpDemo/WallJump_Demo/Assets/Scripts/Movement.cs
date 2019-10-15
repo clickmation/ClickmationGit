@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Movement : MonoBehaviour
 {
     [SerializeField] Camera2DFollow camFol;
+    public CameraShake camShake;
     [SerializeField] CanvasGroup overlayCanvas;
 
     [Space]
@@ -380,6 +381,7 @@ public class Movement : MonoBehaviour
                 }
             }
             ShockWaveSpawnFunction(0.35f);
+            camShake.Shake(5);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
         }
@@ -639,7 +641,8 @@ public class Movement : MonoBehaviour
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        ShockWaveSpawnFunction(1);
+        ShockWaveSpawnFunction(2);
+        camShake.Shake(100);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
         deadPanel.SetActive(true);
@@ -647,6 +650,13 @@ public class Movement : MonoBehaviour
         deadPanelScore.text = score.ToString();
         overlayCanvas.alpha = 0.2f;
         Destroy(this.gameObject);
+        //this.gameObject.SetActive(false);
+        //StartCoroutine(DeadCoroutine());
+    }
+
+    IEnumerator DeadCoroutine ()
+    {
+        yield return new WaitForSeconds(2f);
     }
 
     public void AddCoin (int c)
