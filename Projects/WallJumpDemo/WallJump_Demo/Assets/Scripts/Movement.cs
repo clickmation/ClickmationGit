@@ -16,7 +16,9 @@ public class Movement : MonoBehaviour
     [SerializeField] GameObject[] trails;
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] Sprite[] sprites;
-    [SerializeField] GameObject shockWave;
+    [SerializeField] GameObject shockWaveDeath;
+    [SerializeField] GameObject shockWaveJump;
+    public GameObject shockWaveKill;
     public int coin;
     public Text coinText;
 
@@ -269,7 +271,7 @@ public class Movement : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
-        ShockWaveSpawnFunction(0.5f);
+        Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
         _speed = 100;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
@@ -380,7 +382,7 @@ public class Movement : MonoBehaviour
                     }
                 }
             }
-            ShockWaveSpawnFunction(0.35f);
+            Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
             camShake.Shake(5);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
@@ -584,11 +586,11 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public void ShockWaveSpawnFunction (float scale)
-    {
-        GameObject sw = Instantiate(shockWave, transform.position, Quaternion.Euler(0, 0, 0));
-        sw.transform.localScale = 10 * scale * Vector3.one;
-    }
+    //public void ShockWaveSpawnFunction (float scale)
+    //{
+    //    GameObject sw = Instantiate(shockWave, transform.position, Quaternion.Euler(0, 0, 0));
+    //    sw.transform.localScale = 10 * scale * Vector3.one;
+    //}
 
     IEnumerator StaminaCoroutine ()
     {
@@ -641,7 +643,7 @@ public class Movement : MonoBehaviour
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        ShockWaveSpawnFunction(2);
+        Instantiate(shockWaveDeath, transform.position, Quaternion.Euler(0, 0, 0));
         camShake.Shake(100);
         GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
