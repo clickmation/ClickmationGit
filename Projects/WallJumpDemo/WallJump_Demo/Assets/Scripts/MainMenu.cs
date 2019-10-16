@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
 
     [Header("SaveLoad")]
 
+    public int coin;
     public int curTrailIndex;
     public int curCharacterIndex;
     public int[] trailsArray = new int[20];
@@ -113,7 +114,8 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         SaveLoad.saveload.Load();
-        CoinScript.coinScript.coin = PlayerPrefs.GetInt("Coin");
+        coin += PlayerPrefs.GetInt("Coin");
+        PlayerPrefs.SetInt("Coin", 0);
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
@@ -246,7 +248,10 @@ public class MainMenu : MonoBehaviour
 
     public void Buy ()
     {
+        SaveLoad.saveload.Load();
+        coin -= 1000;
         Debug.Log("Bought");
+        SaveLoad.saveload.Save();
     }
 
     public void HowToNext ()

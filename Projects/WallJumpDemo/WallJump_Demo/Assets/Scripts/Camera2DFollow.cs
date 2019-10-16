@@ -82,7 +82,7 @@ public class Camera2DFollow : MonoBehaviour
         Time.timeScale = 1;
         if (mov.dead)
         {
-            CoinScript.coinScript.PlusCoin(mov.coin);
+            PlayerPrefs.SetInt("Coin", mov.coin);
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -92,7 +92,7 @@ public class Camera2DFollow : MonoBehaviour
         Time.timeScale = 1;
         if (mov.dead)
         {
-            CoinScript.coinScript.PlusCoin(mov.coin);
+            PlayerPrefs.SetInt("Coin", mov.coin);
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
