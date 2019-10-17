@@ -277,8 +277,10 @@ public class Movement : MonoBehaviour
                 if (vec == Vector2.zero)
                 {
                     wallJumped = true;
-                    rb.velocity = new Vector2(dir * speed, 0);
+                    _speed = speed;
+                    rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
+                    Debug.Log(dir + ", " + rb.velocity);
                     // WallJump
                 }
                 else
@@ -307,18 +309,19 @@ public class Movement : MonoBehaviour
                 }
                 else
                 {
-                    //if (vec == Vector2.zero)
-                    //{
-                        rb.velocity = new Vector2(dir * speed, 0);
+                    if (vec == Vector2.zero)
+                    {
+                        _speed = speed;
+                        rb.velocity = new Vector2(dir * _speed, 0);
                         rb.velocity += jumpForce * Vector2.up;
-                    //}
-                    //else
-                    //{
-                    //    panelJumped = true;
-                    //    _speed = Mathf.Abs(vec.x);
-                    //    rb.velocity = new Vector2(0, 0);
-                    //    rb.velocity += vec;
-                    //}
+                    }
+                    else
+                    {
+                        panelJumped = true;
+                        _speed = Mathf.Abs(vec.x);
+                        rb.velocity = new Vector2(0, 0);
+                        rb.velocity += vec;
+                    }
                 }
             }
             Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
