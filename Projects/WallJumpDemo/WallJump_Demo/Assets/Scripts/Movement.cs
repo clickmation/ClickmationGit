@@ -65,7 +65,7 @@ public class Movement : MonoBehaviour
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
 
-    public float lastVelocity;
+    //public float lastVelocity;
     public float lastSpeed;
 
     [Space]
@@ -167,20 +167,20 @@ public class Movement : MonoBehaviour
                 if (!jumpable) jumpable = true;
                 if (panelJumped) panelJumped = false;
             }
-            if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
+            //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
         else
         {
             if (!col.onGround && !wallJumped && !touchJumped)
             {
-                rb.velocity = new Vector2(0, -wallSlideSpeed);
+                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
             }
         }
 
-        if (!jumping)
-        {
+        //if (!jumping)
+        //{
 
-        }
+        //}
 
         if (Input.GetButtonDown("ChangeDir"))
         {
@@ -250,7 +250,6 @@ public class Movement : MonoBehaviour
         }
         else if (col.onWall && col.wallTag == "WallJump")
         {
-            wallJumped = true;
             //stamina -= staminaWallJumpEater;
             Jump(-1, Vector2.zero);
             AudioManager.PlaySound("groundJump");
@@ -272,13 +271,15 @@ public class Movement : MonoBehaviour
             //staminaFunction = staminaMaintain;
             if (side == -1)
             {
-                lastVelocity *= -1f;
+                //lastVelocity *= -1f;
                 dir *= -1f;
                 //if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 if (vec == Vector2.zero)
                 {
-                    rb.velocity = new Vector2(0.75f * lastVelocity, 0);
+                    wallJumped = true;
+                    rb.velocity = new Vector2(dir * speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
+                    // WallJump
                 }
                 else
                 {
@@ -291,6 +292,7 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
+                    // TouchJump
                  }
             if (col.wall != null) col.wall = null;
             }
@@ -298,31 +300,32 @@ public class Movement : MonoBehaviour
             {
                 if (panelJumped)
                 {
-                    dir = Mathf.Sign(vec.x);
-                    camFol.dir = dir;
+                    camFol.dir = Mathf.Sign(vec.x);
+                    dir = camFol.dir;
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
                 }
                 else
                 {
-                    if (vec == Vector2.zero)
-                    {
-                        rb.velocity = new Vector2(lastVelocity, 0);
+                    //if (vec == Vector2.zero)
+                    //{
+                        rb.velocity = new Vector2(dir * speed, 0);
                         rb.velocity += jumpForce * Vector2.up;
-                    }
-                    else
-                    {
-                        panelJumped = true;
-                        _speed = Mathf.Abs(vec.x);
-                        rb.velocity = new Vector2(0, 0);
-                        rb.velocity += vec;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    panelJumped = true;
+                    //    _speed = Mathf.Abs(vec.x);
+                    //    rb.velocity = new Vector2(0, 0);
+                    //    rb.velocity += vec;
+                    //}
                 }
             }
             Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
             camShake.Shake(5);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
+            //Debug.Log("Jumped");
         }
     }
 
@@ -499,8 +502,11 @@ public class Movement : MonoBehaviour
 
     public void OnWallExitFuntion()
     {
-        //if (col.tag == "TouchJump")
-        //{
+        if (!jumping)
+        {
+            camFol.dir *= -1;
+            //dir = camFol.dir;
+        }
         inputController.touchJump.gameObject.SetActive(false);
         inputController.jump.gameObject.SetActive(true);
         inputController.attackButton.SetActive(true);

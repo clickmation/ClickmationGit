@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TriggerFunction : MonoBehaviour
 {
-    Animator anim;
+    [SerializeField] Animator anim;
     [SerializeField] GameObject triggerObject;
     [SerializeField] TriggerType triggerType;
     [SerializeField] bool destroyed;
@@ -14,10 +14,10 @@ public class TriggerFunction : MonoBehaviour
         ACTIVE,
     }
 
-    void Start ()
-    {
-        anim = triggerObject.GetComponent<Animator>();
-    }
+    //void Start ()
+    //{
+    //    anim = triggerObject.transform.GetComponent<Animator>();
+    //}
 
     void OnTriggerEnter2D (Collider2D other)
     {
