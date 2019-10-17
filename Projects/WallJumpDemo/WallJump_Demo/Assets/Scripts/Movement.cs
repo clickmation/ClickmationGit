@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] Camera2DFollow camFol;
+    public Camera2DFollow camFol;
     public CameraShake camShake;
-    [SerializeField] CanvasGroup overlayCanvas;
+    GameMaster gm;
 
     [Space]
 
@@ -16,19 +16,14 @@ public class Movement : MonoBehaviour
     [SerializeField] GameObject[] trails;
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] Sprite[] sprites;
-    [SerializeField] GameObject shockWaveDeath;
     [SerializeField] GameObject shockWaveJump;
     public GameObject shockWaveKill;
-    public int coin;
-    public Text coinText;
+    public Button.ButtonClickedEvent jumpUp;
+    public Button.ButtonClickedEvent jumpDown;
+    public Button.ButtonClickedEvent attackFunction;
 
-    [Space]
-
-    [Header("Dead")]
-
-    public bool dead;
-    [SerializeField] GameObject deadPanel;
-    [SerializeField] GameObject pausePanel;
+    //[SerializeField] GameObject deadPanel;
+    //[SerializeField] GameObject pausePanel;
 
     //[Space]
 
@@ -127,25 +122,14 @@ public class Movement : MonoBehaviour
     [Header("Effects")]
 
     [SerializeField] GameObject playerParticle;
-    [SerializeField] GameObject deathParticle;
     [SerializeField] GameObject jumpParticle;
     [SerializeField] GameObject dragParticle;
     [SerializeField] GameObject attackTrail;
 
-    [Space]
-
-    [Header("Score")]
-
-    public int score;
-    public int scoreAdd;
-    public Text scoreText;
-    public float scoreAddDelay;
-    public Text deadPanelScore;
-    public Text pausePanelScore;
-
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameMaster.gameMaster;
         playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
         sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
         _speed = speed;
@@ -156,11 +140,10 @@ public class Movement : MonoBehaviour
         oriFever = fever;
         fever = 0;
         camFol.dir = dir;
-        GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
+        GameObject _deathParticle = Instantiate(gm.deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
-        StartCoroutine(ScoreCoroutine());
-        StartCoroutine(StaminaCoroutine());
-        StartCoroutine(FeverCoroutine());
+        //StartCoroutine(StaminaCoroutine());
+        //StartCoroutine(FeverCoroutine());
         //Time.timeScale = 0.2f;
     }
     // Update is called once per frame
@@ -467,7 +450,7 @@ public class Movement : MonoBehaviour
                 //staminaFunction = staminaAdd;
             if (col.onWall)
             {
-                Dead();
+                gm.Dead();
             }
             //if (!boosted)
             //{
@@ -507,7 +490,7 @@ public class Movement : MonoBehaviour
         camFol.dir = -dir;
         if (col.onGround)
         {
-            Dead();
+            gm.Dead();
         }
         //staminaFunction = staminaEat;
         //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
@@ -574,17 +557,6 @@ public class Movement : MonoBehaviour
     //{
     //    wallJumped = false;
     //}
-    IEnumerator ScoreCoroutine()
-    {
-        yield return new WaitForSeconds(1f);
-        scoreText.text = score.ToString();
-        while (!dead)
-        {
-            yield return new WaitForSeconds(scoreAddDelay);
-            score += scoreAdd;
-            scoreText.text = score.ToString();
-        }
-    }
 
     //public void ShockWaveSpawnFunction (float scale)
     //{
@@ -592,36 +564,36 @@ public class Movement : MonoBehaviour
     //    sw.transform.localScale = 10 * scale * Vector3.one;
     //}
 
-    IEnumerator StaminaCoroutine ()
-    {
-        while (!dead)
-        {
-            //staminaFunction.Invoke();
-            //staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-            //if (stamina <= 0)
-            //{
-            //    Debug.LogError("Dead");
-            //    dead = true;
-            //    break;
-            //}
-            yield return new WaitForFixedUpdate();
-        }
-    }
-    IEnumerator FeverCoroutine()
-    {
-        while (!dead)
-        {
-            fever -= feverEater;
-            if (fever <= 0)
-            {
-                fever = 0;
-                fevered = false;
-                feverEffect.SetActive(false);
-            }
-            feverImage.rectTransform.localScale = new Vector3(fever / oriFever, 1, 1);
-            yield return new WaitForFixedUpdate();
-        }
-    }
+    //IEnumerator StaminaCoroutine ()
+    //{
+    //    while (!dead)
+    //    {
+    //        //staminaFunction.Invoke();
+    //        //staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
+    //        //if (stamina <= 0)
+    //        //{
+    //        //    Debug.LogError("Dead");
+    //        //    dead = true;
+    //        //    break;
+    //        //}
+    //        yield return new WaitForFixedUpdate();
+    //    }
+    //}
+    //IEnumerator FeverCoroutine()
+    //{
+    //    while (!dead)
+    //    {
+    //        fever -= feverEater;
+    //        if (fever <= 0)
+    //        {
+    //            fever = 0;
+    //            fevered = false;
+    //            feverEffect.SetActive(false);
+    //        }
+    //        feverImage.rectTransform.localScale = new Vector3(fever / oriFever, 1, 1);
+    //        yield return new WaitForFixedUpdate();
+    //    }
+    //}
 
     //public void StaminaEat ()
     //{
@@ -637,52 +609,6 @@ public class Movement : MonoBehaviour
     //{
     //    //stamina += 0;
     //}
-
-    public void Dead ()
-    {
-        dead = true;
-        AudioManager.PlaySound("death");
-        camFol.enabled = false;
-        Instantiate(shockWaveDeath, transform.position, Quaternion.Euler(0, 0, 0));
-        camShake.Shake(100);
-        GameObject _deathParticle = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;
-        Destroy(_deathParticle, 3f);
-        deadPanel.SetActive(true);
-        scoreText.gameObject.SetActive(false);
-        deadPanelScore.text = score.ToString();
-        overlayCanvas.alpha = 0.2f;
-        Destroy(this.gameObject);
-        //this.gameObject.SetActive(false);
-        //StartCoroutine(DeadCoroutine());
-    }
-
-    IEnumerator DeadCoroutine ()
-    {
-        yield return new WaitForSeconds(2f);
-    }
-
-    public void AddCoin (int c)
-    {
-        coin += c;
-        coinText.text = coin.ToString();
-    }
-
-    public void Pause ()
-    {
-        inputController.gameObject.SetActive(false);
-        pausePanel.SetActive(true);
-        overlayCanvas.alpha = 0.2f;
-        pausePanelScore.text = score.ToString();
-        Time.timeScale = 0;
-    }
-
-    public void Resume ()
-    {
-        inputController.gameObject.SetActive(true);
-        pausePanel.SetActive(false);
-        Time.timeScale = 1;
-        overlayCanvas.alpha = 1.0f;
-    }
 
     public void OnCollisionEnter2D (Collision2D other)
     {

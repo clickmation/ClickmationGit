@@ -9,8 +9,7 @@ public class Spike : MonoBehaviour
     {
         if (other.transform.GetComponent<Movement>() != null)
         {
-            movement = other.transform.GetComponent<Movement>();
-            movement.Dead();
+            GameMaster.gameMaster.Dead();
         }
     }
 }

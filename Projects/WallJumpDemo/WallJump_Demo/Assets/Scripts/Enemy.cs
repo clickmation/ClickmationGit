@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
             //{
                 if (!mov.attacking)
                 {
-                    mov.Dead();
+                    GameMaster.gameMaster.Dead();
                 }
                 else
                 {

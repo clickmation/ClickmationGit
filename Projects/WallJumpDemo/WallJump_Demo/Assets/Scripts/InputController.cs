@@ -28,15 +28,15 @@ public class InputController : MonoBehaviour
     public GameObject attackButton;
     private Collider2D colType;
 
-    [Space]
+    //[Space]
 
-    [Header("Functions")]
+    //[Header("Functions")]
 
-    [SerializeField] private Button.ButtonClickedEvent dragjumpDown;
-    [SerializeField] private Button.ButtonClickedEvent dragjumpUp;
-    [SerializeField] private Button.ButtonClickedEvent boostFunction;
-    [SerializeField] private Button.ButtonClickedEvent jumpUp;
-    [SerializeField] private Button.ButtonClickedEvent jumpDown;
+    //[SerializeField] private Button.ButtonClickedEvent dragjumpDown;
+    //[SerializeField] private Button.ButtonClickedEvent dragjumpUp;
+    //[SerializeField] private Button.ButtonClickedEvent boostFunction;
+    //public Button.ButtonClickedEvent jumpUp;
+    //public Button.ButtonClickedEvent jumpDown;
 
     // Start is called before the first frame update
     void Start()
@@ -75,7 +75,7 @@ public class InputController : MonoBehaviour
                 else if (colType == jump)
                 {
                     mov.jump = true;
-                    jumpDown.Invoke();
+                    mov.jumpDown.Invoke();
                 }
             }
         }
@@ -102,7 +102,7 @@ public class InputController : MonoBehaviour
             if (colType == jump)
             {
                 mov.jump = false;
-                jumpUp.Invoke();
+                mov.jumpUp.Invoke();
             }
             //else if (colType == attack)
             //{

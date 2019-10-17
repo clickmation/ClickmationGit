@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class Camera2DFollow : MonoBehaviour
 {
-    [SerializeField] Movement mov;
     public Transform target;
     public float damping = 1;
     public float lookAheadFactor = 3;
@@ -76,30 +74,4 @@ public class Camera2DFollow : MonoBehaviour
             nextTimeToSearch = Time.time + 0.5f;
         }
     }
-
-    public void ReTry()
-    {
-        Time.timeScale = 1;
-        if (mov.dead)
-        {
-            PlayerPrefs.SetInt("Coin", mov.coin);
-        }
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void MainMenu ()
-    {
-        Time.timeScale = 1;
-        if (mov.dead)
-        {
-            PlayerPrefs.SetInt("Coin", mov.coin);
-        }
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-    }
-    //IEnumerator DeadCoroutine()
-    //{
-    //    yield return new WaitForSeconds(1f);
-    //    deadPanel.SetActive(true);
-    //    Destroy(this.gameObject);
-    //}
 }

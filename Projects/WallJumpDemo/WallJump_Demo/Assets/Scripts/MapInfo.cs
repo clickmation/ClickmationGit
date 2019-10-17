@@ -9,6 +9,7 @@ public class MapInfo : MonoBehaviour
     public string nextLevel;
     public Transform endPos;
     private bool spawned;
+    public Transform playerSpawnPoint;
 
     public Level[] levels;
     [System.Serializable]
@@ -26,6 +27,7 @@ public class MapInfo : MonoBehaviour
             mapgan.wherePlayerIs = mapIndex;
             MapInstantiate(nextLevel, -1);
             mapgan.MapSpawnDelete();
+            GameMaster.gameMaster.playerSpawnPoint = playerSpawnPoint.position;
         }
     }
 

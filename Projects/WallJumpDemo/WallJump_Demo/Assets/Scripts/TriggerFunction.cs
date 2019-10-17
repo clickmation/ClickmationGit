@@ -5,20 +5,32 @@ using UnityEngine;
 public class TriggerFunction : MonoBehaviour
 {
     Animator anim;
+    [SerializeField] GameObject triggerObject;
+    [SerializeField] TriggerType triggerType;
+    [SerializeField] bool destroyed;
+    enum TriggerType
+    {
+        ANIMATOR,
+        ACTIVE,
+    }
 
     void Start ()
     {
         anim = GetComponent<Animator>();
     }
 
-    void OnCollisionEnter2D (Collision2D other)
-    {
-        anim.SetTrigger("Triggered");
-    }
-
     void OnTriggerEnter2D (Collider2D other)
     {
-        anim.SetTrigger("Triggered");
+        switch (triggerType)
+        {
+            case TriggerType.ACTIVE:
+                if (destroyed) triggerObject.SetActive(false);
+                else triggerObject.SetActive(true);
+                break;
+            case TriggerType.ANIMATOR:
+                anim.SetTrigger("Triggered");
+                break;
+        }
     }
 
     public void Destroy ()

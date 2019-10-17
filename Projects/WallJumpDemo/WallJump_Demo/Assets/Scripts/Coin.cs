@@ -11,7 +11,7 @@ public class Coin : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            other.transform.GetComponent<Movement>().AddCoin(coinAddAmount);
+            GameMaster.gameMaster.AddCoin(coinAddAmount);
             AudioManager.PlaySound("coin");
             Destroy(this.gameObject);
         }
