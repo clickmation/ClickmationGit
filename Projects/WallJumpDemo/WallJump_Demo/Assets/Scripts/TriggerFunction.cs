@@ -33,6 +33,11 @@ public class TriggerFunction : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D (Collision2D other)
+    {
+        anim.SetTrigger("Triggered");
+    }
+
     public void Destroy ()
     {
         Destroy(this.gameObject);

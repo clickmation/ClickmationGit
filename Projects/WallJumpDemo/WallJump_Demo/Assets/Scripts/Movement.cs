@@ -155,71 +155,30 @@ public class Movement : MonoBehaviour
         }
         if (!col.onWall)
         {
-            //if (Input.GetButtonDown("AddSpeed") && !adding)
-            //{
-            //    adding = true;
-            //    staminaFunction = staminaEat;
-            //    StartCoroutine(AddingSpeedCoroutine(addingTime));
-            //}
-            //if (Input.GetButtonUp("AddSpeed") && adding)
-            //{
-            //    adding = false;
-            //    _addSpeed = 0;
-            //    curBoostStaminaEater = 0;
-            //    if (jumpable) staminaFunction = staminaAdd;
-            //}
             rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
-            //transform.position += new Vector3 (_speed * dir * Time.deltaTime, 0, 0);
-            // && !Input.GetButtonDown("Jump")
             if (!jumpButtonDown && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (rb.velocity.y < 0)
             {
-                if (jumpButtonDown) jumpButtonDown = false;
+                //if (jumpButtonDown) jumpButtonDown = false;
                 if (!jumpable) jumpable = true;
                 if (panelJumped) panelJumped = false;
             }
-            //else if (Input.GetButtonUp("Jump"))
-            //    jumpButtonDown = false;
             if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
-        //else if (Input.GetButtonDown("Jump") && col.wallTag == "WallJump")
-        //{
-        //    wallJumped = true;
-        //    if (col.wall != null) col.wall = null;
-        //    stamina -= staminaWallJumpEater;
-        //    ChangeCameraPosition();
-        //    Jump(-1);
-        //    //lightningParticle.SetActive(false);
-        //}
         else
         {
             if (!col.onGround && !wallJumped && !touchJumped)
             {
-                //if (col.wallTag == "TouchJump")
-                //    rb.velocity = boost ? (new Vector2(lastVelocity, 0)) : (new Vector2(0, -wallSlideSpeed));
-                //else if (col.wallTag == "WallJump")
-                    rb.velocity = new Vector2(0, -wallSlideSpeed);
-                //if (Input.GetButtonDown("AddSpeed")) lightningParticle.SetActive(true);
-                //else if (Input.GetButtonUp("AddSpeed")) lightningParticle.SetActive(false);
+                rb.velocity = new Vector2(0, -wallSlideSpeed);
             }
         }
 
         if (!jumpButtonDown)
         {
-            //if (Input.GetButtonDown("Jump") && col.onGround)
-            //{
-            //    Jump(1);
-            //    stamina -= staminaJumpEater;
-            //}
 
-            //if (stamina <= 0 && !dead)
-            //{
-            //    staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-            //    Dead();
-            //}
         }
 
         if (Input.GetButtonDown("ChangeDir"))
@@ -228,14 +187,6 @@ public class Movement : MonoBehaviour
             camFol.dir = dir;
         }
     }
-
-    //public void Ripple (float str)
-    //{
-    //    Camera c = Camera.main;
-    //    Vector3 v = c.WorldToScreenPoint(this.transform.position);
-    //    //Debug.Log(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight));
-    //    ripple.DropIt(new Vector2(v.x / c.pixelWidth, v.y / c.pixelHeight), str);
-    //}
 
     public void Attack()
     {
@@ -441,9 +392,14 @@ public class Movement : MonoBehaviour
     {
         if (!panelJumped)
         {
-            //if (jumpButtonDown) jumpButtonDown = false;
-            //if (!jumpable) jumpable = true;
-            panelJumped = false;
+            if (jumpButtonDown)
+            {
+                jumpButtonDown = false;
+                //AudioManager.PlaySound("groundJump");
+                //Jump(1, Vector2.zero);
+            }
+                //if (!jumpable) jumpable = true;
+                panelJumped = false;
             ///_staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
             //else
