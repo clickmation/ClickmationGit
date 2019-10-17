@@ -60,7 +60,8 @@ public class Movement : MonoBehaviour
     public bool touchJumped;
     public bool wallJumped;
     [SerializeField] private bool boosted;
-    public bool jumpButtonDown = true;
+    public bool jumping = true;
+    private bool jumpButtonDown;
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
 
@@ -156,13 +157,13 @@ public class Movement : MonoBehaviour
         if (!col.onWall)
         {
             rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
-            if (!jumpButtonDown && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
+            if (!jumping && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (rb.velocity.y < 0)
             {
-                //if (jumpButtonDown) jumpButtonDown = false;
+                if (jumping) jumping = false;
                 if (!jumpable) jumpable = true;
                 if (panelJumped) panelJumped = false;
             }
@@ -176,7 +177,7 @@ public class Movement : MonoBehaviour
             }
         }
 
-        if (!jumpButtonDown)
+        if (!jumping)
         {
 
         }
@@ -240,7 +241,8 @@ public class Movement : MonoBehaviour
 
     public void JumpButtonDown()
     {
-        if (col.onGround && !jumpButtonDown)
+        jumpButtonDown = true;
+        if (col.onGround && !jumping)
         {
             AudioManager.PlaySound("groundJump");
             Jump(1, Vector2.zero);
@@ -257,15 +259,16 @@ public class Movement : MonoBehaviour
     }
     public void JumpButtonUp()
     {
-        if (!panelJumped) jumpButtonDown = false;
+        if (!panelJumped) jumping = false;
+        jumpButtonDown = false;
     }
 
     public void Jump(int side, Vector2 vec)
     {
-        if (jumpable && !jumpButtonDown)
+        if (jumpable && !jumping)
         {
             jumpable = false;
-            jumpButtonDown = true;
+            jumping = true;
             //staminaFunction = staminaMaintain;
             if (side == -1)
             {
@@ -394,12 +397,12 @@ public class Movement : MonoBehaviour
         {
             if (jumpButtonDown)
             {
-                jumpButtonDown = false;
-                //AudioManager.PlaySound("groundJump");
-                //Jump(1, Vector2.zero);
+                //jumpButtonDown = false;
+                AudioManager.PlaySound("groundJump");
+                Jump(1, Vector2.zero);
             }
-                //if (!jumpable) jumpable = true;
-                panelJumped = false;
+            //if (!jumpable) jumpable = true;
+            panelJumped = false;
             ///_staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
             //else
@@ -466,7 +469,7 @@ public class Movement : MonoBehaviour
         //{
         //    Dead();
         //}
-        if (jumpButtonDown) jumpButtonDown = false;
+        if (jumping) jumping = false;
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
         if (col.wallTag == "WallJump")

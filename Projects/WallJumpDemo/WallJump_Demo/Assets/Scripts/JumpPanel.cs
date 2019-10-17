@@ -24,7 +24,7 @@ public class JumpPanel : MonoBehaviour
         {
             //Debug.Log("Triggered");
             mov = other.transform.GetComponent<Movement>();
-            mov.jumpButtonDown = false;
+            mov.jumping = false;
             mov.jumpable = true;
             if (panelType == PanelType.GROUND)
             {

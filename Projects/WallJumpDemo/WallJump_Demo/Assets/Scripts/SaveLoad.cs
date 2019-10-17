@@ -39,7 +39,7 @@ public class SaveLoad : MonoBehaviour
 
         binary.Serialize(fstream, saver);
         fstream.Close();
-        Debug.Log("Saved.");
+        //Debug.Log("Saved.");
     }
 
     public void Load()
@@ -50,7 +50,7 @@ public class SaveLoad : MonoBehaviour
             FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
             SaveManager saver = (SaveManager)binary.Deserialize(fstream);
             fstream.Close();
-            Debug.Log("Loaded.");
+            //Debug.Log("Loaded.");
 
             mainMenu.coin = saver.coin;
             mainMenu.curTrailIndex = saver.curTrailIndex;

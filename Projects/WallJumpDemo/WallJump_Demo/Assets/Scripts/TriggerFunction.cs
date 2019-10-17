@@ -16,7 +16,7 @@ public class TriggerFunction : MonoBehaviour
 
     void Start ()
     {
-        anim = GetComponent<Animator>();
+        anim = triggerObject.GetComponent<Animator>();
     }
 
     void OnTriggerEnter2D (Collider2D other)
