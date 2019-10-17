@@ -207,7 +207,7 @@ public class Movement : MonoBehaviour
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
         Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
-        _speed = 100;
+        _speed = 50;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
         rb.velocity = (new Vector2(dir * _speed, tmpV));
