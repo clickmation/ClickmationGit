@@ -28,7 +28,7 @@ public class ADManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            DestroyObject(this.gameObject);
         }
     }
 

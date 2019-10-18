@@ -27,6 +27,7 @@ public class SaveLoad : MonoBehaviour
         //Debug.Log(Application.persistentDataPath + "/saveFile.WJM");
 
         SaveManager saver = new SaveManager();
+        saver.highScore = mainMenu.highScore;
         saver.coin = mainMenu.coin;
         saver.curTrailIndex = mainMenu.curTrailIndex;
         saver.curCharacterIndex = mainMenu.curCharacterIndex;
@@ -52,6 +53,7 @@ public class SaveLoad : MonoBehaviour
             fstream.Close();
             //Debug.Log("Loaded.");
 
+            mainMenu.highScore = saver.highScore;
             mainMenu.coin = saver.coin;
             mainMenu.curTrailIndex = saver.curTrailIndex;
             mainMenu.curCharacterIndex = saver.curCharacterIndex;
@@ -81,6 +83,7 @@ public class SaveLoad : MonoBehaviour
 [System.Serializable]
 class SaveManager
 {
+    public int highScore;
     public int coin;
     public int curTrailIndex;
     public int curCharacterIndex;

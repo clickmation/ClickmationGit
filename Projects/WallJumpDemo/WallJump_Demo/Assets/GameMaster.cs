@@ -37,7 +37,9 @@ public class GameMaster : MonoBehaviour
 
     public int score;
     public int scoreAdd;
+    public int highScore;
     public Text scoreText;
+    public Text highScoreText;
     public float scoreAddDelay;
     public Text deadPanelScore;
     public Text pausePanelScore;
@@ -50,17 +52,24 @@ public class GameMaster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        highScore = PlayerPrefs.GetInt("HighScore");
         StartCoroutine(ScoreCoroutine());
     }
     IEnumerator ScoreCoroutine()
     {
         yield return new WaitForSeconds(1f);
         scoreText.text = score.ToString();
+        highScoreText.text = highScore.ToString();
         while (!dead)
         {
             yield return new WaitForSeconds(scoreAddDelay);
             score += scoreAdd;
             scoreText.text = score.ToString();
+            if (score > highScore)
+            {
+                //highScore = score;
+                highScoreText.text = score.ToString();
+            }
         }
     }
 
@@ -90,6 +99,10 @@ public class GameMaster : MonoBehaviour
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
         overlayCanvas.alpha = 0.2f;
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", score);
+        }
     }
 
     public void Pause()

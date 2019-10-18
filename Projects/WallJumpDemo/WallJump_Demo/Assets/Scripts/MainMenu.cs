@@ -6,10 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+
+    [Space]
+
+    [Header("UI")]
+
+    public Text highScoreText;
+
     [Space]
 
     [Header("SaveLoad")]
 
+    public int highScore;
     public int coin;
     public int curTrailIndex;
     public int curCharacterIndex;
@@ -114,6 +122,9 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         SaveLoad.saveload.Load();
+        if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
+        highScoreText.text = highScore.ToString();
+        PlayerPrefs.SetInt("HighScore", 0);
         coin += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
@@ -184,6 +195,7 @@ public class MainMenu : MonoBehaviour
 
     public void GameStart()
     {
+        PlayerPrefs.SetInt("HighScore", highScore);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
