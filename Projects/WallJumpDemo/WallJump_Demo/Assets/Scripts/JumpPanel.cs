@@ -28,7 +28,7 @@ public class JumpPanel : MonoBehaviour
             mov.jumpable = true;
             if (panelType == PanelType.GROUND)
             {
-                mov.Jump(1, SetVec(mov.dir, xVel, height));
+                mov.Jump(1, SetVec(mov.dir * Mathf.Sign(xVel), xVel, height));
             }
             else if (panelType == PanelType.WALL)
             {

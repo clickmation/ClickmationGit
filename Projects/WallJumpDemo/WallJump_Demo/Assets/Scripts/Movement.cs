@@ -318,7 +318,6 @@ public class Movement : MonoBehaviour
                     else
                     {
                         panelJumped = true;
-                        //_speed = Mathf.Abs(vec.x);
                         rb.velocity = Vector2.zero;
                         rb.velocity += vec;
                         Debug.Log(rb.velocity);
