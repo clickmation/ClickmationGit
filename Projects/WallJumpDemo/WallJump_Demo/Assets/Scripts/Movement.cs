@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
 
     public Rigidbody2D rb;
     public float speed;
-    private float _speed;
+    [SerializeField] private float _speed;
     //public float boostingTime;
     //public float maxSpeed;
     //public float addSpeed;
@@ -156,7 +156,8 @@ public class Movement : MonoBehaviour
         }
         if (!col.onWall)
         {
-            rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
+
+           if (!panelJumped) rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
             if (!jumping && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
@@ -164,8 +165,6 @@ public class Movement : MonoBehaviour
             else if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
-                if (!jumpable) jumpable = true;
-                if (panelJumped) panelJumped = false;
             }
             //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
@@ -198,6 +197,7 @@ public class Movement : MonoBehaviour
     {
         attacking = true;
         attackable = false;
+        if (panelJumped) panelJumped = false;
         float tmpV = rb.velocity.y;
         float tmpG = rb.gravityScale;
         rb.velocity = (new Vector2(dir * _speed, 0));
@@ -318,9 +318,10 @@ public class Movement : MonoBehaviour
                     else
                     {
                         panelJumped = true;
-                        _speed = Mathf.Abs(vec.x);
-                        rb.velocity = new Vector2(0, 0);
+                        //_speed = Mathf.Abs(vec.x);
+                        rb.velocity = Vector2.zero;
                         rb.velocity += vec;
+                        Debug.Log(rb.velocity);
                     }
                 }
             }
@@ -399,20 +400,24 @@ public class Movement : MonoBehaviour
     }
     public void OnGroundEnterFunction()
     {
-        if (!panelJumped)
+        if (!jumpable) jumpable = true;
+        if (panelJumped)
+        {
+            panelJumped = false;
+        }
+        else
         {
             if (jumpButtonDown)
             {
-                //jumpButtonDown = false;
                 AudioManager.PlaySound("groundJump");
                 Jump(1, Vector2.zero);
             }
             //if (!jumpable) jumpable = true;
-            panelJumped = false;
+            //panelJumped = false;
             ///_staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
             //else
-                //staminaFunction = staminaAdd;
+            //staminaFunction = staminaAdd;
             if (col.onWall)
             {
                 gm.Dead();
@@ -580,9 +585,10 @@ public class Movement : MonoBehaviour
 
     public void OnCollisionEnter2D (Collision2D other)
     {
-        if (!col.onGround)
+        if ((transform.position.y - other.transform.position.y) < 0.4f && !col.onGround)
         {
             _speed = 0;
+            Debug.Log("Hey");
         }
     }
 
