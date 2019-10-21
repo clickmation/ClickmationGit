@@ -10,6 +10,8 @@ public class Collision : MonoBehaviour
     public LayerMask wallLayer;
 
     [Space]
+	
+	public Animator animator;
 
     public bool onGround;
     private bool _onGround;
@@ -52,7 +54,8 @@ public class Collision : MonoBehaviour
     void Update()
     {
         onGround = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, collisionRadius, groundLayer);
-        onWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer)
+        animator.SetBool("Ground", onGround);
+		onWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer)
             || Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, collisionRadius, wallLayer);
 
         onRightWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, collisionRadius, wallLayer);

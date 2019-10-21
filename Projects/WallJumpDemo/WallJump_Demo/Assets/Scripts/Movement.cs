@@ -37,6 +37,7 @@ public class Movement : MonoBehaviour
     [Header("Default")]
 
     public Rigidbody2D rb;
+	public Animator animator;
     public float speed;
     [SerializeField] private float _speed;
     //public float boostingTime;
