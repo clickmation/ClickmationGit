@@ -53,6 +53,7 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         highScore = PlayerPrefs.GetInt("HighScore");
+        PlayerPrefs.SetInt("HighScore", 0);
         StartCoroutine(ScoreCoroutine());
     }
     IEnumerator ScoreCoroutine()
@@ -67,7 +68,6 @@ public class GameMaster : MonoBehaviour
             scoreText.text = score.ToString();
             if (score > highScore)
             {
-                //highScore = score;
                 highScoreText.text = score.ToString();
             }
         }
@@ -102,6 +102,7 @@ public class GameMaster : MonoBehaviour
         if (score > highScore)
         {
             PlayerPrefs.SetInt("HighScore", score);
+            highScore = score;
         }
     }
 
@@ -158,6 +159,7 @@ public class GameMaster : MonoBehaviour
         {
             PlayerPrefs.SetInt("Coin", coin);
         }
+        PlayerPrefs.SetInt("HighScore", highScore);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }

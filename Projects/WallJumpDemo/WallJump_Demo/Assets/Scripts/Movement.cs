@@ -61,7 +61,7 @@ public class Movement : MonoBehaviour
     public bool wallJumped;
     [SerializeField] private bool boosted;
     public bool jumping = true;
-    private bool jumpButtonDown;
+    [SerializeField] private bool jumpButtonDown;
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
 
@@ -193,7 +193,7 @@ public class Movement : MonoBehaviour
         if (attackable) StartCoroutine(AttackCoroutine());
     }
 
-    IEnumerator AttackCoroutine ()
+    public IEnumerator AttackCoroutine ()
     {
         attacking = true;
         attackable = false;
@@ -210,10 +210,10 @@ public class Movement : MonoBehaviour
         _speed = 50;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
-        rb.velocity = (new Vector2(dir * _speed, tmpV));
+        if (!jumping)
+            rb.velocity = (new Vector2(dir * _speed, tmpV));
         rb.gravityScale = tmpG;
         attacking = false;
-        rb.gravityScale = 6;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
         yield return new WaitForSeconds(attackDelay);
         attackable = true;
@@ -493,7 +493,8 @@ public class Movement : MonoBehaviour
             panelJumped = false;
             inputController.touchJump.gameObject.SetActive(true);
             inputController.jump.gameObject.SetActive(false);
-            inputController.attackButton.SetActive(false);
+            inputController.attack.gameObject.SetActive(false);
+            //inputController.attackButton.SetActive(false);
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
         }
@@ -516,7 +517,8 @@ public class Movement : MonoBehaviour
         }
         inputController.touchJump.gameObject.SetActive(false);
         inputController.jump.gameObject.SetActive(true);
-        inputController.attackButton.SetActive(true);
+        inputController.attack.gameObject.SetActive(true);
+        //inputController.attackButton.SetActive(true);
         //}
         //inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);

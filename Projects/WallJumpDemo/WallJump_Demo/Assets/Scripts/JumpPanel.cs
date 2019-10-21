@@ -26,6 +26,11 @@ public class JumpPanel : MonoBehaviour
             mov = other.transform.GetComponent<Movement>();
             mov.jumping = false;
             mov.jumpable = true;
+            if (mov.attacking)
+            {
+                StopCoroutine(mov.AttackCoroutine());
+                mov.attacking = false;
+            }
             if (panelType == PanelType.GROUND)
             {
                 mov.Jump(1, SetVec(mov.dir * Mathf.Sign(xVel), xVel, height));
