@@ -83,8 +83,9 @@ public class InputController : MonoBehaviour
                         //isClicked = true;
                         //jumpDir.gameObject.SetActive(true);
                         Vector2 vec = GetJumpingDirection();
-                        //Debug.Log(vec);
-                        mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
+                    //Debug.Log(vec);
+                    touchJump.gameObject.SetActive(false);
+                    mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
                         //}
                     }
                 }

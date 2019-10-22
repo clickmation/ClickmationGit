@@ -22,6 +22,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] CameraShake camShake;
     public Vector3 playerSpawnPoint;
     public Button attackButton;
+    [SerializeField] private RectTransform attackCoolTimeBar;
 
     [Space]
 
@@ -56,6 +57,19 @@ public class GameMaster : MonoBehaviour
         PlayerPrefs.SetInt("HighScore", 0);
         StartCoroutine(ScoreCoroutine());
     }
+
+    public IEnumerator AttackCoolTimeBarCoroutine(float coolTime)
+    {
+        attackCoolTimeBar.gameObject.SetActive(true);
+        for (float t = 0; t < coolTime; t += Time.deltaTime)
+        {
+            attackCoolTimeBar.localScale = new Vector3(Mathf.Lerp(0, 1, t / coolTime), 1, 1);
+            yield return new WaitForFixedUpdate();
+        }
+        attackCoolTimeBar.gameObject.SetActive(false);
+        mov.attackable = true;
+    }
+
     IEnumerator ScoreCoroutine()
     {
         yield return new WaitForSeconds(1f);
@@ -149,6 +163,7 @@ public class GameMaster : MonoBehaviour
         {
             PlayerPrefs.SetInt("Coin", coin);
         }
+        PlayerPrefs.SetInt("HighScore", highScore);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

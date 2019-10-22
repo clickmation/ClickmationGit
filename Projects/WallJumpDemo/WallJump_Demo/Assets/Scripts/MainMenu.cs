@@ -136,6 +136,8 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("TrailsArray1", 1);
         PlayerPrefs.SetInt("TrailsArray2", 1);
         PlayerPrefs.SetInt("CharactersArray1", 1);
+        PlayerPrefs.SetInt("CharactersArray2", 1);
+        PlayerPrefs.SetInt("CharactersArray3", 1);
 
         for (int i = 0; i < 20; i++)
         {

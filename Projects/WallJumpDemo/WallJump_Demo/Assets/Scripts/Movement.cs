@@ -37,7 +37,8 @@ public class Movement : MonoBehaviour
     [Header("Default")]
 
     public Rigidbody2D rb;
-	public Animator animator;
+    [SerializeField] private Animator animator;
+    [SerializeField] private RotationController rotCon;
     public float speed;
     [SerializeField] private float _speed;
     //public float boostingTime;
@@ -57,11 +58,13 @@ public class Movement : MonoBehaviour
     public bool attackable;
     public float attackTime;
     public float attackDelay;
+    private float gravity;
 
     public bool touchJumped;
     public bool wallJumped;
     [SerializeField] private bool boosted;
     public bool jumping = true;
+    private bool _jumping;
     [SerializeField] private bool jumpButtonDown;
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
@@ -141,6 +144,7 @@ public class Movement : MonoBehaviour
         //oriStamina = stamina;
         oriFever = fever;
         fever = 0;
+        gravity = rb.gravityScale;
         camFol.dir = dir;
         GameObject _deathParticle = Instantiate(gm.deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
@@ -151,6 +155,13 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        animator.SetFloat("Yvel", rb.velocity.y);
+
+        if (Input.GetButtonDown("ChangeDir"))
+        {
+            dir *= -1f;
+            camFol.dir = dir;
+        }
         if (Input.GetButtonDown("Attack") && attackable)
         {
             Attack();
@@ -166,6 +177,8 @@ public class Movement : MonoBehaviour
             else if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
+                if (jumping != _jumping) rotCon.SetRotation(Vector2.zero);
+                _jumping = jumping;
             }
             //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
@@ -181,12 +194,6 @@ public class Movement : MonoBehaviour
         //{
 
         //}
-
-        if (Input.GetButtonDown("ChangeDir"))
-        {
-            dir *= -1f;
-            camFol.dir = dir;
-        }
     }
 
     public void Attack()
@@ -199,8 +206,7 @@ public class Movement : MonoBehaviour
         attacking = true;
         attackable = false;
         if (panelJumped) panelJumped = false;
-        float tmpV = rb.velocity.y;
-        float tmpG = rb.gravityScale;
+        //float tmpV = rb.velocity.y;
         rb.velocity = (new Vector2(dir * _speed, 0));
         rb.gravityScale = 0;
         _speed = 0;
@@ -211,13 +217,11 @@ public class Movement : MonoBehaviour
         _speed = 50;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
-        if (!jumping)
-            rb.velocity = (new Vector2(dir * _speed, tmpV));
-        rb.gravityScale = tmpG;
+        if (!jumping) rb.velocity = (new Vector2(dir * _speed, 0));
+        rb.gravityScale = gravity;
         attacking = false;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
-        yield return new WaitForSeconds(attackDelay);
-        attackable = true;
+        StartCoroutine(GameMaster.gameMaster.AttackCoolTimeBarCoroutine(attackDelay));
     }
 
     //public void Boost()
@@ -269,6 +273,7 @@ public class Movement : MonoBehaviour
         {
             jumpable = false;
             jumping = true;
+            _jumping = jumping;
             //staminaFunction = staminaMaintain;
             if (side == -1)
             {
@@ -281,7 +286,8 @@ public class Movement : MonoBehaviour
                     _speed = speed;
                     rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
-                    Debug.Log(dir + ", " + rb.velocity);
+                    rotCon.SetRotation(rb.velocity);
+                    //Debug.Log(dir + ", " + rb.velocity);
                     // WallJump
                 }
                 else
@@ -295,6 +301,7 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
+                    rotCon.SetRotation(rb.velocity);
                     // TouchJump
                  }
             if (col.wall != null) col.wall = null;
@@ -307,6 +314,7 @@ public class Movement : MonoBehaviour
                     dir = camFol.dir;
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
+                    rotCon.SetRotation(rb.velocity);
                 }
                 else
                 {
@@ -321,7 +329,7 @@ public class Movement : MonoBehaviour
                         panelJumped = true;
                         rb.velocity = Vector2.zero;
                         rb.velocity += vec;
-                        Debug.Log(rb.velocity);
+                        //Debug.Log(rb.velocity);
                     }
                 }
             }
@@ -516,7 +524,6 @@ public class Movement : MonoBehaviour
             camFol.dir *= -1;
             //dir = camFol.dir;
         }
-        inputController.touchJump.gameObject.SetActive(false);
         inputController.jump.gameObject.SetActive(true);
         inputController.attack.gameObject.SetActive(true);
         //inputController.attackButton.SetActive(true);
@@ -590,7 +597,7 @@ public class Movement : MonoBehaviour
         if ((transform.position.y - other.transform.position.y) < 0.4f && !col.onGround)
         {
             _speed = 0;
-            Debug.Log("Hey");
+            //Debug.Log("Hey");
         }
     }
 

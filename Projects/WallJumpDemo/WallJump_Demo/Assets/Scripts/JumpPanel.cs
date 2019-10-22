@@ -28,11 +28,12 @@ public class JumpPanel : MonoBehaviour
             mov.jumpable = true;
             if (mov.attacking)
             {
-                StopCoroutine(mov.AttackCoroutine());
+                //StopCoroutine(mov.AttackCoroutine());
                 mov.attacking = false;
             }
             if (panelType == PanelType.GROUND)
             {
+                mov.panelJumped = false;
                 mov.Jump(1, SetVec(mov.dir * Mathf.Sign(xVel), xVel, height));
             }
             else if (panelType == PanelType.WALL)
