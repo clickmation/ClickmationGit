@@ -115,8 +115,8 @@ public class Movement : MonoBehaviour
         Destroy(_deathParticle, 3f);
         //StartCoroutine(StaminaCoroutine());
         //StartCoroutine(FeverCoroutine());
-        //Time.timeScale = 0.2f;
     }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -250,6 +250,7 @@ public class Movement : MonoBehaviour
             jumpable = false;
             jumping = true;
             _jumping = jumping;
+            rb.gravityScale = gravity;
             if (side == -1)
             {
                 //lastVelocity *= -1f;

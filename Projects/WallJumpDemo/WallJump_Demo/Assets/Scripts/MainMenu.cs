@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
     [Header("UI")]
 
     public Text highScoreText;
+    public Text coinText;
 
     [Space]
 
@@ -35,7 +36,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool shop;
     [SerializeField] bool howTo;
     [SerializeField] bool customization;
-
+    [SerializeField] bool sound;
     [Space]
 
     [Header("Panels")]
@@ -44,15 +45,17 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject shopObj;
     [SerializeField] GameObject howToObj;
     [SerializeField] GameObject cusObj;
+    [SerializeField] GameObject soundObj;
 
     [Space]
 
     [Header("Buttons")]
 
-    [SerializeField] Button shopButton;
-    [SerializeField] Button howToButton;
-    [SerializeField] Button gameStartButton;
-    [SerializeField] Button customizationButton;
+    [SerializeField] Image shopButton;
+    [SerializeField] Image howToButton;
+    [SerializeField] Image gameStartButton;
+    [SerializeField] Image customizationButton;
+    [SerializeField] Image soundButton;
 
     [Space]
 
@@ -118,6 +121,12 @@ public class MainMenu : MonoBehaviour
         public AudioClip bgm;
     }
 
+    //[Space]
+
+    //[Header("Sound")]
+
+    //public 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -127,6 +136,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("HighScore", 0);
         coin += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
+        coinText.text = coin.ToString();
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
@@ -155,21 +165,33 @@ public class MainMenu : MonoBehaviour
     {
         if (!shop)
         {
+            howTo = false;
             shop = true;
+            customization = false;
+            sound = false;
             mainMenu.SetActive(false);
             shopObj.SetActive(true);
-            howToButton.interactable = false;
-            gameStartButton.interactable = false;
-            customizationButton.interactable = false;
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (200, 200, 200, 128);
+            shopButton.color = new Color32(255, 255, 255, 255);
+            customizationButton.color = new Color32 (200, 200, 200, 128);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
         }
         else
         {
             shop = false;
             mainMenu.SetActive(true);
             shopObj.SetActive(false);
-            howToButton.interactable = true;
-            gameStartButton.interactable = true;
-            customizationButton.interactable = true;
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (255, 255, 255, 255);
+            customizationButton.color = new Color32 (255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(255, 255, 255, 255);
         }
     }
 
@@ -178,20 +200,32 @@ public class MainMenu : MonoBehaviour
         if (!howTo)
         {
             howTo = true;
+            shop = false;
+            customization = false;
+            sound = false;
             mainMenu.SetActive(false);
             howToObj.SetActive(true);
-            shopButton.interactable = false;
-            gameStartButton.interactable = false;
-            customizationButton.interactable = false;
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32 (200, 200, 200, 128);
+            customizationButton.color = new Color32 (200, 200, 200, 128);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
         }
         else
         {
             howTo = false;
             mainMenu.SetActive(true);
             howToObj.SetActive(false);
-            shopButton.interactable = true;
-            gameStartButton.interactable = true;
-            customizationButton.interactable = true;
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            shopButton.color = new Color32 (255, 255, 255, 255);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32 (255, 255, 255, 255);
         }
     }
 
@@ -205,7 +239,10 @@ public class MainMenu : MonoBehaviour
     {
         if (!customization)
         {
+            howTo = false;
+            shop = false;
             customization = true;
+            sound = false;
             SaveLoad.saveload.Load();
             trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
             characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
@@ -243,20 +280,63 @@ public class MainMenu : MonoBehaviour
             //bgmImage = bgms[bgmIndex].image;
             //bgmsetting;
             mainMenu.SetActive(false);
+            howToObj.SetActive(false);
+            shopObj.SetActive(false);
             cusObj.SetActive(true);
-            shopButton.interactable = false;
-            howToButton.interactable = false;
-            gameStartButton.interactable = false;
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (200, 200, 200, 128);
+            shopButton.color = new Color32(200, 200, 200, 128);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32 (200, 200, 200, 128);
         }
         else
         {
             Destroy(curTrail);
             customization = false;
-            cusObj.SetActive(false);
             mainMenu.SetActive(true);
-            shopButton.interactable = true;
-            howToButton.interactable = true;
-            gameStartButton.interactable = true;
+            howToObj.SetActive(false);
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32 (255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32 (255, 255, 255, 255);
+        }
+    }
+
+    public void Sound()
+    {
+        if (!sound)
+        {
+            howTo = false;
+            shop = true;
+            customization = false;
+            sound = true;
+            mainMenu.SetActive(false);
+            shopObj.SetActive(false);
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(true);
+            howToButton.color = new Color32(200, 200, 200, 128);
+            shopButton.color = new Color32(200, 200, 200, 128);
+            customizationButton.color = new Color32(200, 200, 200, 128);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
+        }
+        else
+        {
+            sound = false;
+            mainMenu.SetActive(true);
+            shopObj.SetActive(false);
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32(255, 255, 255, 255);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(255, 255, 255, 255);
         }
     }
 

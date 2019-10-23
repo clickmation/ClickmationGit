@@ -91,6 +91,21 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
     }
 
+    bool timeScaleTriggered;
+    public void TimeScaleFunction()
+    {
+        if (!timeScaleTriggered)
+        {
+            timeScaleTriggered = true;
+            Time.timeScale = 0.2f;
+        }
+        else
+        {
+            timeScaleTriggered = false;
+            Time.timeScale = 1f;
+        }
+    }
+
     public void StaminaActiveTrue(int c)
     {
         if (!barActivated)
