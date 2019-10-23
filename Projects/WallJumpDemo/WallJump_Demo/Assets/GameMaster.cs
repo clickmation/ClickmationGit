@@ -169,6 +169,7 @@ public class GameMaster : MonoBehaviour
     {
         feverStructs[index].started = true;
         scoreMultiplier++;
+        if (index == 0) feverEffect.SetActive(true);
         while (feverStructs[index].fever >= feverStructs[index].feverStopPoint)
         {
             feverStructs[index].fever -= feverStructs[index].feverEater;
@@ -179,6 +180,7 @@ public class GameMaster : MonoBehaviour
         feverStructs[index].started = false;
         if (index == 0)
         {
+            feverEffect.SetActive(false);
             for (int i = 1; i < feverStructs.Length; i++)
             {
                 feverStructs[i].fever = 0;
