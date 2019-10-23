@@ -261,7 +261,7 @@ public class Movement : MonoBehaviour
                     _speed = speed;
                     rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
-                    rotCon.SetRotation(0.05f, rb.velocity);
+                    rotCon.SetRotation(0.1f, rb.velocity);
                     //Debug.Log(dir + ", " + rb.velocity);
                     // WallJump
                 }
@@ -276,7 +276,7 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(0.05f, rb.velocity);
+                    rotCon.SetRotation(0.1f, rb.velocity);
                     // TouchJump
                  }
             if (col.wall != null) col.wall = null;
@@ -289,7 +289,7 @@ public class Movement : MonoBehaviour
                     dir = camFol.dir;
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(0.05f, rb.velocity);
+                    rotCon.SetRotation(0.1f, rb.velocity);
                 }
                 else
                 {
