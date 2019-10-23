@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour
 {
-    public float wallStaminaEater;
+    public int wallStaminaCount;
     public float wallSlideSpeed;
     [SerializeField] float vecX;
     [SerializeField] float vecY;

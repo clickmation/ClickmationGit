@@ -26,6 +26,16 @@ public class GameMaster : MonoBehaviour
 
     [Space]
 
+    [Header("Stamina")]
+
+    public int staminaCount;
+    [SerializeField] private Transform staminaBarParent;
+    [SerializeField] private GameObject staminaBar;
+    [SerializeField] private List<GameObject> staminaBars = new List<GameObject>();
+    private bool barActivated;
+
+    [Space]
+
     [Header("Dead")]
 
     public bool dead;
@@ -56,6 +66,56 @@ public class GameMaster : MonoBehaviour
         highScore = PlayerPrefs.GetInt("HighScore");
         PlayerPrefs.SetInt("HighScore", 0);
         StartCoroutine(ScoreCoroutine());
+    }
+
+    public void StaminaActiveTrue(int c)
+    {
+        if (!barActivated)
+        {
+            barActivated = true;
+            staminaCount = c;
+            staminaBarParent.gameObject.SetActive(true);
+            for (int i = 0; i < c; i++)
+            {
+                GameObject b = Instantiate(staminaBar, staminaBarParent);
+                b.GetComponent<RectTransform>().localPosition = new Vector3(i * 1336 / (float)c - 668, 0, 0);
+                b.GetComponent<RectTransform>().localScale = new Vector3(1 / (float)c, 1, 1);
+                staminaBars.Add(b);
+            }
+        }
+        else if (staminaCount == 0)
+        {
+            Dead();
+        }
+    }
+
+    public void WallJump()
+    {
+        staminaBars[--staminaCount].SetActive(false);
+
+    }
+
+    public void StaminaActiveFalse ()
+    {
+        barActivated = false;
+        StartCoroutine(StaminaActiveFalseCoroutine());
+    }
+
+    IEnumerator StaminaActiveFalseCoroutine ()
+    {
+        for (int i = staminaCount; i < staminaBars.Count; i++)
+        {
+            yield return new WaitForSeconds(0.2f);
+            staminaBars[i].SetActive(true);
+        }
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < staminaBars.Count; i++)
+        {
+            Destroy(staminaBars[i]);
+        }
+        staminaBars.Clear();
+        staminaCount = 0;
+        staminaBarParent.gameObject.SetActive(false);
     }
 
     public IEnumerator AttackCoolTimeBarCoroutine(float coolTime)

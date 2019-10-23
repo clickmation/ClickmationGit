@@ -81,27 +81,6 @@ public class Movement : MonoBehaviour
     public bool jumpable;
     public bool panelJumped;
 
-    //[Space]
-
-    //[Header("Stamina")]
-
-    //public float stamina;
-    //private float oriStamina;
-    //public float staminaEater;
-    //private float _staminaEater;
-    //public float staminaAdder;
-    //public float boostStaminaEater;
-    //private float curBoostStaminaEater;
-    //public float staminaJumpEater;
-    //public float staminaWallJumpEater;
-    //public float staminaTouchJumpEater;
-    //public Image staminaImage;
-    //public Button.ButtonClickedEvent staminaFunction;
-    //[SerializeField] private Button.ButtonClickedEvent staminaEat;
-    //[SerializeField] private Button.ButtonClickedEvent staminaAdd;
-    //[SerializeField] private Button.ButtonClickedEvent staminaMaintain;
-    //[SerializeField] private GameObject lightningParticle;
-
     [Space]
 
     [Header("Fever")]
@@ -138,10 +117,8 @@ public class Movement : MonoBehaviour
         playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
         sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
         _speed = speed;
-        //_staminaEater = staminaEater;
         speedMultiflier = 1f;
         col = GetComponent<Collision>();
-        //oriStamina = stamina;
         oriFever = fever;
         fever = 0;
         gravity = rb.gravityScale;
@@ -251,11 +228,10 @@ public class Movement : MonoBehaviour
         {
             AudioManager.PlaySound("groundJump");
             Jump(1, Vector2.zero);
-            //stamina -= staminaJumpEater;
         }
         else if (col.onWall && col.wallTag == "WallJump")
         {
-            //stamina -= staminaWallJumpEater;
+            GameMaster.gameMaster.WallJump();
             Jump(-1, Vector2.zero);
             AudioManager.PlaySound("groundJump");
             //lightningParticle.SetActive(false);
@@ -274,7 +250,6 @@ public class Movement : MonoBehaviour
             jumpable = false;
             jumping = true;
             _jumping = jumping;
-            //staminaFunction = staminaMaintain;
             if (side == -1)
             {
                 //lastVelocity *= -1f;
@@ -422,7 +397,7 @@ public class Movement : MonoBehaviour
             }
             //if (!jumpable) jumpable = true;
             //panelJumped = false;
-            ///_staminaEater = staminaEater;
+            //_staminaEater = staminaEater;
             //if (adding) staminaFunction = staminaEat;
             //else
             //staminaFunction = staminaAdd;
@@ -447,6 +422,7 @@ public class Movement : MonoBehaviour
                 fevered = true;
                 feverEffect.SetActive(true);
             }
+            GameMaster.gameMaster.StaminaActiveFalse();
             _speed = speed;
             AudioManager.PlaySound("landing");
             //Debug.Log("Entered");
@@ -455,8 +431,6 @@ public class Movement : MonoBehaviour
     public void OnGroundExitFunction()
     {
         lastSpeed = _speed;
-        //staminaFunction = staminaEat;
-        //staminaFunction = staminaMaintain;
         //Debug.Log("Exited");
     }
     public void OnWallEnterFunction()
@@ -470,11 +444,9 @@ public class Movement : MonoBehaviour
         {
             gm.Dead();
         }
-        //staminaFunction = staminaEat;
         //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
         if (col.wall.GetComponent<Wall>() != null)
         {
-            //_staminaEater = col.wall.GetComponent<Wall>().wallStaminaEater;
             wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         }
         //StopCoroutine(SpeedLerp());
@@ -484,10 +456,6 @@ public class Movement : MonoBehaviour
         //    _addSpeed = 0;
         //    curBoostStaminaEater = 0;
         //}
-        //if (stamina == 0)
-        //{
-        //    Dead();
-        //}
         if (jumping) jumping = false;
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
@@ -495,6 +463,7 @@ public class Movement : MonoBehaviour
         {
             jumpable = true;
             panelJumped = false;
+            GameMaster.gameMaster.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
         }
         else if (col.wallTag == "TouchJump")
         {
@@ -506,6 +475,7 @@ public class Movement : MonoBehaviour
             //inputController.attackButton.SetActive(false);
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
+            GameMaster.gameMaster.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
         }
         //else if (col.wallTag == "WallPanel")
         //{
@@ -546,18 +516,18 @@ public class Movement : MonoBehaviour
     //    sw.transform.localScale = 10 * scale * Vector3.one;
     //}
 
-    //IEnumerator StaminaCoroutine ()
+    //IEnumerator StaminaCoroutine()
     //{
-    //    while (!dead)
+    //    while (!GameMaster.gameMaster.dead)
     //    {
-    //        //staminaFunction.Invoke();
-    //        //staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-    //        //if (stamina <= 0)
-    //        //{
-    //        //    Debug.LogError("Dead");
-    //        //    dead = true;
-    //        //    break;
-    //        //}
+    //        staminaFunction.Invoke();
+    //        staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
+    //        if (stamina <= 0)
+    //        {
+    //            Debug.LogError("Dead");
+    //            GameMaster.gameMaster.Dead();
+    //            break;
+    //        }
     //        yield return new WaitForFixedUpdate();
     //    }
     //}
@@ -577,9 +547,9 @@ public class Movement : MonoBehaviour
     //    }
     //}
 
-    //public void StaminaEat ()
+    //public void StaminaEat()
     //{
-    //    stamina -= (_staminaEater + curBoostStaminaEater);
+    //    stamina -= _staminaEater;
     //    if (stamina <= 0) stamina = 0;
     //}
     //public void StaminaAdd()
