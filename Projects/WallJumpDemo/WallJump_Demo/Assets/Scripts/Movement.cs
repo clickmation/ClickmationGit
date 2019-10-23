@@ -395,38 +395,23 @@ public class Movement : MonoBehaviour
                 AudioManager.PlaySound("groundJump");
                 Jump(1, Vector2.zero);
             }
-            //if (!jumpable) jumpable = true;
-            //panelJumped = false;
-            //_staminaEater = staminaEater;
-            //if (adding) staminaFunction = staminaEat;
-            //else
-            //staminaFunction = staminaAdd;
-            if (col.onWall)
-            {
-                gm.Dead();
-            }
-            //if (!boosted)
-            //{
-            //    StartCoroutine(SpeedLerp());
-            //}
-            //if (jumpButtonDown)
-            //{
-            //    jumpButtonDown = false;
-            //}
             if (wallJumped) wallJumped = false;
             if (touchJumped) touchJumped = false;
-            //if (!fevered) fever += stamina;
             if (fever >= oriFever)
             {
                 fever = oriFever;
                 fevered = true;
                 feverEffect.SetActive(true);
             }
-            GameMaster.gameMaster.StaminaActiveFalse();
             _speed = speed;
             AudioManager.PlaySound("landing");
             //Debug.Log("Entered");
         }
+        if (col.onWall)
+        {
+            gm.Dead();
+        }
+        GameMaster.gameMaster.StaminaActiveFalse();
     }
     public void OnGroundExitFunction()
     {
