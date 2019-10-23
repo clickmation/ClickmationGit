@@ -154,7 +154,7 @@ public class Movement : MonoBehaviour
             else if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
-                if (jumping != _jumping) rotCon.SetRotation(Vector2.zero);
+                if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero);
                 _jumping = jumping;
             }
             //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
@@ -198,7 +198,7 @@ public class Movement : MonoBehaviour
         rb.gravityScale = gravity;
         attacking = false;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
-        StartCoroutine(GameMaster.gameMaster.AttackCoolTimeBarCoroutine(attackDelay));
+        StartCoroutine(gm.AttackCoolTimeBarCoroutine(attackDelay));
     }
 
     //public void Boost()
@@ -231,7 +231,7 @@ public class Movement : MonoBehaviour
         }
         else if (col.onWall && col.wallTag == "WallJump")
         {
-            GameMaster.gameMaster.WallJump();
+            gm.WallJump();
             Jump(-1, Vector2.zero);
             AudioManager.PlaySound("groundJump");
             //lightningParticle.SetActive(false);
@@ -261,7 +261,7 @@ public class Movement : MonoBehaviour
                     _speed = speed;
                     rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
-                    rotCon.SetRotation(rb.velocity);
+                    rotCon.SetRotation(0.2f, rb.velocity);
                     //Debug.Log(dir + ", " + rb.velocity);
                     // WallJump
                 }
@@ -276,7 +276,7 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(rb.velocity);
+                    rotCon.SetRotation(0.2f, rb.velocity);
                     // TouchJump
                  }
             if (col.wall != null) col.wall = null;
@@ -289,7 +289,7 @@ public class Movement : MonoBehaviour
                     dir = camFol.dir;
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(rb.velocity);
+                    rotCon.SetRotation(0.2f, rb.velocity);
                 }
                 else
                 {
@@ -395,23 +395,20 @@ public class Movement : MonoBehaviour
                 AudioManager.PlaySound("groundJump");
                 Jump(1, Vector2.zero);
             }
-            if (wallJumped) wallJumped = false;
-            if (touchJumped) touchJumped = false;
-            if (fever >= oriFever)
-            {
-                fever = oriFever;
-                fevered = true;
-                feverEffect.SetActive(true);
-            }
-            _speed = speed;
             AudioManager.PlaySound("landing");
             //Debug.Log("Entered");
         }
-        if (col.onWall)
+        if (col.onWall) gm.Dead();
+        if (wallJumped) wallJumped = false;
+        if (touchJumped) touchJumped = false;
+        if (fever >= oriFever)
         {
-            gm.Dead();
+            fever = oriFever;
+            fevered = true;
+            feverEffect.SetActive(true);
         }
-        GameMaster.gameMaster.StaminaActiveFalse();
+        _speed = speed;
+        gm.StaminaActiveFalse();
     }
     public void OnGroundExitFunction()
     {
@@ -425,6 +422,7 @@ public class Movement : MonoBehaviour
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
         playerParticle.SetActive(false);
         camFol.dir = -dir;
+        rotCon.SetRotation(0f, new Vector2 (0, 1));
         if (col.onGround)
         {
             gm.Dead();
@@ -448,7 +446,7 @@ public class Movement : MonoBehaviour
         {
             jumpable = true;
             panelJumped = false;
-            GameMaster.gameMaster.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
+            gm.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
         }
         else if (col.wallTag == "TouchJump")
         {
@@ -460,7 +458,7 @@ public class Movement : MonoBehaviour
             //inputController.attackButton.SetActive(false);
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
-            GameMaster.gameMaster.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
+            gm.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
         }
         //else if (col.wallTag == "WallPanel")
         //{

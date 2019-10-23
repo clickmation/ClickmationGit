@@ -96,9 +96,11 @@ public class GameMaster : MonoBehaviour
     }
 
     public void StaminaActiveFalse ()
-    {
-        barActivated = false;
-        StartCoroutine(StaminaActiveFalseCoroutine());
+    {if (barActivated)
+        {
+            barActivated = false;
+            StartCoroutine(StaminaActiveFalseCoroutine());
+        }
     }
 
     IEnumerator StaminaActiveFalseCoroutine ()
@@ -124,7 +126,7 @@ public class GameMaster : MonoBehaviour
         for (float t = 0; t < coolTime; t += Time.deltaTime)
         {
             attackCoolTimeBar.localScale = new Vector3(Mathf.Lerp(0, 1, t / coolTime), 1, 1);
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(Time.deltaTime);
         }
         attackCoolTimeBar.gameObject.SetActive(false);
         mov.attackable = true;
