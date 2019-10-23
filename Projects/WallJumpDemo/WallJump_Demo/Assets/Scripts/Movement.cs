@@ -21,6 +21,7 @@ public class Movement : MonoBehaviour
     public Button.ButtonClickedEvent jumpUp;
     public Button.ButtonClickedEvent jumpDown;
     public Button.ButtonClickedEvent attackFunction;
+    [SerializeField] private Transform attackCoolTimeBar;
 
     //[SerializeField] GameObject deadPanel;
     //[SerializeField] GameObject pausePanel;
@@ -57,7 +58,7 @@ public class Movement : MonoBehaviour
     public bool attacking;
     public bool attackable;
     public float attackTime;
-    public float attackDelay;
+    public float attackCoolTime;
     private float gravity;
 
     public bool touchJumped;
@@ -80,17 +81,6 @@ public class Movement : MonoBehaviour
     public float lowJumpMultiplier = 2f;
     public bool jumpable;
     public bool panelJumped;
-
-    [Space]
-
-    [Header("Fever")]
-
-    public float fever;
-    private float oriFever;
-    [SerializeField] private float feverEater;
-    [SerializeField] private bool fevered;
-    public Image feverImage;
-    public GameObject feverEffect;
 
     [Space]
 
@@ -119,8 +109,6 @@ public class Movement : MonoBehaviour
         _speed = speed;
         speedMultiflier = 1f;
         col = GetComponent<Collision>();
-        oriFever = fever;
-        fever = 0;
         gravity = rb.gravityScale;
         camFol.dir = dir;
         GameObject _deathParticle = Instantiate(gm.deathParticle, this.transform.position, Quaternion.identity) as GameObject;
@@ -198,7 +186,19 @@ public class Movement : MonoBehaviour
         rb.gravityScale = gravity;
         attacking = false;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
-        StartCoroutine(gm.AttackCoolTimeBarCoroutine(attackDelay));
+        StartCoroutine(AttackCoolTimeBarCoroutine(attackCoolTime));
+    }
+
+    public IEnumerator AttackCoolTimeBarCoroutine(float coolTime)
+    {
+        attackCoolTimeBar.gameObject.SetActive(true);
+        for (float t = 0; t < coolTime; t += Time.deltaTime)
+        {
+            attackCoolTimeBar.localScale = new Vector3(0.15f, Mathf.Lerp(0, 1, t / coolTime), 1);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        attackCoolTimeBar.gameObject.SetActive(false);
+        attackable = true;
     }
 
     //public void Boost()
@@ -401,12 +401,12 @@ public class Movement : MonoBehaviour
         if (col.onWall) gm.Dead();
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
-        if (fever >= oriFever)
-        {
-            fever = oriFever;
-            fevered = true;
-            feverEffect.SetActive(true);
-        }
+        //if (fever >= oriFever)
+        //{
+        //    fever = oriFever;
+        //    fevered = true;
+        //    feverEffect.SetActive(true);
+        //}
         _speed = speed;
         gm.StaminaActiveFalse();
     }

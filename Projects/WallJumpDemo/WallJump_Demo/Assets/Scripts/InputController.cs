@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InputController : MonoBehaviour
 {
     public Movement mov;
-    [SerializeField] private Collision col;
+    public Collision col;
     [SerializeField] private Camera camera;
     [SerializeField] GameObject touchEffect;
     private LayerMask layer;

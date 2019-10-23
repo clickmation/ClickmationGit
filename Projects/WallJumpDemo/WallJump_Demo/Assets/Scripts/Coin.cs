@@ -6,12 +6,14 @@ using System.Collections;
 public class Coin : MonoBehaviour
 {
     public int coinAddAmount;
+    public float feverAdder;
 
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player")
         {
             GameMaster.gameMaster.AddCoin(coinAddAmount);
+            GameMaster.gameMaster.FeverAdd(feverAdder);
             AudioManager.PlaySound("coin");
             Destroy(this.gameObject);
         }

@@ -22,7 +22,6 @@ public class GameMaster : MonoBehaviour
     [SerializeField] CameraShake camShake;
     public Vector3 playerSpawnPoint;
     public Button attackButton;
-    [SerializeField] private RectTransform attackCoolTimeBar;
 
     [Space]
 
@@ -33,6 +32,27 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private GameObject staminaBar;
     [SerializeField] private List<GameObject> staminaBars = new List<GameObject>();
     private bool barActivated;
+
+    [Space]
+
+    [Header("Fever")]
+
+    public float fever;
+    private float oriFever;
+    [SerializeField] int feverIndex;
+    [SerializeField] private bool fevered;
+    public GameObject feverEffect;
+    [SerializeField] FeverStruct[] feverStructs;
+    [System.Serializable]
+    public struct FeverStruct
+    {
+        public bool started;
+        public float fever;
+        public float feverEater;
+        public float feverStartPoint;
+        public float feverStopPoint;
+        public RectTransform feverImage;
+    }
 
     [Space]
 
@@ -48,6 +68,7 @@ public class GameMaster : MonoBehaviour
 
     public int score;
     public int scoreAdd;
+    public int scoreMultiplier = 1;
     public int highScore;
     public Text scoreText;
     public Text highScoreText;
@@ -64,6 +85,8 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         highScore = PlayerPrefs.GetInt("HighScore");
+        oriFever = fever;
+        fever = 0;
         PlayerPrefs.SetInt("HighScore", 0);
         StartCoroutine(ScoreCoroutine());
     }
@@ -120,16 +143,47 @@ public class GameMaster : MonoBehaviour
         staminaBarParent.gameObject.SetActive(false);
     }
 
-    public IEnumerator AttackCoolTimeBarCoroutine(float coolTime)
+    public void FeverAdd (float f)
     {
-        attackCoolTimeBar.gameObject.SetActive(true);
-        for (float t = 0; t < coolTime; t += Time.deltaTime)
+        feverStructs[feverIndex].fever += f;
+        //if (feverStructs[feverIndex].fever >= oriFever) feverStructs[feverIndex].fever = oriFever;
+        //feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
+        //if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
+        while (feverIndex < feverStructs.Length)
         {
-            attackCoolTimeBar.localScale = new Vector3(Mathf.Lerp(0, 1, t / coolTime), 1, 1);
+            if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
+            if (feverStructs[feverIndex].fever > oriFever)
+            {
+                if (feverIndex < feverStructs.Length - 1) feverStructs[feverIndex + 1].fever += feverStructs[feverIndex].fever - oriFever;
+                feverStructs[feverIndex].fever = oriFever;
+                feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
+                feverIndex++;
+            }
+            else break;
+        }
+        if (feverIndex == feverStructs.Length - 1 && feverStructs[feverIndex].fever > oriFever) feverStructs[feverIndex].fever = oriFever;
+        feverIndex = 0;
+    }
+
+    IEnumerator FeverCoroutine(int index)
+    {
+        feverStructs[index].started = true;
+        scoreMultiplier++;
+        while (feverStructs[index].fever >= feverStructs[index].feverStopPoint)
+        {
+            feverStructs[index].fever -= feverStructs[index].feverEater;
+            feverStructs[index].feverImage.localScale = new Vector3(feverStructs[index].fever  / oriFever, 1, 1);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        attackCoolTimeBar.gameObject.SetActive(false);
-        mov.attackable = true;
+        scoreMultiplier--;
+        feverStructs[index].started = false;
+        if (index == 0)
+        {
+            for (int i = 1; i < feverStructs.Length; i++)
+            {
+                feverStructs[i].fever = 0;
+            }
+        }
     }
 
     IEnumerator ScoreCoroutine()
@@ -140,7 +194,7 @@ public class GameMaster : MonoBehaviour
         while (!dead)
         {
             yield return new WaitForSeconds(scoreAddDelay);
-            score += scoreAdd;
+            score += scoreAdd * scoreMultiplier;
             scoreText.text = score.ToString();
             if (score > highScore)
             {
@@ -209,6 +263,7 @@ public class GameMaster : MonoBehaviour
         mov.camShake = camShake;
         camFol.target = mainChar.transform;
         inputController.mov = mov;
+        inputController.col = mov.GetComponent<Collision>();
         mov.inputController = inputController;
         attackButton.onClick = mov.attackFunction;
         StartCoroutine(ScoreCoroutine());
