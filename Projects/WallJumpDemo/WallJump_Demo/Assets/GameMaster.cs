@@ -12,16 +12,25 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject mainCharacter;
     [SerializeField] GameObject startCollider;
     [SerializeField] Movement mov;
-    [SerializeField] GameObject deadPanel;
-    [SerializeField] GameObject pausePanel;
-    public CanvasGroup overlayCanvas;
-    public int coin;
-    public Text coinText;
 
     [SerializeField] Camera2DFollow camFol;
     [SerializeField] CameraShake camShake;
     public Vector3 playerSpawnPoint;
     public Button attackButton;
+
+    [Space]
+
+    [Header("UI")]
+    [SerializeField] GameObject deadPanel;
+    [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject reTryCheckPanel;
+    [SerializeField] GameObject mainmenuCheckPanel;
+    [SerializeField] GameObject adReviveButton;
+    [SerializeField] GameObject tokenReviveButton;
+    public CanvasGroup overlayCanvas;
+    public int coin;
+    public Text coinText;
+    public int adToken;
 
     [Space]
 
@@ -85,9 +94,11 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         highScore = PlayerPrefs.GetInt("HighScore");
+        PlayerPrefs.SetInt("HighScore", 0);
+        adToken = PlayerPrefs.GetInt("AdToken");
+        PlayerPrefs.SetInt("AdToken", 0);
         oriFever = fever;
         fever = 0;
-        PlayerPrefs.SetInt("HighScore", 0);
         StartCoroutine(ScoreCoroutine());
     }
 
@@ -242,6 +253,16 @@ public class GameMaster : MonoBehaviour
     IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(2f);
+        if (adToken == 0)
+        {
+            adReviveButton.SetActive(true);
+            tokenReviveButton.SetActive(false);
+        }
+        else
+        {
+            adReviveButton.SetActive(false);
+            tokenReviveButton.SetActive(true);
+        }
         deadPanel.SetActive(true);
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
@@ -269,7 +290,19 @@ public class GameMaster : MonoBehaviour
         Time.timeScale = 1;
         overlayCanvas.alpha = 1.0f;
     }
-    public void TokenResume()
+
+    public void TokenRevive ()
+    {
+        adToken -= 1;
+        Revive();
+    }
+
+    public void AdRevive ()
+    {
+        Debug.Log("Show me Ad!");
+        Revive();
+    }
+    public void Revive()
     {
         dead = false;
         camFol.enabled = true;
@@ -290,6 +323,21 @@ public class GameMaster : MonoBehaviour
         overlayCanvas.alpha = 1.0f;
     }
 
+    bool reTryCheckTriggered;
+    public void ReTryCheck ()
+    {
+        if (!reTryCheckTriggered)
+        {
+            reTryCheckTriggered = true;
+            reTryCheckPanel.SetActive(true);
+        }
+        else
+        {
+            reTryCheckTriggered = false;
+            reTryCheckPanel.SetActive(false);
+        }
+    }
+
     public void ReTry()
     {
         Time.timeScale = 1;
@@ -301,6 +349,22 @@ public class GameMaster : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    bool mainmenuCheckTriggered;
+
+    public void MainMenuCheck ()
+    {
+        if (!mainmenuCheckTriggered)
+        {
+            mainmenuCheckTriggered = true;
+            mainmenuCheckPanel.SetActive(true);
+        }
+        else
+        {
+            mainmenuCheckTriggered = false;
+            mainmenuCheckPanel.SetActive(false);
+        }
+    }
+
     public void MainMenu()
     {
         Time.timeScale = 1;
@@ -309,6 +373,7 @@ public class GameMaster : MonoBehaviour
             PlayerPrefs.SetInt("Coin", coin);
         }
         PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }

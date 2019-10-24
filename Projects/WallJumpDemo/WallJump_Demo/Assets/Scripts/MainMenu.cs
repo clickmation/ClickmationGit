@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
 
     public Text highScoreText;
     public Text coinText;
+    public Text adTokenText;
 
     [Space]
 
@@ -124,6 +125,7 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SaveLoad.saveload.mainMenu = this;
         SaveLoad.saveload.Load();
         if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
         highScoreText.text = highScore.ToString();
@@ -131,7 +133,9 @@ public class MainMenu : MonoBehaviour
         coin += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
         coinText.text = coin.ToString();
-        adToken = PlayerPrefs.GetInt("AdToken");
+        if (PlayerPrefs.GetInt("AdToken") != 11) adToken = PlayerPrefs.GetInt("AdToken");
+        adTokenText.text = adToken.ToString();
+        PlayerPrefs.SetInt("AdToken", 11);
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
@@ -244,6 +248,7 @@ public class MainMenu : MonoBehaviour
     public void GameStart()
     {
         PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

@@ -41,7 +41,6 @@ public class SaveLoad : MonoBehaviour
 
         binary.Serialize(fstream, saver);
         fstream.Close();
-        //Debug.Log("Saved.");
     }
 
     public void Load()
