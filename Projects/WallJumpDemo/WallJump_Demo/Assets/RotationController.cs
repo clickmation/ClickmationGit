@@ -5,6 +5,7 @@ using UnityEngine;
 public class RotationController : MonoBehaviour
 {
     [SerializeField] private Movement mov;
+    [SerializeField] private Transform movSprite;
     private IEnumerator setRotationCoroutine;
 
     void Start ()
@@ -23,20 +24,20 @@ public class RotationController : MonoBehaviour
     {
         if (time == 0f)
         {
-            mov.transform.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
+            movSprite.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
             //Debug.Log(-mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
         }
         else
         {
-            float z = Mathf.Rad2Deg * mov.transform.rotation.z;
+            float z = Mathf.Rad2Deg * movSprite.rotation.z;
             float r = vec == Vector2.zero ? 0 : -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y);
             //Debug.Log(z + ", " + r);
             for (float t = 0; t < time; t += Time.deltaTime)
             {
-                mov.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(z, r, t / time));
+                movSprite.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(z, r, t / time));
                 yield return new WaitForSeconds(Time.deltaTime);
             }
-            mov.transform.rotation = Quaternion.Euler(0, 0, r);
+            movSprite.rotation = Quaternion.Euler(0, 0, r);
         }
     }
 }
