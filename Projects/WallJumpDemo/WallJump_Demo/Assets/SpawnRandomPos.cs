@@ -10,5 +10,6 @@ public class SpawnRandomPos : MonoBehaviour
     public void SpawnRandomPosition ()
     {
         GameObject _spawnObject = Instantiate(spawnObject, spawnPos[Random.Range(0, spawnPos.Length)].position, Quaternion.Euler(0, 0, 0));
+        Destroy(_spawnObject, 7f);
     }
 }

@@ -103,12 +103,14 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gm = GameMaster.gameMaster;
+        if (GameMaster.gameMaster != null) gm = GameMaster.gameMaster;
+        else Debug.LogError("There's no GameMaster.");
         playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
         sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
         _speed = speed;
         speedMultiflier = 1f;
-        col = GetComponent<Collision>();
+        if (GetComponent<Collision>() != null) col = GetComponent<Collision>();
+        else Debug.LogError("There's no Collision.");
         gravity = rb.gravityScale;
         camFol.dir = dir;
         GameObject _deathParticle = Instantiate(gm.deathParticle, this.transform.position, Quaternion.identity) as GameObject;
