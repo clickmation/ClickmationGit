@@ -149,6 +149,7 @@ public class MainMenu : MonoBehaviour
 
         //PlayerPrefs.SetInt("CurTrailIndex", 0);
         //PlayerPrefs.SetInt("CurCharacterIndex", 0);
+        //PlayerPrefs.SetInt("CurBGMIndex", 0);
 
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
@@ -157,6 +158,13 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("CharactersArray0", 1);
         PlayerPrefs.SetInt("BGMsArray0", 1);
 
+
+        //for (int i = 1; i < 20; i++)
+        //{
+        //    PlayerPrefs.SetInt("TrailsArray" + i, 0);
+        //    PlayerPrefs.SetInt("CharactersArray" + i, 0);
+        //    PlayerPrefs.SetInt("BGMsArray" + i, 0);
+        //}
         //PlayerPrefs.SetInt("TrailsArray1", 0);
         //PlayerPrefs.SetInt("TrailsArray2", 0);
         //PlayerPrefs.SetInt("TrailsArray3", 0);
@@ -171,17 +179,17 @@ public class MainMenu : MonoBehaviour
         //PlayerPrefs.SetInt("CharactersArray6", 0);
         //PlayerPrefs.SetInt("CharactersArray7", 0);
 
-        for (int i = 0; i < trails.Length; i++)
+        for (int i = 0; i < 20; i++)
         {
             trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
             if (trailsArray[i] == 1) availableTrails.Add(i);
         }
-        for (int i = 0; i < characters.Length; i++)
+        for (int i = 0; i < 20; i++)
         {
             charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
             if (charactersArray[i] == 1) availableCharacters.Add(i);
         }
-        for (int i = 0; i < bgms.Length; i++)
+        for (int i = 0; i < 20; i++)
         {
             bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
@@ -298,6 +306,7 @@ public class MainMenu : MonoBehaviour
             prizeObject.gameObject.SetActive(false);
             trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
             characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+            bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
             for (int i = 0; i < availableTrails.Count; i++)
             {
                 if (availableTrails[i] == trailIndex)
@@ -314,23 +323,23 @@ public class MainMenu : MonoBehaviour
                     break;
                 }
             }
-            //for (int i = 0; i < availableBGMs.Count; i++)
-            //{
-            //    if (availableBGMs[i] == bgmIndex)
-            //    {
-            //        bgmIndex = i;
-            //        break;
-            //    }
-            //}
+            for (int i = 0; i < availableBGMs.Count; i++)
+            {
+                if (availableBGMs[i] == bgmIndex)
+                {
+                    bgmIndex = i;
+                    break;
+                }
+            }
             SaveLoad.saveload.Save();
             trailName.text = trails[availableTrails[trailIndex]].name;
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             characterName.text = characters[availableCharacters[characterIndex]].name;
             //characterImage = characters[characterIndex].image;
-            //bgmName.text = bgms[bgmIndex].name;
+            bgmName.text = bgms[availableBGMs[bgmIndex]].name;
             //bgmImage = bgms[bgmIndex].image;
-            //bgmsetting;
+            AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
             mainMenu.SetActive(false);
             howToObj.SetActive(false);
             shopObj.SetActive(false);
@@ -406,6 +415,7 @@ public class MainMenu : MonoBehaviour
         {
             List<int> buyableTrails = new List<int>();
             List<int> buyableCharacters = new List<int>();
+            List<int> buyableBGMs = new List<int>();
             for (int i = 0; i < trails.Length; i++)
             {
                 if (trailsArray[i] == 0) buyableTrails.Add(i);
@@ -414,7 +424,11 @@ public class MainMenu : MonoBehaviour
             {
                 if (charactersArray[i] == 0) buyableCharacters.Add(i);
             }
-            if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
+            for (int i = 0; i < bgms.Length; i++)
+            {
+                if (bgmsArray[i] == 0) buyableBGMs.Add(i);
+            }
+            if (buyableTrails.Count == 0 && buyableCharacters.Count == 0 && buyableBGMs.Count == 0)
             {
                 Debug.LogError("There's no buyable items.");
             }
@@ -422,17 +436,21 @@ public class MainMenu : MonoBehaviour
             {
                 int r;
                 int index;
-                if (buyableTrails.Count == 0)
-                {
-                    r = 1;
-                }
-                else if (buyableCharacters.Count == 0)
+                if (buyableTrails.Count != 0 && buyableCharacters.Count == 0 && buyableBGMs.Count == 0)
                 {
                     r = 0;
                 }
+                else if (buyableTrails.Count == 0 && buyableCharacters.Count != 0 && buyableBGMs.Count == 0)
+                {
+                    r = 1;
+                }
+                else if (buyableTrails.Count == 0 && buyableCharacters.Count == 0 && buyableBGMs.Count != 0)
+                {
+                    r = 2;
+                }
                 else
                 {
-                    r = Random.Range(0, 2);
+                    r = Random.Range(0, 3);
                 }
                 SaveLoad.saveload.Load();
                 prizeObject.gameObject.SetActive(true);
@@ -440,8 +458,6 @@ public class MainMenu : MonoBehaviour
                 {
                     Destroy(prizeTrailObject);
                     index = Random.Range(0, buyableTrails.Count);
-                    Debug.Log(index);
-                    Debug.Log(buyableTrails[index]);
                     PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
                     GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
                     prizeTrailObject = prizeTrail;
@@ -455,6 +471,14 @@ public class MainMenu : MonoBehaviour
                     prizeObject.sprite = characters[buyableCharacters[index]].sprite;
                     prizeName.text = characters[buyableCharacters[index]].name;
                     PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
+                }
+                else if (r == 2)
+                {
+                    index = Random.Range(0, buyableBGMs.Count);
+                    PlayerPrefs.SetInt("BGMsArray" + buyableBGMs[index], 1);
+                    prizeName.text = bgms[buyableBGMs[index]].name;
+                    PlayerPrefs.SetInt("CurBGMIndex", buyableBGMs[index]);
+                    AudioManager.PlayBGM(bgms[buyableBGMs[index]].bgm);
                 }
                 coin -= 1000;
                 coinText.text = coin.ToString();
@@ -553,11 +577,10 @@ public class MainMenu : MonoBehaviour
 
     public void BGMNext()
     {
-        if (bgmIndex < bgms.Length - 1)
+        if (bgmIndex < availableBGMs.Count - 1)
         {
-            bgmName.text = bgms[++bgmIndex].name;
-            //bgmImage = bgms[bgmIndex].image;
-            //bgmsetting;
+            bgmName.text = bgms[availableBGMs[++bgmIndex]].name;
+            AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
         }
     }
 
@@ -565,9 +588,8 @@ public class MainMenu : MonoBehaviour
     {
         if (bgmIndex > 0)
         {
-            bgmName.text = bgms[--bgmIndex].name;
-            //bgmImage = bgms-bgmIndex].image;
-            //bgmsetting;
+            bgmName.text = bgms[availableBGMs[--bgmIndex]].name;
+            AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
         }
     }
 }
