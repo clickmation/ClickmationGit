@@ -136,6 +136,10 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.GetInt("AdToken") != 11) adToken = PlayerPrefs.GetInt("AdToken");
         adTokenText.text = adToken.ToString();
         PlayerPrefs.SetInt("AdToken", 11);
+
+        //PlayerPrefs.SetInt("CurTrailIndex", 0);
+        //PlayerPrefs.SetInt("CurCharacterIndex", 0);
+
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
@@ -156,13 +160,19 @@ public class MainMenu : MonoBehaviour
         //PlayerPrefs.SetInt("CharactersArray6", 0);
         //PlayerPrefs.SetInt("CharactersArray7", 0);
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < trails.Length; i++)
         {
             trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
-            charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
-            bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
             if (trailsArray[i] == 1) availableTrails.Add(i);
+        }
+        for (int i = 0; i < characters.Length; i++)
+        {
+            charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
             if (charactersArray[i] == 1) availableCharacters.Add(i);
+        }
+        for (int i = 0; i < bgms.Length; i++)
+        {
+            bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
         }
         SaveLoad.saveload.Save();
@@ -361,72 +371,88 @@ public class MainMenu : MonoBehaviour
 
     public void Buy ()
     {
-        List<int> buyableTrails = new List<int>();
-        List<int> buyableCharacters = new List<int>();
-        for (int i = 0; i < trails.Length; i++)
+        if (coin >= 1000)
         {
-            if (trailsArray[i] == 0) buyableTrails.Add(i);
-        }
-        for (int i = 0; i < characters.Length; i++)
-        {
-            if (charactersArray[i] == 0) buyableCharacters.Add(i);
-        }
-        if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
-        {
-            Debug.LogError("There's no buyable items.");
-        }
-        else
-        {
-            int r;
-            int index;
-            if (buyableTrails.Count == 0)
+            List<int> buyableTrails = new List<int>();
+            List<int> buyableCharacters = new List<int>();
+            for (int i = 0; i < trails.Length; i++)
             {
-                r = 1;
+                if (trailsArray[i] == 0) buyableTrails.Add(i);
             }
-            else if (buyableCharacters.Count == 0)
+            for (int i = 0; i < characters.Length; i++)
             {
-                r = 0;
+                if (charactersArray[i] == 0) buyableCharacters.Add(i);
+            }
+            if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
+            {
+                Debug.LogError("There's no buyable items.");
             }
             else
             {
-                r = Random.Range(0, 2);
+                int r;
+                int index;
+                if (buyableTrails.Count == 0)
+                {
+                    r = 1;
+                }
+                else if (buyableCharacters.Count == 0)
+                {
+                    r = 0;
+                }
+                else
+                {
+                    r = Random.Range(0, 2);
+                }
+                SaveLoad.saveload.Load();
+                prizeObject.gameObject.SetActive(true);
+                if (r == 0)
+                {
+                    Destroy(prizeTrailObject);
+                    index = Random.Range(0, buyableTrails.Count);
+                    Debug.Log(index);
+                    Debug.Log(buyableTrails[index]);
+                    PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
+                    GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
+                    prizeTrailObject = prizeTrail;
+                    prizeName.text = trails[buyableTrails[index]].name;
+                    PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
+                }
+                else if (r == 1)
+                {
+                    index = Random.Range(0, buyableCharacters.Count);
+                    PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
+                    prizeObject.sprite = characters[buyableCharacters[index]].sprite;
+                    prizeName.text = characters[buyableCharacters[index]].name;
+                    PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
+                }
+                coin -= 1000;
+                coinText.text = coin.ToString();
+                availableTrails.Clear();
+                availableCharacters.Clear();
+                availableBGMs.Clear();
+
+                for (int i = 0; i < trails.Length; i++)
+                {
+                    trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+                    if (trailsArray[i] == 1) availableTrails.Add(i);
+                }
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
+                    if (charactersArray[i] == 1) availableCharacters.Add(i);
+                }
+                for (int i = 0; i < bgms.Length; i++)
+                {
+                    bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+                    if (bgmsArray[i] == 1) availableBGMs.Add(i);
+                }
+                Debug.Log("Bought");
+                SaveLoad.saveload.Save();
             }
-            SaveLoad.saveload.Load();
-            prizeObject.gameObject.SetActive(true);
-            if (r == 0)
-            {
-                Destroy(prizeTrailObject);
-                index = Random.Range(0, buyableTrails.Count);
-                PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
-                GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
-                prizeTrailObject = prizeTrail;
-                prizeName.text = trails[buyableTrails[index]].name;
-                PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
-            }
-            else if (r == 1)
-            {
-                index = Random.Range(0, buyableCharacters.Count);
-                PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
-                prizeObject.sprite = characters[buyableCharacters[index]].sprite;
-                prizeName.text = characters[buyableCharacters[index]].name;
-                PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
-            }
-            coin -= 1000;
-            coinText.text = coin.ToString();
-            availableTrails.Clear();
-            availableCharacters.Clear();
-            availableBGMs.Clear();
-            for (int i = 0; i < 20; i++)
-            {
-                trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
-                charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
-                bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
-                if (trailsArray[i] == 1) availableTrails.Add(i);
-                if (charactersArray[i] == 1) availableCharacters.Add(i);
-                if (bgmsArray[i] == 1) availableBGMs.Add(i);
-            }
-            Debug.Log("Bought");
-            SaveLoad.saveload.Save();
+        }
+        else
+        {
+            Debug.LogError("Not enough coins");
         }
     }
 
