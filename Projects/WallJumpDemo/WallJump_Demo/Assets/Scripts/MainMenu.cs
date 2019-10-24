@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    AudioManager am;
 
     [Space]
 
@@ -24,9 +25,13 @@ public class MainMenu : MonoBehaviour
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
+    public int curBGMIndex;
     public int[] trailsArray = new int[20];
     public int[] charactersArray = new int[20];
     public int[] bgmsArray = new int[20];
+    public float masterVolume;
+    public float soundEffectVolume;
+    public float bgmVolume;
     public List<int> availableTrails;
     public List<int> availableCharacters;
     public List<int> availableBGMs;
@@ -112,9 +117,11 @@ public class MainMenu : MonoBehaviour
     public struct BGM
     {
         public string name;
-        public Image image;
         public AudioClip bgm;
     }
+    public Slider masterVolumeSlider;
+    public Slider soundEffectVolumeSlider;
+    public Slider bgmVolumeSlider;
 
     //[Space]
 
@@ -126,6 +133,9 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         SaveLoad.saveload.mainMenu = this;
+        am = AudioManager.audioManager;
+        am.mainMenu = this;
+        am.SetAudioSources();
         SaveLoad.saveload.Load();
         if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
         highScoreText.text = highScore.ToString();
@@ -142,6 +152,7 @@ public class MainMenu : MonoBehaviour
 
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+        curBGMIndex = PlayerPrefs.GetInt("CurBGMIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
         PlayerPrefs.SetInt("CharactersArray0", 1);
         PlayerPrefs.SetInt("BGMsArray0", 1);
@@ -175,7 +186,21 @@ public class MainMenu : MonoBehaviour
             bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
         }
+
+        masterVolumeSlider.onValueChanged = am.setMasterVolume;
+        soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
+        bgmVolumeSlider.onValueChanged = am.setBGMVolume;
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+        bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
         SaveLoad.saveload.Save();
+        masterVolumeSlider.value = masterVolume;
+        soundEffectVolumeSlider.value = soundEffectVolume;
+        bgmVolumeSlider.value = bgmVolume;
+        am.SetMasterVolume();
+        am.SetSoundEffectVolume();
+        am.SetBGMVolume();
+        AudioManager.PlayBGM(bgms[curBGMIndex].bgm);
     }
 
     public void Shop ()
@@ -353,6 +378,12 @@ public class MainMenu : MonoBehaviour
             customizationButton.color = new Color32(200, 200, 200, 128);
             soundButton.color = new Color32(255, 255, 255, 255);
             gameStartButton.color = new Color32(200, 200, 200, 128);
+            masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+            soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+            bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+            masterVolumeSlider.value = masterVolume;
+            soundEffectVolumeSlider.value = soundEffectVolume;
+            bgmVolumeSlider.value = bgmVolume;
         }
         else
         {

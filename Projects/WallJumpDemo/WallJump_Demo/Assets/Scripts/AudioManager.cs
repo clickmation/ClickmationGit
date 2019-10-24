@@ -1,12 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager audioManager;
+    public MainMenu mainMenu;
 	
 	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound;
-	static AudioSource audioSrc;
+    public static AudioSource soundEffectAudioSrc;
+    public static AudioSource bgmAudioSrc;
+    //[SerializeField] AudioSource SEASrc;
+    //[SerializeField] AudioSource BGMSrc;
+    public Slider.SliderEvent setMasterVolume;
+    public Slider.SliderEvent setSoundEffectVolume;
+    public Slider.SliderEvent setBGMVolume;
+    float masterVolume;
+    float soundEffectVolume;
+    float bgmVolume;
+
+    void Awake ()
+    {
+        if (audioManager == null) audioManager = this;
+    }
+
+    public void SetAudioSources ()
+    {
+        soundEffectAudioSrc = transform.GetChild(0).GetComponent<AudioSource>();
+        bgmAudioSrc = transform.GetChild(1).GetComponent<AudioSource>();
+    }
 	
     void Start()
     {
@@ -18,42 +41,56 @@ public class AudioManager : MonoBehaviour
 		coinSound = Resources.Load<AudioClip> ("Coin4");
 		jumpPanelSound = Resources.Load<AudioClip> ("Boing2");
 		wallPanelSound = Resources.Load<AudioClip> ("Boing1");
-		
-		audioSrc = GetComponent<AudioSource> ();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetMasterVolume ()
     {
-        
+        masterVolume = mainMenu.masterVolumeSlider.value;
+        soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
+        bgmAudioSrc.volume = masterVolume * bgmVolume;
+        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+    }
+
+    public void SetSoundEffectVolume ()
+    {
+        soundEffectVolume = mainMenu.soundEffectVolumeSlider.value;
+        soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
+        PlayerPrefs.SetFloat("SoundEffectVolume", soundEffectVolume);
+    }
+
+    public void SetBGMVolume ()
+    {
+        bgmVolume = mainMenu.bgmVolumeSlider.value;
+        bgmAudioSrc.volume = masterVolume * bgmVolume;
+        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
     }
 	
 	public static void PlaySound (string clip)
 	{
 		switch(clip) {
 			case "groundJump":
-				audioSrc.PlayOneShot (groundJumpSound);
+				soundEffectAudioSrc.PlayOneShot (groundJumpSound);
 				break;
 			case "landing":
-				audioSrc.PlayOneShot (landingSound);
+				soundEffectAudioSrc.PlayOneShot (landingSound);
 				break;
 			case "attack":
-				audioSrc.PlayOneShot (attackSound);
+				soundEffectAudioSrc.PlayOneShot (attackSound);
 				break;
 			case "kill":
-				audioSrc.PlayOneShot (killSound);
+				soundEffectAudioSrc.PlayOneShot (killSound);
 				break;
 			case "death":
-				audioSrc.PlayOneShot (deathSound);
+				soundEffectAudioSrc.PlayOneShot (deathSound);
 				break;
 			case "coin":
-				audioSrc.PlayOneShot (coinSound);
+				soundEffectAudioSrc.PlayOneShot (coinSound);
 				break;
 			case "jumpPanel":
-				audioSrc.PlayOneShot (jumpPanelSound);
+				soundEffectAudioSrc.PlayOneShot (jumpPanelSound);
 				break;
 			case "wallPanel":
-				audioSrc.PlayOneShot (wallPanelSound);
+				soundEffectAudioSrc.PlayOneShot (wallPanelSound);
 				break;
             default:
                 Debug.LogError("AudioManager : no corresponding audio of name \"" + clip + "\"");
@@ -61,4 +98,14 @@ public class AudioManager : MonoBehaviour
         }
 		
 	}
+    
+    public static void PlayBGM (AudioClip clip)
+    {
+        if (clip != bgmAudioSrc.clip)
+        {
+            bgmAudioSrc.clip = clip;
+            bgmAudioSrc.Play();
+            Debug.Log("Played");
+        }
+    }
 }

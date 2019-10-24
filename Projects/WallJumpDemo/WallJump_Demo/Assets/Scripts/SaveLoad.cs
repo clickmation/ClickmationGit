@@ -32,12 +32,16 @@ public class SaveLoad : MonoBehaviour
         saver.adToken = mainMenu.adToken;
         saver.curTrailIndex = mainMenu.curTrailIndex;
         saver.curCharacterIndex = mainMenu.curCharacterIndex;
+        saver.curBGMIndex = mainMenu.curBGMIndex;
         for (int i = 0; i < 20; i++)
         {
             saver.trailsArray[i] = mainMenu.trailsArray[i];
             saver.charactersArray[i] = mainMenu.charactersArray[i];
             saver.bgmsArray[i] = mainMenu.bgmsArray[i];
         }
+        saver.masterVolume = mainMenu.masterVolume;
+        saver.soundEffectVolume = mainMenu.soundEffectVolume;
+        saver.bgmVolume = mainMenu.bgmVolume;
 
         binary.Serialize(fstream, saver);
         fstream.Close();
@@ -58,12 +62,16 @@ public class SaveLoad : MonoBehaviour
             mainMenu.adToken = saver.adToken;
             mainMenu.curTrailIndex = saver.curTrailIndex;
             mainMenu.curCharacterIndex = saver.curCharacterIndex;
+            mainMenu.curBGMIndex = saver.curBGMIndex;
             for (int i = 0; i < 20; i++)
             {
                 mainMenu.trailsArray[i] = saver.trailsArray[i];
                 mainMenu.charactersArray[i] = saver.charactersArray[i];
                 mainMenu.bgmsArray[i] = saver.bgmsArray[i];
             }
+            mainMenu.masterVolume = saver.masterVolume;
+            mainMenu.soundEffectVolume = saver.soundEffectVolume;
+            mainMenu.bgmVolume = saver.bgmVolume;
         }
     }
 
@@ -89,7 +97,11 @@ class SaveManager
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
+    public int curBGMIndex;
     public int[] trailsArray = new int[20];
     public int[] charactersArray = new int[20];
     public int[] bgmsArray = new int[20];
+    public float masterVolume;
+    public float soundEffectVolume;
+    public float bgmVolume;
 }
