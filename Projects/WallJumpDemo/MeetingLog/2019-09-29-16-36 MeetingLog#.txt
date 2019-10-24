@@ -13,15 +13,15 @@
 @드래그 파티클은 particle system의 shape에서 position.x를 우측은 0.5, 좌측은 -0.5로 조절 or 2개 만들어서 껐다켰다
 @trail에서 renderer면 emiting을 끄고 파티클이면 setactive
 @jumpparticle은 점프할때 생성, t초 후 사라짐
-#적 죽일때 크게ripple, 점프할때 작게 ripple
+@적 죽일때 크게ripple, 점프할때 작게 ripple
 
 카메라(이건 진짜 데충해도됨)
-	카메라 쉐이크(이건 일단 미루면 내가 해볼 수도 있음)
-점프패드 리워크
+	@카메라 쉐이크(이건 일단 미루면 내가 해볼 수도 있음)
+@점프패드 리워크
 	벽점패드는 각도와 세기 정할 수 있게
 	바닥패드는 높이와 속도 정할 수 있게
-DragJump 리워크
+@DragJump 리워크
 	클릭하는 방향으로
-가시 꼭 추가
-벽 붙을때 파티클 키고 꺼지는거
+@가시 꼭 추가
+@벽 붙을때 파티클 키고 꺼지는거
 	GameObject.particleEmitter.emit = true/false; 쓰기

@@ -1,29 +1,29 @@
-//0001 rotation lerp
+@0001 rotation lerp
 -이게 lerp만 문제가 아니고 벽에서 슬라이딩할때도 이상함 수직이여야함 (slide anim은 없앨생각 딱히 필요가 없음)
 
-//0002 wall jump stamina
+@0002 wall jump stamina
 
-//0003 공격 쿨탐 캐릭터 위에 표시
+@0003 공격 쿨탐 캐릭터 위에 표시
 
 0004 카메라 damping
 
-0005 shop 활성화
+@0005 shop 활성화
 
 0006 bgm삽입
 
-//0007 카톡으로 말한 empty game object들의 위치중 랜덤으로 특정 prefab 소환하는 코드
+@0007 카톡으로 말한 empty game object들의 위치중 랜덤으로 특정 prefab 소환하는 코드
 
 0008 랜덤 맵 generator
 
-//0009 피버 적용
+@0009 피버 적용
 
 0010 총 점프 횟수, 총 죽음 횟수, 총 코인 획득량, 총 점수 획득량, 총 죽인 적 수, 총 토큰 갯수도 추후 이벤트를 위해 저장
 
 0011 bgm ui 연결
 
-0012 gameover ui 완성
+@0012 gameover ui 완성
 
-0013 pause ui 완성
+@0013 pause ui 완성
 
 0014 daily reward(솔직히 이건 힘들지도 모름)
 

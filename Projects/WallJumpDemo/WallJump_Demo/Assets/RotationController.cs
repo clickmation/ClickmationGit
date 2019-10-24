@@ -5,26 +5,18 @@ using UnityEngine;
 public class RotationController : MonoBehaviour
 {
     [SerializeField] private Movement mov;
+    private IEnumerator setRotationCoroutine;
 
-    // Update is called once per frame
-    //void FixedUpdate()
-    //{
+    void Start ()
+    {
         
-    //}
+    }
 
     public void SetRotation (float time, Vector2 vec)
     {
-        //if (vec == Vector2.zero)
-        //{
-        //    mov.transform.rotation = Quaternion.Euler(0, 0, 0);
-        //}
-        //else
-        //{
-            StartCoroutine(SetRotationCoroutine(time, vec));
-            //mov.transform.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
-            //Debug.Log(Mathf.Asin(0.5f));
-            //Debug.Log(vec + ", " + mov.dir * Mathf.Asin(vec.normalized.y));
-        //}
+        if (setRotationCoroutine != null) StopCoroutine(setRotationCoroutine);
+        setRotationCoroutine = SetRotationCoroutine(time, vec);
+        StartCoroutine(setRotationCoroutine);
     }
 
     IEnumerator SetRotationCoroutine (float time, Vector2 vec)
@@ -32,7 +24,7 @@ public class RotationController : MonoBehaviour
         if (time == 0f)
         {
             mov.transform.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
-            Debug.Log(-mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
+            //Debug.Log(-mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
         }
         else
         {

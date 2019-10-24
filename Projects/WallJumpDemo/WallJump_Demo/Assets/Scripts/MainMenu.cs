@@ -12,6 +12,8 @@ public class MainMenu : MonoBehaviour
     [Header("UI")]
 
     public Text highScoreText;
+    public Text coinText;
+    public Text adTokenText;
 
     [Space]
 
@@ -19,6 +21,7 @@ public class MainMenu : MonoBehaviour
 
     public int highScore;
     public int coin;
+    public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
     public int[] trailsArray = new int[20];
@@ -35,7 +38,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool shop;
     [SerializeField] bool howTo;
     [SerializeField] bool customization;
-
+    [SerializeField] bool sound;
     [Space]
 
     [Header("Panels")]
@@ -44,31 +47,26 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject shopObj;
     [SerializeField] GameObject howToObj;
     [SerializeField] GameObject cusObj;
+    [SerializeField] GameObject soundObj;
 
     [Space]
 
     [Header("Buttons")]
 
-    [SerializeField] Button shopButton;
-    [SerializeField] Button howToButton;
-    [SerializeField] Button gameStartButton;
-    [SerializeField] Button customizationButton;
+    [SerializeField] Image shopButton;
+    [SerializeField] Image howToButton;
+    [SerializeField] Image gameStartButton;
+    [SerializeField] Image customizationButton;
+    [SerializeField] Image soundButton;
 
     [Space]
 
     [Header("Shop")]
 
     //public int shopIndex;
-    public Image prizeImage;
     public Text prizeName;
-    public Prize[] prizes;
-
-    [System.Serializable]
-    public struct Prize
-    {
-        public string name;
-        public Image image;
-    }
+    public SpriteRenderer prizeObject;
+    public GameObject prizeTrailObject;
 
     [Space]
 
@@ -118,26 +116,45 @@ public class MainMenu : MonoBehaviour
         public AudioClip bgm;
     }
 
+    //[Space]
+
+    //[Header("Sound")]
+
+    //public 
+
     // Start is called before the first frame update
     void Start()
     {
+        SaveLoad.saveload.mainMenu = this;
         SaveLoad.saveload.Load();
         if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
         highScoreText.text = highScore.ToString();
         PlayerPrefs.SetInt("HighScore", 0);
         coin += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
+        coinText.text = coin.ToString();
+        if (PlayerPrefs.GetInt("AdToken") != 11) adToken = PlayerPrefs.GetInt("AdToken");
+        adTokenText.text = adToken.ToString();
+        PlayerPrefs.SetInt("AdToken", 11);
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
         PlayerPrefs.SetInt("CharactersArray0", 1);
         PlayerPrefs.SetInt("BGMsArray0", 1);
 
-        PlayerPrefs.SetInt("TrailsArray1", 1);
-        PlayerPrefs.SetInt("TrailsArray2", 1);
-        PlayerPrefs.SetInt("CharactersArray1", 1);
-        PlayerPrefs.SetInt("CharactersArray2", 1);
-        PlayerPrefs.SetInt("CharactersArray3", 1);
+        //PlayerPrefs.SetInt("TrailsArray1", 0);
+        //PlayerPrefs.SetInt("TrailsArray2", 0);
+        //PlayerPrefs.SetInt("TrailsArray3", 0);
+        //PlayerPrefs.SetInt("TrailsArray4", 0);
+        //PlayerPrefs.SetInt("TrailsArray5", 0);
+        //PlayerPrefs.SetInt("TrailsArray6", 0);
+        //PlayerPrefs.SetInt("CharactersArray1", 0);
+        //PlayerPrefs.SetInt("CharactersArray2", 0);
+        //PlayerPrefs.SetInt("CharactersArray3", 0);
+        //PlayerPrefs.SetInt("CharactersArray4", 0);
+        //PlayerPrefs.SetInt("CharactersArray5", 0);
+        //PlayerPrefs.SetInt("CharactersArray6", 0);
+        //PlayerPrefs.SetInt("CharactersArray7", 0);
 
         for (int i = 0; i < 20; i++)
         {
@@ -155,21 +172,40 @@ public class MainMenu : MonoBehaviour
     {
         if (!shop)
         {
+            howTo = false;
             shop = true;
+            customization = false;
+            sound = false;
+            if (curTrail != null) Destroy(curTrail);
             mainMenu.SetActive(false);
             shopObj.SetActive(true);
-            howToButton.interactable = false;
-            gameStartButton.interactable = false;
-            customizationButton.interactable = false;
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (200, 200, 200, 128);
+            shopButton.color = new Color32(255, 255, 255, 255);
+            customizationButton.color = new Color32 (200, 200, 200, 128);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
+            if (prizeTrailObject != null)
+            {
+                Destroy(prizeTrailObject);
+                prizeTrailObject = null;
+            }
         }
         else
         {
             shop = false;
+            prizeObject.gameObject.SetActive(false);
             mainMenu.SetActive(true);
             shopObj.SetActive(false);
-            howToButton.interactable = true;
-            gameStartButton.interactable = true;
-            customizationButton.interactable = true;
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (255, 255, 255, 255);
+            customizationButton.color = new Color32 (255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(255, 255, 255, 255);
         }
     }
 
@@ -178,26 +214,41 @@ public class MainMenu : MonoBehaviour
         if (!howTo)
         {
             howTo = true;
+            shop = false;
+            customization = false;
+            sound = false;
+            if (curTrail != null) Destroy(curTrail);
+            prizeObject.gameObject.SetActive(false);
             mainMenu.SetActive(false);
             howToObj.SetActive(true);
-            shopButton.interactable = false;
-            gameStartButton.interactable = false;
-            customizationButton.interactable = false;
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32 (200, 200, 200, 128);
+            customizationButton.color = new Color32 (200, 200, 200, 128);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
         }
         else
         {
             howTo = false;
             mainMenu.SetActive(true);
             howToObj.SetActive(false);
-            shopButton.interactable = true;
-            gameStartButton.interactable = true;
-            customizationButton.interactable = true;
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            shopButton.color = new Color32 (255, 255, 255, 255);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32 (255, 255, 255, 255);
         }
     }
 
     public void GameStart()
     {
         PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -205,8 +256,11 @@ public class MainMenu : MonoBehaviour
     {
         if (!customization)
         {
+            howTo = false;
+            shop = false;
             customization = true;
-            SaveLoad.saveload.Load();
+            sound = false;
+            prizeObject.gameObject.SetActive(false);
             trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
             characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
             for (int i = 0; i < availableTrails.Count; i++)
@@ -234,38 +288,146 @@ public class MainMenu : MonoBehaviour
             //    }
             //}
             SaveLoad.saveload.Save();
-            trailName.text = trails[trailIndex].name;
-            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            curSprite.sprite = characters[characterIndex].sprite;
-            characterName.text = characters[characterIndex].name;
+            trailName.text = trails[availableTrails[trailIndex]].name;
+            curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            characterName.text = characters[availableCharacters[characterIndex]].name;
             //characterImage = characters[characterIndex].image;
             //bgmName.text = bgms[bgmIndex].name;
             //bgmImage = bgms[bgmIndex].image;
             //bgmsetting;
             mainMenu.SetActive(false);
+            howToObj.SetActive(false);
+            shopObj.SetActive(false);
             cusObj.SetActive(true);
-            shopButton.interactable = false;
-            howToButton.interactable = false;
-            gameStartButton.interactable = false;
+            soundObj.SetActive(false);
+            howToButton.color = new Color32 (200, 200, 200, 128);
+            shopButton.color = new Color32(200, 200, 200, 128);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            soundButton.color = new Color32(200, 200, 200, 128);
+            gameStartButton.color = new Color32 (200, 200, 200, 128);
         }
         else
         {
             Destroy(curTrail);
             customization = false;
-            cusObj.SetActive(false);
             mainMenu.SetActive(true);
-            shopButton.interactable = true;
-            howToButton.interactable = true;
-            gameStartButton.interactable = true;
+            howToObj.SetActive(false);
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32 (255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32 (255, 255, 255, 255);
+        }
+    }
+
+    public void Sound()
+    {
+        if (!sound)
+        {
+            howTo = false;
+            shop = true;
+            customization = false;
+            sound = true;
+            if (curTrail != null) Destroy(curTrail);
+            prizeObject.gameObject.SetActive(false);
+            mainMenu.SetActive(false);
+            shopObj.SetActive(false);
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(true);
+            howToButton.color = new Color32(200, 200, 200, 128);
+            shopButton.color = new Color32(200, 200, 200, 128);
+            customizationButton.color = new Color32(200, 200, 200, 128);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(200, 200, 200, 128);
+        }
+        else
+        {
+            sound = false;
+            mainMenu.SetActive(true);
+            shopObj.SetActive(false);
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32(255, 255, 255, 255);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(255, 255, 255, 255);
         }
     }
 
     public void Buy ()
     {
-        SaveLoad.saveload.Load();
-        coin -= 1000;
-        Debug.Log("Bought");
-        SaveLoad.saveload.Save();
+        List<int> buyableTrails = new List<int>();
+        List<int> buyableCharacters = new List<int>();
+        for (int i = 0; i < trails.Length; i++)
+        {
+            if (trailsArray[i] == 0) buyableTrails.Add(i);
+        }
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (charactersArray[i] == 0) buyableCharacters.Add(i);
+        }
+        if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
+        {
+            Debug.LogError("There's no buyable items.");
+        }
+        else
+        {
+            int r;
+            int index;
+            if (buyableTrails.Count == 0)
+            {
+                r = 1;
+            }
+            else if (buyableCharacters.Count == 0)
+            {
+                r = 0;
+            }
+            else
+            {
+                r = Random.Range(0, 2);
+            }
+            SaveLoad.saveload.Load();
+            prizeObject.gameObject.SetActive(true);
+            if (r == 0)
+            {
+                Destroy(prizeTrailObject);
+                index = Random.Range(0, buyableTrails.Count);
+                PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
+                GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
+                prizeTrailObject = prizeTrail;
+                prizeName.text = trails[buyableTrails[index]].name;
+                PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
+            }
+            else if (r == 1)
+            {
+                index = Random.Range(0, buyableCharacters.Count);
+                PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
+                prizeObject.sprite = characters[buyableCharacters[index]].sprite;
+                prizeName.text = characters[buyableCharacters[index]].name;
+                PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
+            }
+            coin -= 1000;
+            coinText.text = coin.ToString();
+            availableTrails.Clear();
+            availableCharacters.Clear();
+            availableBGMs.Clear();
+            for (int i = 0; i < 20; i++)
+            {
+                trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+                charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
+                bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+                if (trailsArray[i] == 1) availableTrails.Add(i);
+                if (charactersArray[i] == 1) availableCharacters.Add(i);
+                if (bgmsArray[i] == 1) availableBGMs.Add(i);
+            }
+            Debug.Log("Bought");
+            SaveLoad.saveload.Save();
+        }
     }
 
     public void HowToNext ()
@@ -316,9 +478,9 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex < availableCharacters.Count - 1)
         {
-            characterName.text = characters[++characterIndex].name;
-            curSprite.sprite = characters[characterIndex].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
+            characterName.text = characters[availableCharacters[++characterIndex]].name;
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
         }
     }
 
@@ -326,9 +488,9 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex > 0)
         {
-            characterName.text = characters[--characterIndex].name;
-            curSprite.sprite = characters[characterIndex].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
+            characterName.text = characters[availableCharacters[--characterIndex]].name;
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
         }
     }
 

@@ -115,8 +115,8 @@ public class Movement : MonoBehaviour
         Destroy(_deathParticle, 3f);
         //StartCoroutine(StaminaCoroutine());
         //StartCoroutine(FeverCoroutine());
-        //Time.timeScale = 0.2f;
     }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -135,7 +135,7 @@ public class Movement : MonoBehaviour
         {
 
            if (!panelJumped) rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
-            if (!jumping && rb.velocity.y > 0 && !touchJumped && !panelJumped && !attacking)
+            if (!jumping && rb.velocity.y > 0 && !touchJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
@@ -161,9 +161,29 @@ public class Movement : MonoBehaviour
         //}
     }
 
+    IEnumerator attackCoroutine;
     public void Attack()
     {
-        if (attackable) StartCoroutine(AttackCoroutine());
+        if (attackable)
+        {
+            //if (attackCoroutine != null) StopCoroutine(attackCoroutine);
+            attackCoroutine = AttackCoroutine();
+            StartCoroutine(attackCoroutine);
+        }
+    }
+
+    public void StopAttack ()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            _speed = speed;
+            rb.velocity = (new Vector2(dir * _speed, 0));
+            rb.gravityScale = gravity;
+            attacking = false;
+            attackTrail.GetComponent<TrailRenderer>().emitting = false;
+            StartCoroutine(AttackCoolTimeBarCoroutine(attackCoolTime));
+        }
     }
 
     public IEnumerator AttackCoroutine ()
@@ -182,7 +202,7 @@ public class Movement : MonoBehaviour
         _speed = 50;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
-        if (!jumping) rb.velocity = (new Vector2(dir * _speed, 0));
+        rb.velocity = (new Vector2(dir * _speed, 0));
         rb.gravityScale = gravity;
         attacking = false;
         attackTrail.GetComponent<TrailRenderer>().emitting = false;
@@ -250,6 +270,7 @@ public class Movement : MonoBehaviour
             jumpable = false;
             jumping = true;
             _jumping = jumping;
+            rb.gravityScale = gravity;
             if (side == -1)
             {
                 //lastVelocity *= -1f;
@@ -422,7 +443,7 @@ public class Movement : MonoBehaviour
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
         playerParticle.SetActive(false);
         camFol.dir = -dir;
-        rotCon.SetRotation(0f, new Vector2 (0, 1));
+        rotCon.SetRotation(0f, new Vector2 (0, -1));
         if (col.onGround)
         {
             gm.Dead();
@@ -477,6 +498,7 @@ public class Movement : MonoBehaviour
             camFol.dir *= -1;
             //dir = camFol.dir;
         }
+        if (!jumping) rotCon.SetRotation(0.2f, Vector2.zero);
         inputController.jump.gameObject.SetActive(true);
         inputController.attack.gameObject.SetActive(true);
         //inputController.attackButton.SetActive(true);
