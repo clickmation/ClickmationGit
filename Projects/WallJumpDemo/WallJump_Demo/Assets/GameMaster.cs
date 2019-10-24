@@ -162,7 +162,7 @@ public class GameMaster : MonoBehaviour
     {
         feverStructs[feverIndex].fever += f;
         //if (feverStructs[feverIndex].fever >= oriFever) feverStructs[feverIndex].fever = oriFever;
-        //feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
+        feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
         //if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
         while (feverIndex < feverStructs.Length)
         {

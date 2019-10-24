@@ -177,6 +177,11 @@ public class Movement : MonoBehaviour
         if (attackCoroutine != null)
         {
             StopCoroutine(attackCoroutine);
+            _speed = speed;
+            rb.velocity = (new Vector2(dir * _speed, 0));
+            rb.gravityScale = gravity;
+            attacking = false;
+            attackTrail.GetComponent<TrailRenderer>().emitting = false;
             StartCoroutine(AttackCoolTimeBarCoroutine(attackCoolTime));
         }
     }

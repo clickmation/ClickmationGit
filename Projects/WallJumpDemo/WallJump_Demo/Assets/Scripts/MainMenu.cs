@@ -63,16 +63,9 @@ public class MainMenu : MonoBehaviour
     [Header("Shop")]
 
     //public int shopIndex;
-    public Image prizeImage;
     public Text prizeName;
-    public Prize[] prizes;
-
-    [System.Serializable]
-    public struct Prize
-    {
-        public string name;
-        public Image image;
-    }
+    public SpriteRenderer prizeObject;
+    public GameObject prizeTrailObject;
 
     [Space]
 
@@ -145,15 +138,19 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("CharactersArray0", 1);
         PlayerPrefs.SetInt("BGMsArray0", 1);
 
-        PlayerPrefs.SetInt("TrailsArray1", 1);
-        PlayerPrefs.SetInt("TrailsArray2", 1);
-        PlayerPrefs.SetInt("CharactersArray1", 1);
-        PlayerPrefs.SetInt("CharactersArray2", 1);
-        PlayerPrefs.SetInt("CharactersArray3", 1);
-        PlayerPrefs.SetInt("CharactersArray4", 1);
-        PlayerPrefs.SetInt("CharactersArray5", 1);
-        PlayerPrefs.SetInt("CharactersArray6", 1);
-        PlayerPrefs.SetInt("CharactersArray7", 1);
+        //PlayerPrefs.SetInt("TrailsArray1", 0);
+        //PlayerPrefs.SetInt("TrailsArray2", 0);
+        //PlayerPrefs.SetInt("TrailsArray3", 0);
+        //PlayerPrefs.SetInt("TrailsArray4", 0);
+        //PlayerPrefs.SetInt("TrailsArray5", 0);
+        //PlayerPrefs.SetInt("TrailsArray6", 0);
+        //PlayerPrefs.SetInt("CharactersArray1", 0);
+        //PlayerPrefs.SetInt("CharactersArray2", 0);
+        //PlayerPrefs.SetInt("CharactersArray3", 0);
+        //PlayerPrefs.SetInt("CharactersArray4", 0);
+        //PlayerPrefs.SetInt("CharactersArray5", 0);
+        //PlayerPrefs.SetInt("CharactersArray6", 0);
+        //PlayerPrefs.SetInt("CharactersArray7", 0);
 
         for (int i = 0; i < 20; i++)
         {
@@ -175,6 +172,7 @@ public class MainMenu : MonoBehaviour
             shop = true;
             customization = false;
             sound = false;
+            if (curTrail != null) Destroy(curTrail);
             mainMenu.SetActive(false);
             shopObj.SetActive(true);
             howToObj.SetActive(false);
@@ -185,10 +183,16 @@ public class MainMenu : MonoBehaviour
             customizationButton.color = new Color32 (200, 200, 200, 128);
             soundButton.color = new Color32(200, 200, 200, 128);
             gameStartButton.color = new Color32(200, 200, 200, 128);
+            if (prizeTrailObject != null)
+            {
+                Destroy(prizeTrailObject);
+                prizeTrailObject = null;
+            }
         }
         else
         {
             shop = false;
+            prizeObject.gameObject.SetActive(false);
             mainMenu.SetActive(true);
             shopObj.SetActive(false);
             howToObj.SetActive(false);
@@ -209,6 +213,8 @@ public class MainMenu : MonoBehaviour
             shop = false;
             customization = false;
             sound = false;
+            if (curTrail != null) Destroy(curTrail);
+            prizeObject.gameObject.SetActive(false);
             mainMenu.SetActive(false);
             howToObj.SetActive(true);
             shopObj.SetActive(false);
@@ -249,7 +255,7 @@ public class MainMenu : MonoBehaviour
             shop = false;
             customization = true;
             sound = false;
-            SaveLoad.saveload.Load();
+            prizeObject.gameObject.SetActive(false);
             trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
             characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
             for (int i = 0; i < availableTrails.Count; i++)
@@ -277,10 +283,10 @@ public class MainMenu : MonoBehaviour
             //    }
             //}
             SaveLoad.saveload.Save();
-            trailName.text = trails[trailIndex].name;
-            curTrail = Instantiate(trails[trailIndex].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            curSprite.sprite = characters[characterIndex].sprite;
-            characterName.text = characters[characterIndex].name;
+            trailName.text = trails[availableTrails[trailIndex]].name;
+            curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            characterName.text = characters[availableCharacters[characterIndex]].name;
             //characterImage = characters[characterIndex].image;
             //bgmName.text = bgms[bgmIndex].name;
             //bgmImage = bgms[bgmIndex].image;
@@ -320,6 +326,8 @@ public class MainMenu : MonoBehaviour
             shop = true;
             customization = false;
             sound = true;
+            if (curTrail != null) Destroy(curTrail);
+            prizeObject.gameObject.SetActive(false);
             mainMenu.SetActive(false);
             shopObj.SetActive(false);
             howToObj.SetActive(false);
@@ -348,10 +356,73 @@ public class MainMenu : MonoBehaviour
 
     public void Buy ()
     {
-        SaveLoad.saveload.Load();
-        coin -= 1000;
-        Debug.Log("Bought");
-        SaveLoad.saveload.Save();
+        List<int> buyableTrails = new List<int>();
+        List<int> buyableCharacters = new List<int>();
+        for (int i = 0; i < trails.Length; i++)
+        {
+            if (trailsArray[i] == 0) buyableTrails.Add(i);
+        }
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (charactersArray[i] == 0) buyableCharacters.Add(i);
+        }
+        if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
+        {
+            Debug.LogError("There's no buyable items.");
+        }
+        else
+        {
+            int r;
+            int index;
+            if (buyableTrails.Count == 0)
+            {
+                r = 1;
+            }
+            else if (buyableCharacters.Count == 0)
+            {
+                r = 0;
+            }
+            else
+            {
+                r = Random.Range(0, 2);
+            }
+            SaveLoad.saveload.Load();
+            prizeObject.gameObject.SetActive(true);
+            if (r == 0)
+            {
+                Destroy(prizeTrailObject);
+                index = Random.Range(0, buyableTrails.Count);
+                PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
+                GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
+                prizeTrailObject = prizeTrail;
+                prizeName.text = trails[buyableTrails[index]].name;
+                PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
+            }
+            else if (r == 1)
+            {
+                index = Random.Range(0, buyableCharacters.Count);
+                PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
+                prizeObject.sprite = characters[buyableCharacters[index]].sprite;
+                prizeName.text = characters[buyableCharacters[index]].name;
+                PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
+            }
+            coin -= 1000;
+            coinText.text = coin.ToString();
+            availableTrails.Clear();
+            availableCharacters.Clear();
+            availableBGMs.Clear();
+            for (int i = 0; i < 20; i++)
+            {
+                trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+                charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
+                bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+                if (trailsArray[i] == 1) availableTrails.Add(i);
+                if (charactersArray[i] == 1) availableCharacters.Add(i);
+                if (bgmsArray[i] == 1) availableBGMs.Add(i);
+            }
+            Debug.Log("Bought");
+            SaveLoad.saveload.Save();
+        }
     }
 
     public void HowToNext ()
@@ -402,9 +473,9 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex < availableCharacters.Count - 1)
         {
-            characterName.text = characters[++characterIndex].name;
-            curSprite.sprite = characters[characterIndex].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
+            characterName.text = characters[availableCharacters[++characterIndex]].name;
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
         }
     }
 
@@ -412,9 +483,9 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex > 0)
         {
-            characterName.text = characters[--characterIndex].name;
-            curSprite.sprite = characters[characterIndex].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", characterIndex);
+            characterName.text = characters[availableCharacters[--characterIndex]].name;
+            curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
+            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
         }
     }
 
