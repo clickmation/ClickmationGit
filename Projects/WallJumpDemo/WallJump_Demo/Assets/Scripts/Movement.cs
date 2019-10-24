@@ -200,7 +200,7 @@ public class Movement : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         attackTrail.GetComponent<TrailRenderer>().emitting = true;
         AudioManager.PlaySound("attack");
-        Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
+        gm.SpawnShockWave(shockWaveJump, 0.25f);
         _speed = 50;
         yield return new WaitForSeconds(attackTime);
         _speed = speed;
@@ -331,7 +331,7 @@ public class Movement : MonoBehaviour
                     }
                 }
             }
-            Instantiate(shockWaveJump, transform.position, Quaternion.Euler(0, 0, 0));
+            gm.SpawnShockWave(shockWaveJump, 0.25f);
             camShake.Shake(5);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);

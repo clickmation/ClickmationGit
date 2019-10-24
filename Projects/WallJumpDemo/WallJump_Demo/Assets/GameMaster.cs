@@ -27,6 +27,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject mainmenuCheckPanel;
     [SerializeField] GameObject adReviveButton;
     [SerializeField] GameObject tokenReviveButton;
+    [SerializeField] List<GameObject> shockWaves = new List<GameObject>();
     public CanvasGroup overlayCanvas;
     public int coin;
     public Text coinText;
@@ -100,6 +101,18 @@ public class GameMaster : MonoBehaviour
         oriFever = fever;
         fever = 0;
         StartCoroutine(ScoreCoroutine());
+    }
+
+    public void SpawnShockWave (GameObject sw, float t)
+    {
+        GameObject shockWave = Instantiate(sw, mov.transform.position, Quaternion.Euler(0, 0, 0));
+        shockWaves.Add(shockWave);
+        StartCoroutine(ShockWavesCoroutine(shockWave, t));
+    }
+    IEnumerator ShockWavesCoroutine(GameObject _sw, float _t)
+    {
+        yield return new WaitForSeconds(_t);
+        shockWaves.Remove(_sw);
     }
 
     bool timeScaleTriggered;
@@ -242,7 +255,7 @@ public class GameMaster : MonoBehaviour
         dead = true;
         AudioManager.PlaySound("death");
         camFol.enabled = false;
-        Instantiate(shockWaveDeath, transform.position, Quaternion.Euler(0, 0, 0));
+        SpawnShockWave(shockWaveDeath, 2f);
         camShake.Shake(100);
         GameObject _deathParticle = Instantiate(deathParticle, mov.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
@@ -276,6 +289,7 @@ public class GameMaster : MonoBehaviour
 
     public void Pause()
     {
+        for (int i = 0; i < shockWaves.Count; i++) shockWaves[i].SetActive(false);
         inputController.gameObject.SetActive(false);
         pausePanel.SetActive(true);
         overlayCanvas.alpha = 0.2f;
@@ -285,6 +299,7 @@ public class GameMaster : MonoBehaviour
 
     public void Resume()
     {
+        for (int i = 0; i < shockWaves.Count; i++) shockWaves[i].SetActive(true);
         inputController.gameObject.SetActive(true);
         pausePanel.SetActive(false);
         Time.timeScale = 1;

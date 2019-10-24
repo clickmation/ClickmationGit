@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                Instantiate(mov.shockWaveKill, transform.position, Quaternion.Euler(0, 0, 0));
+                GameMaster.gameMaster.SpawnShockWave(mov.shockWaveKill, 2f);
                 mov.camShake.Shake(10);
                     AudioManager.PlaySound("kill");
                     GameObject clone;
