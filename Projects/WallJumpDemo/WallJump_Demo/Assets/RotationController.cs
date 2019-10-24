@@ -6,6 +6,7 @@ public class RotationController : MonoBehaviour
 {
     [SerializeField] private Movement mov;
     [SerializeField] private Transform movSprite;
+    [SerializeField] private Transform _movSprite;
     private IEnumerator setRotationCoroutine;
 
     void Start ()
