@@ -29,6 +29,7 @@ public class SaveLoad : MonoBehaviour
         SaveManager saver = new SaveManager();
         saver.highScore = mainMenu.highScore;
         saver.coin = mainMenu.coin;
+        saver.adToken = mainMenu.adToken;
         saver.curTrailIndex = mainMenu.curTrailIndex;
         saver.curCharacterIndex = mainMenu.curCharacterIndex;
         for (int i = 0; i < 20; i++)
@@ -55,6 +56,7 @@ public class SaveLoad : MonoBehaviour
 
             mainMenu.highScore = saver.highScore;
             mainMenu.coin = saver.coin;
+            mainMenu.adToken = saver.adToken;
             mainMenu.curTrailIndex = saver.curTrailIndex;
             mainMenu.curCharacterIndex = saver.curCharacterIndex;
             for (int i = 0; i < 20; i++)
@@ -85,6 +87,7 @@ class SaveManager
 {
     public int highScore;
     public int coin;
+    public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
     public int[] trailsArray = new int[20];

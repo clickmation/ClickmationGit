@@ -28,7 +28,7 @@ public class JumpPanel : MonoBehaviour
             mov.jumpable = true;
             if (mov.attacking)
             {
-                //StopCoroutine(mov.AttackCoroutine());
+                mov.StopAttack();
                 mov.attacking = false;
             }
             if (panelType == PanelType.GROUND)

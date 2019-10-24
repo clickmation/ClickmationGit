@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
 
     public int highScore;
     public int coin;
+    public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
     public int[] trailsArray = new int[20];
@@ -137,6 +138,7 @@ public class MainMenu : MonoBehaviour
         coin += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
         coinText.text = coin.ToString();
+        adToken = PlayerPrefs.GetInt("AdToken");
         curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
@@ -148,6 +150,10 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("CharactersArray1", 1);
         PlayerPrefs.SetInt("CharactersArray2", 1);
         PlayerPrefs.SetInt("CharactersArray3", 1);
+        PlayerPrefs.SetInt("CharactersArray4", 1);
+        PlayerPrefs.SetInt("CharactersArray5", 1);
+        PlayerPrefs.SetInt("CharactersArray6", 1);
+        PlayerPrefs.SetInt("CharactersArray7", 1);
 
         for (int i = 0; i < 20; i++)
         {
