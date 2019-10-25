@@ -26,8 +26,9 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                GameMaster.gameMaster.SpawnShockWave(mov.shockWaveKill, 2f);
-                mov.camShake.Shake(10);
+                    GameMaster.gameMaster.SpawnShockWave(mov.shockWaveKill, 2f);
+                    GameMaster.gameMaster.KillCount(1);
+                    mov.camShake.Shake(10);
                     AudioManager.PlaySound("kill");
                     GameObject clone;
                     clone = Instantiate(deathParticle, this.transform.position, Quaternion.identity) as GameObject;

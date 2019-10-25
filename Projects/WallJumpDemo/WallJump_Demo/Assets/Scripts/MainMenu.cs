@@ -21,7 +21,12 @@ public class MainMenu : MonoBehaviour
     [Header("SaveLoad")]
 
     public int highScore;
+    public int allScores;
     public int coin;
+    public int allCoins;
+    public int allDeaths;
+    public int allJumps;
+    public int allKills;
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
@@ -140,9 +145,18 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
         highScoreText.text = highScore.ToString();
         PlayerPrefs.SetInt("HighScore", 0);
+        allScores += PlayerPrefs.GetInt("Score");
+        PlayerPrefs.SetInt("Score", 0);
         coin += PlayerPrefs.GetInt("Coin");
+        allCoins += PlayerPrefs.GetInt("Coin");
         PlayerPrefs.SetInt("Coin", 0);
         coinText.text = coin.ToString();
+        allDeaths += PlayerPrefs.GetInt("Death");
+        PlayerPrefs.SetInt("Death", 0);
+        allJumps += PlayerPrefs.GetInt("Jumps");
+        PlayerPrefs.SetInt("Jumps", 0);
+        allKills += PlayerPrefs.GetInt("Kills");
+        PlayerPrefs.SetInt("Kills", 0);
         if (PlayerPrefs.GetInt("AdToken") != 11) adToken = PlayerPrefs.GetInt("AdToken");
         adTokenText.text = adToken.ToString();
         PlayerPrefs.SetInt("AdToken", 11);
@@ -165,19 +179,6 @@ public class MainMenu : MonoBehaviour
         //    PlayerPrefs.SetInt("CharactersArray" + i, 0);
         //    PlayerPrefs.SetInt("BGMsArray" + i, 0);
         //}
-        //PlayerPrefs.SetInt("TrailsArray1", 0);
-        //PlayerPrefs.SetInt("TrailsArray2", 0);
-        //PlayerPrefs.SetInt("TrailsArray3", 0);
-        //PlayerPrefs.SetInt("TrailsArray4", 0);
-        //PlayerPrefs.SetInt("TrailsArray5", 0);
-        //PlayerPrefs.SetInt("TrailsArray6", 0);
-        //PlayerPrefs.SetInt("CharactersArray1", 0);
-        //PlayerPrefs.SetInt("CharactersArray2", 0);
-        //PlayerPrefs.SetInt("CharactersArray3", 0);
-        //PlayerPrefs.SetInt("CharactersArray4", 0);
-        //PlayerPrefs.SetInt("CharactersArray5", 0);
-        //PlayerPrefs.SetInt("CharactersArray6", 0);
-        //PlayerPrefs.SetInt("CharactersArray7", 0);
 
         for (int i = 0; i < 20; i++)
         {

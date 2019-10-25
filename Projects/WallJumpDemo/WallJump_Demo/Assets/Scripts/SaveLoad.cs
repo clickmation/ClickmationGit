@@ -28,7 +28,12 @@ public class SaveLoad : MonoBehaviour
 
         SaveManager saver = new SaveManager();
         saver.highScore = mainMenu.highScore;
+        saver.allScores = mainMenu.allScores;
         saver.coin = mainMenu.coin;
+        saver.allCoins = mainMenu.allCoins;
+        saver.allDeaths = mainMenu.allDeaths;
+        saver.allJumps = mainMenu.allJumps;
+        saver.allKills = mainMenu.allKills;
         saver.adToken = mainMenu.adToken;
         saver.curTrailIndex = mainMenu.curTrailIndex;
         saver.curCharacterIndex = mainMenu.curCharacterIndex;
@@ -58,7 +63,12 @@ public class SaveLoad : MonoBehaviour
             //Debug.Log("Loaded.");
 
             mainMenu.highScore = saver.highScore;
+            mainMenu.allScores = saver.allScores;
             mainMenu.coin = saver.coin;
+            mainMenu.allCoins = saver.allCoins;
+            mainMenu.allDeaths = saver.allDeaths;
+            mainMenu.allJumps = saver.allJumps;
+            mainMenu.allKills = saver.allKills;
             mainMenu.adToken = saver.adToken;
             mainMenu.curTrailIndex = saver.curTrailIndex;
             mainMenu.curCharacterIndex = saver.curCharacterIndex;
@@ -93,7 +103,12 @@ public class SaveLoad : MonoBehaviour
 class SaveManager
 {
     public int highScore;
+    public int allScores;
     public int coin;
+    public int allCoins;
+    public int allDeaths;
+    public int allJumps;
+    public int allKills;
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;

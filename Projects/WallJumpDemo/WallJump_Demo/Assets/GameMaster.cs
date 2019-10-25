@@ -18,6 +18,9 @@ public class GameMaster : MonoBehaviour
     public Vector3 playerSpawnPoint;
     public Button attackButton;
 
+    int deathCount;
+    int scoreSum;
+
     [Space]
 
     [Header("UI")]
@@ -254,6 +257,7 @@ public class GameMaster : MonoBehaviour
     {
         dead = true;
         AudioManager.PlaySound("death");
+        deathCount++;
         camFol.enabled = false;
         SpawnShockWave(shockWaveDeath, 2f);
         camShake.Shake(100);
@@ -359,6 +363,7 @@ public class GameMaster : MonoBehaviour
         if (dead)
         {
             PlayerPrefs.SetInt("Coin", coin);
+            scoreSum += score;
         }
         PlayerPrefs.SetInt("HighScore", highScore);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -385,7 +390,10 @@ public class GameMaster : MonoBehaviour
         Time.timeScale = 1;
         if (dead)
         {
+            scoreSum += score;
             PlayerPrefs.SetInt("Coin", coin);
+            PlayerPrefs.SetInt("Deaths", deathCount);
+            PlayerPrefs.SetInt("Score", scoreSum);
         }
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.SetInt("AdToken", adToken);

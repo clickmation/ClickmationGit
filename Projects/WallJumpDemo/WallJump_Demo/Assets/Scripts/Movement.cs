@@ -273,6 +273,7 @@ public class Movement : MonoBehaviour
             jumping = true;
             _jumping = jumping;
             rb.gravityScale = gravity;
+            gm.Jumpcount(1);
             if (side == -1)
             {
                 //lastVelocity *= -1f;
