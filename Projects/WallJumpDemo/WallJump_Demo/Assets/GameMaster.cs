@@ -8,6 +8,7 @@ public class GameMaster : MonoBehaviour
 {
     public static GameMaster gameMaster;
     [SerializeField] InputController inputController;
+    AudioManager am;
 
     [SerializeField] GameObject mainCharacter;
     [SerializeField] GameObject startCollider;
@@ -99,6 +100,11 @@ public class GameMaster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (AudioManager.audioManager != null)
+        {
+            am = AudioManager.audioManager;
+            am.SetAudioSources();
+        }
         highScore = PlayerPrefs.GetInt("HighScore");
         PlayerPrefs.SetInt("HighScore", 0);
         adToken = PlayerPrefs.GetInt("AdToken");
