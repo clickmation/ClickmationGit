@@ -20,6 +20,8 @@ public class GameMaster : MonoBehaviour
 
     int deathCount;
     int scoreSum;
+    int jumpCount;
+    int killCount;
 
     [Space]
 
@@ -104,6 +106,16 @@ public class GameMaster : MonoBehaviour
         oriFever = fever;
         fever = 0;
         StartCoroutine(ScoreCoroutine());
+    }
+
+    public void Jumpcount (int c)
+    {
+        jumpCount += c;
+    }
+
+    public void KillCount (int c)
+    {
+        killCount += c;
     }
 
     public void SpawnShockWave (GameObject sw, float t)
