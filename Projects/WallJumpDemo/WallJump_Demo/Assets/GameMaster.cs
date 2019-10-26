@@ -8,6 +8,7 @@ public class GameMaster : MonoBehaviour
 {
     public static GameMaster gameMaster;
     [SerializeField] InputController inputController;
+    public RandomMapGanerater rmg;
     AudioManager am;
 
     [SerializeField] GameObject mainCharacter;
@@ -166,20 +167,16 @@ public class GameMaster : MonoBehaviour
                 staminaBars.Add(b);
             }
         }
-        else if (staminaCount == 0)
-        {
-            Dead();
-        }
     }
 
     public void WallJump()
     {
-        staminaBars[--staminaCount].SetActive(false);
-
+        staminaBars[--staminaCount].GetComponent<Animator>().SetTrigger("Death");
     }
 
     public void StaminaActiveFalse ()
-    {if (barActivated)
+    {
+        if (barActivated)
         {
             barActivated = false;
             StartCoroutine(StaminaActiveFalseCoroutine());
@@ -190,7 +187,7 @@ public class GameMaster : MonoBehaviour
     {
         for (int i = staminaCount; i < staminaBars.Count; i++)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.5f/ (float)staminaCount);
             staminaBars[i].SetActive(true);
         }
         yield return new WaitForSeconds(0.5f);

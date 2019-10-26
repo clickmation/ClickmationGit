@@ -253,10 +253,17 @@ public class Movement : MonoBehaviour
         }
         else if (col.onWall && col.wallTag == "WallJump")
         {
-            gm.WallJump();
-            Jump(-1, Vector2.zero);
-            AudioManager.PlaySound("groundJump");
-            //lightningParticle.SetActive(false);
+            if (gm.staminaCount != 0)
+            {
+                gm.WallJump();
+                Jump(-1, Vector2.zero);
+                AudioManager.PlaySound("groundJump");
+                //lightningParticle.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("Not enough Stamina");
+            }
         }
     }
     public void JumpButtonUp()
@@ -302,8 +309,8 @@ public class Movement : MonoBehaviour
                     rb.velocity += vec;
                     rotCon.SetRotation(0.1f, rb.velocity);
                     // TouchJump
-                 }
-            if (col.wall != null) col.wall = null;
+                }
+                if (col.wall != null) col.wall = null;
             }
             else
             {
@@ -498,7 +505,7 @@ public class Movement : MonoBehaviour
     {
         if (!jumping)
         {
-            camFol.dir *= -1;
+            camFol.dir *= -dir;
             //dir = camFol.dir;
         }
         if (!jumping) rotCon.SetRotation(0.2f, Vector2.zero);

@@ -18,6 +18,11 @@ public class JumpPanel : MonoBehaviour
     [SerializeField] float vecY;
     [SerializeField] float force;
 
+    void Start ()
+    {
+        dir *= GameMaster.gameMaster.rmg.mapDir;
+    }
+
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player")
