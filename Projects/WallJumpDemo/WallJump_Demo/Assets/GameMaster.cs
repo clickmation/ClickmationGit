@@ -152,11 +152,21 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    IEnumerator safCoroutine;
     public void StaminaActiveTrue(int c)
     {
         if (!barActivated)
         {
             barActivated = true;
+            if (safCoroutine != null) {
+                StopCoroutine(safCoroutine);
+                for (int i = 0; i < staminaBars.Count; i++)
+                {
+                    Destroy(staminaBars[i]);
+                }
+                staminaBars.Clear();
+                staminaCount = 0;
+            }
             staminaCount = c;
             staminaBarParent.gameObject.SetActive(true);
             for (int i = 0; i < c; i++)
@@ -179,7 +189,8 @@ public class GameMaster : MonoBehaviour
         if (barActivated)
         {
             barActivated = false;
-            StartCoroutine(StaminaActiveFalseCoroutine());
+            safCoroutine = StaminaActiveFalseCoroutine();
+            StartCoroutine(safCoroutine);
         }
     }
 
@@ -198,6 +209,7 @@ public class GameMaster : MonoBehaviour
         staminaBars.Clear();
         staminaCount = 0;
         staminaBarParent.gameObject.SetActive(false);
+        safCoroutine = null;
     }
 
     public void FeverAdd (float f)

@@ -20,7 +20,7 @@ public class JumpPanel : MonoBehaviour
 
     void Start ()
     {
-        dir *= GameMaster.gameMaster.rmg.mapDir;
+        dir *= GameMaster.gameMaster.rmg.mapList[GameMaster.gameMaster.rmg.mapList.Count - 1].dir;
     }
 
     void OnTriggerEnter2D (Collider2D other)

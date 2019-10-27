@@ -9,7 +9,6 @@ public class RandomMapGanerater : MonoBehaviour
     [SerializeField] int mapIndex;
     public int mapDir;
     public int wherePlayerIs;
-    private int rot;
 
     public Level[] levels;
     [System.Serializable]
@@ -24,13 +23,10 @@ public class RandomMapGanerater : MonoBehaviour
     {
         public GameObject mapObj;
         public bool invert;
+        public int dir;
     }
 
     public GameObject[] neutrals;
-
-    public string spawnLevel;
-    public List<GameObject> mapList = new List<GameObject>();
-    public List<GameObject> neutralList = new List<GameObject>();
 
     public ScoreCut[] scoreCuts;
     [System.Serializable]
@@ -48,10 +44,12 @@ public class RandomMapGanerater : MonoBehaviour
     }
 
     Vector2 spawnPoint = Vector2.zero;
+    public List<Map> mapList = new List<Map>();
+    public List<GameObject> neutralList = new List<GameObject>();
 
     public void Start()
     {
-        GameObject neutral = Instantiate(neutrals[0], spawnPoint, Quaternion.Euler(0, rot * 180, 0), transform);
+        GameObject neutral = Instantiate(neutrals[0], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
         spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
         neutralList.Add(neutral);
         Spawn();
@@ -115,20 +113,39 @@ public class RandomMapGanerater : MonoBehaviour
         {
             if (difficulty == levels[i].levelName)
             {
+                if (mapList.Count != 0 && mapList[mapList.Count - 1].invert)
+                {
+                    int rn = Random.Range(1, neutrals.Length);
+                    GameObject neutral = Instantiate(neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                    neutral.transform.localScale = new Vector3(mapDir, 1, 1);
+                    spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
+                    neutralList.Add(neutral);
+                }
+                Map tmpMap = new Map();
                 MapInfo mapInfo;
                 int rm = Random.Range(0, levels[i].maps.Length);
-                GameObject map = Instantiate(levels[i].maps[rm].mapObj, spawnPoint, Quaternion.Euler(0, rot * 180, 0), transform);
+                GameObject map = Instantiate(levels[i].maps[rm].mapObj, spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                map.transform.localScale = new Vector3(mapDir, 1, 1);
                 mapInfo = map.GetComponent<MapInfo>();
                 mapInfo.mapgan = this;
                 mapInfo.mapIndex = mapIndex++;
                 spawnPoint = mapInfo.endPos.position;
-                if (levels[i].maps[rm].invert) rot = rot == 0 ? 1 : 0;
-                if (levels[i].maps[rm].invert) mapDir = mapDir == 1 ? -1 : 1;
-                int rn = Random.Range(0, neutrals.Length);
-                GameObject neutral = Instantiate(neutrals[rn], spawnPoint, Quaternion.Euler(0, rot * 180, 0), transform);
-                spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
-                neutralList.Add(neutral);
-                mapList.Add(map);
+                tmpMap.mapObj = map;
+                tmpMap.invert = levels[i].maps[rm].invert;
+                tmpMap.dir = mapDir;
+                mapList.Add(tmpMap);
+                if (!levels[i].maps[rm].invert)
+                {
+                    int rn = Random.Range(1, neutrals.Length);
+                    GameObject neutral = Instantiate(neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                    neutral.transform.localScale = new Vector3(mapDir, 1, 1);
+                    spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
+                    neutralList.Add(neutral);
+                }
+                else
+                {
+                    mapDir = mapDir == 1 ? -1 : 1;
+                }
                 break;
             }
         }
@@ -136,10 +153,10 @@ public class RandomMapGanerater : MonoBehaviour
 
     public void Delete ()
     {
-        if ((wherePlayerIs - mapList[0].GetComponent<MapInfo>().mapIndex) > 0)
+        if ((wherePlayerIs - mapList[0].mapObj.GetComponent<MapInfo>().mapIndex) > 0)
         {
             Destroy(neutralList[0]);
-            Destroy(mapList[0]);
+            Destroy(mapList[0].mapObj);
             neutralList.RemoveAt(0);
             mapList.RemoveAt(0);
         }
