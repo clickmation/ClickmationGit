@@ -10,7 +10,6 @@ public class MainMenuSoundManager : MonoBehaviour
     [SerializeField] AudioSource audioOneShotSrc;
     AudioManager am;
     MainMenu mainMenu;
-    int r;
 
     void Start ()
     {
@@ -22,17 +21,57 @@ public class MainMenuSoundManager : MonoBehaviour
         audioLoopSrc.volume = mainMenu.soundEffectVolume;
     }
 
-    public void PlayNeonSound()
+    public void PlayNeonSound1()
     {
         audioOneShotSrc.volume = mainMenu.soundEffectVolume;
-        r = Random.Range(0, neonSounds.Length);
-        audioOneShotSrc.PlayOneShot(neonSounds[r]);
+        audioOneShotSrc.PlayOneShot(neonSounds[0]);
+    }
+	public void PlayNeonSound2()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(neonSounds[1]);
+    }
+	public void PlayNeonSound3()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(neonSounds[2]);
     }
 
-    public void PlaySparkSound()
+
+
+    public void PlaySparkSound1()
     {
         audioOneShotSrc.volume = mainMenu.soundEffectVolume;
-        r = Random.Range(0, sparkSounds.Length);
-        audioOneShotSrc.PlayOneShot(sparkSounds[r]);
+        audioOneShotSrc.PlayOneShot(sparkSounds[0]);
+    }
+	public void PlaySparkSound2()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[1]);
+    }
+	public void PlaySparkSound3()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[2]);
+    }
+	public void PlaySparkSound4()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[3]);
+    }
+	public void PlaySparkSound4_1()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[4]);
+    }
+	public void PlaySparkSound4_2()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[5]);
+    }
+	public void PlaySparkSound5()
+    {
+        audioOneShotSrc.volume = mainMenu.soundEffectVolume;
+        audioOneShotSrc.PlayOneShot(sparkSounds[6]);
     }
 }
