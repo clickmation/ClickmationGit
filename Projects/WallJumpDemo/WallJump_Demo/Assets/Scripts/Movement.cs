@@ -144,7 +144,7 @@ public class Movement : MonoBehaviour
             else if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
-                if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero);
+                if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
                 _jumping = jumping;
             }
             //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
@@ -156,11 +156,6 @@ public class Movement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
             }
         }
-
-        //if (!jumping)
-        //{
-
-        //}
     }
 
     IEnumerator attackCoroutine;
@@ -170,6 +165,8 @@ public class Movement : MonoBehaviour
         {
             //if (attackCoroutine != null) StopCoroutine(attackCoroutine);
             attackCoroutine = AttackCoroutine();
+            animator.SetTrigger("Attack");
+            rotCon.SetRotation(0, Vector2.zero, false);
             StartCoroutine(attackCoroutine);
         }
     }
@@ -216,7 +213,7 @@ public class Movement : MonoBehaviour
         attackCoolTimeBar.gameObject.SetActive(true);
         for (float t = 0; t < coolTime; t += Time.deltaTime)
         {
-            attackCoolTimeBar.localScale = new Vector3(0.15f, Mathf.Lerp(0, 1, t / coolTime), 1);
+            attackCoolTimeBar.localScale = new Vector3(Mathf.Lerp(0, 1, t / coolTime), 0.15f, 1);
             yield return new WaitForSeconds(Time.deltaTime);
         }
         attackCoolTimeBar.gameObject.SetActive(false);
@@ -292,7 +289,7 @@ public class Movement : MonoBehaviour
                     _speed = speed;
                     rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
-                    rotCon.SetRotation(0.1f, rb.velocity);
+                    rotCon.SetRotation(0.1f, -rb.velocity,true);
                     //Debug.Log(dir + ", " + rb.velocity);
                     // WallJump
                 }
@@ -307,7 +304,7 @@ public class Movement : MonoBehaviour
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(0.1f, rb.velocity);
+                    rotCon.SetRotation(0.1f, -rb.velocity, true);
                     // TouchJump
                 }
                 if (col.wall != null) col.wall = null;
@@ -320,7 +317,7 @@ public class Movement : MonoBehaviour
                     dir = camFol.dir;
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
-                    rotCon.SetRotation(0.1f, rb.velocity);
+                    rotCon.SetRotation(0.1f, -rb.velocity, true);
                 }
                 else
                 {
@@ -453,7 +450,7 @@ public class Movement : MonoBehaviour
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
         playerParticle.SetActive(false);
         camFol.dir = -dir;
-        rotCon.SetRotation(0f, new Vector2 (0, -1));
+        rotCon.SetRotation(0f, new Vector2 (0, -1), false);
         if (col.onGround)
         {
             gm.Dead();
@@ -508,7 +505,7 @@ public class Movement : MonoBehaviour
             camFol.dir *= -dir;
             //dir = camFol.dir;
         }
-        if (!jumping) rotCon.SetRotation(0.2f, Vector2.zero);
+        if (!jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
         inputController.jump.gameObject.SetActive(true);
         inputController.attack.gameObject.SetActive(true);
         //inputController.attackButton.SetActive(true);

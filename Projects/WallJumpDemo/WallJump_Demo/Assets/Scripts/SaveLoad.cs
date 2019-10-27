@@ -110,6 +110,7 @@ class SaveManager
     public int allJumps;
     public int allKills;
     public int adToken;
+    public int adTokenStack;
     public int curTrailIndex;
     public int curCharacterIndex;
     public int curBGMIndex;

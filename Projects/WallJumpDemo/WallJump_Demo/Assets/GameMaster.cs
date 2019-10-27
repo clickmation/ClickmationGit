@@ -9,6 +9,7 @@ public class GameMaster : MonoBehaviour
     public static GameMaster gameMaster;
     [SerializeField] InputController inputController;
     public RandomMapGanerater rmg;
+    public List<TriggerFunction> triggerFunctions = new List<TriggerFunction>();
     AudioManager am;
 
     [SerializeField] GameObject mainCharacter;
@@ -379,6 +380,8 @@ public class GameMaster : MonoBehaviour
     {
         dead = false;
         camFol.enabled = true;
+        for (int i = 0; i < triggerFunctions.Count; i++) triggerFunctions[i].Trigger();
+        rmg.StartSpawn();
         Instantiate(startCollider, playerSpawnPoint, Quaternion.Euler(0, 0, 0));
         GameObject mainChar = Instantiate(mainCharacter, playerSpawnPoint, Quaternion.Euler(0, 0, 0));
         mov = mainChar.GetComponent<Movement>();

@@ -14,14 +14,14 @@ public class RotationController : MonoBehaviour
         
     }
 
-    public void SetRotation (float time, Vector2 vec)
+    public void SetRotation (float time, Vector2 vec, bool zeroStart)
     {
         if (setRotationCoroutine != null) StopCoroutine(setRotationCoroutine);
-        setRotationCoroutine = SetRotationCoroutine(time, vec);
+        setRotationCoroutine = SetRotationCoroutine(time, vec, zeroStart);
         StartCoroutine(setRotationCoroutine);
     }
 
-    IEnumerator SetRotationCoroutine (float time, Vector2 vec)
+    IEnumerator SetRotationCoroutine (float time, Vector2 vec, bool zeroStart)
     {
         if (time == 0f)
         {
@@ -30,7 +30,9 @@ public class RotationController : MonoBehaviour
         }
         else
         {
-            float z = Mathf.Rad2Deg * movSprite.rotation.z;
+            float z;
+            if (zeroStart) z = 0;
+            else z = Mathf.Rad2Deg * movSprite.rotation.z;
             float r = vec == Vector2.zero ? 0 : -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y);
             //Debug.Log(z + ", " + r);
             for (float t = 0; t < time; t += Time.deltaTime)

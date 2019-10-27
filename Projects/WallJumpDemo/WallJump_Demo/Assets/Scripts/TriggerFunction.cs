@@ -7,7 +7,8 @@ public class TriggerFunction : MonoBehaviour
     [SerializeField] Animator anim;
     [SerializeField] GameObject triggerObject;
     [SerializeField] TriggerType triggerType;
-    [SerializeField] bool destroyed;
+    public bool destroy;
+    private bool added;
     enum TriggerType
     {
         ANIMATOR,
@@ -21,11 +22,16 @@ public class TriggerFunction : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D other)
     {
+        if (!added)
+        {
+            added = true;
+            GameMaster.gameMaster.triggerFunctions.Add(this);
+        }
         switch (triggerType)
         {
             case TriggerType.ACTIVE:
-                if (destroyed) triggerObject.SetActive(false);
-                else triggerObject.SetActive(true);
+                if (!destroy) triggerObject.SetActive(true);
+                else triggerObject.SetActive(false);
                 break;
             case TriggerType.ANIMATOR:
                 anim.SetTrigger("Triggered");
@@ -36,6 +42,11 @@ public class TriggerFunction : MonoBehaviour
     void OnCollisionEnter2D (Collision2D other)
     {
         anim.SetTrigger("Triggered");
+    }
+
+    public void Trigger()
+    {
+        triggerObject.SetActive(false);
     }
 
     public void Destroy ()

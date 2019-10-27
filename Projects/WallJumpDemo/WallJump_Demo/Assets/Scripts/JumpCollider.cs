@@ -9,11 +9,6 @@ public class JumpCollider : MonoBehaviour
     [SerializeField] private Camera camera;
     [SerializeField] private Button.ButtonClickedEvent jumpUp;
     [SerializeField] private Button.ButtonClickedEvent jumpDown;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
