@@ -54,10 +54,11 @@ public class DailyReward : MonoBehaviour
 
     void Update()
     {
-		if (!isFullStack) {
+		if (!isFullStack() && justRefreshed) {
 			_remainingTime = eventEndTime.Subtract(currentTime);
 			tcounter = _remainingTime.TotalMilliseconds;
 			countIsReady = true;
+			justRefreshed = false;
 		}
 		
 		if (countIsReady) {startCountdown();}
@@ -73,7 +74,11 @@ public class DailyReward : MonoBehaviour
 	private void startCountdown()
 	{
 		tcounter-= Time.deltaTime * 1000;
-		deactivateButton(GetRemainingTime(tcounter) + "Until\nMore Revive Tokens");
+		if (saver.curStack == 0) {
+			deactivateButton(GetRemainingTime(tcounter) + "Until\nMore Revive Tokens");	
+		} else {
+			activateButton(GetRemainingTime(tcounter) + "Until\nMore Revive Tokens");
+		}
 		
 		if (tcounter <= 0) {
 			countIsReady = false;
@@ -104,6 +109,7 @@ public class DailyReward : MonoBehaviour
 	{
 		lastDate = currentDate;
 		//curStack의 값을 maxStack의 값으로 바꿈 (maxStack은 saver에 있음)
+		justRefreshed = true;
 	}
 	
 	public void getReward()
