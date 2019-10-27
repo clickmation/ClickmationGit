@@ -32,6 +32,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject pausePanel;
     [SerializeField] GameObject reTryCheckPanel;
     [SerializeField] GameObject mainmenuCheckPanel;
+    [SerializeField] GameObject soundPanel;
     [SerializeField] GameObject adReviveButton;
     [SerializeField] GameObject tokenReviveButton;
     [SerializeField] List<GameObject> shockWaves = new List<GameObject>();
@@ -93,6 +94,19 @@ public class GameMaster : MonoBehaviour
     public Text deadPanelScore;
     public Text pausePanelScore;
 
+    [Space]
+
+    [Header("Sound")]
+
+    [SerializeField] bool sound;
+    public float masterVolume;
+    public float soundEffectVolume;
+    public float bgmVolume;
+    public Slider masterVolumeSlider;
+    public Slider soundEffectVolumeSlider;
+    public Slider bgmVolumeSlider;
+
+
     void Awake ()
     {
         GameMaster.gameMaster = this;
@@ -104,6 +118,7 @@ public class GameMaster : MonoBehaviour
         if (AudioManager.audioManager != null)
         {
             am = AudioManager.audioManager;
+            am.gm = this;
             am.SetAudioSources();
         }
         highScore = PlayerPrefs.GetInt("HighScore");
@@ -112,6 +127,18 @@ public class GameMaster : MonoBehaviour
         PlayerPrefs.SetInt("AdToken", 0);
         oriFever = fever;
         fever = 0;
+        masterVolumeSlider.onValueChanged = am.setMasterVolume;
+        soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
+        bgmVolumeSlider.onValueChanged = am.setBGMVolume;
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+        bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+        masterVolumeSlider.value = masterVolume;
+        soundEffectVolumeSlider.value = soundEffectVolume;
+        bgmVolumeSlider.value = bgmVolume;
+        am.SetMasterVolume();
+        am.SetSoundEffectVolume();
+        am.SetBGMVolume();
         StartCoroutine(ScoreCoroutine());
     }
 
@@ -425,5 +452,50 @@ public class GameMaster : MonoBehaviour
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+    public void Sound()
+    {
+        if (!sound)
+        {
+            sound = true;
+            soundPanel.SetActive(true);
+            //if (curTrail != null) Destroy(curTrail);
+            //if (curBGMIndex == 0) bgmBackButton.color = new Color32(200, 200, 200, 128);
+            //else if (curBGMIndex == availableBGMs.Count - 1) bgmNextButton.color = new Color32(200, 200, 200, 128);
+            //prizeObject.gameObject.SetActive(false);
+            //mainMenu.SetActive(false);
+            //shopObj.SetActive(false);
+            //howToObj.SetActive(false);
+            //cusObj.SetActive(false);
+            //soundObj.SetActive(true);
+            //bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
+            //for (int i = 0; i < availableBGMs.Count; i++)
+            //{
+            //    if (availableBGMs[i] == bgmIndex)
+            //    {
+            //        bgmIndex = i;
+            //        break;
+            //    }
+            //}
+            //bgmName.text = bgms[availableBGMs[bgmIndex]].name;
+            //AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
+            //howToButton.color = new Color32(200, 200, 200, 128);
+            //shopButton.color = new Color32(200, 200, 200, 128);
+            //customizationButton.color = new Color32(200, 200, 200, 128);
+            //soundButton.color = new Color32(255, 255, 255, 255);
+            //gameStartButton.color = new Color32(200, 200, 200, 128);
+            //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+            //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+            //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+            //masterVolumeSlider.value = masterVolume;
+            //soundEffectVolumeSlider.value = soundEffectVolume;
+            //bgmVolumeSlider.value = bgmVolume;
+            //SaveLoad.saveload.Save();
+        }
+        else
+        {
+            sound = false;
+            soundPanel.SetActive(false);
+        }
     }
 }

@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager audioManager;
     public MainMenu mainMenu;
+    public GameMaster gm;
 	
 	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound;
     public static AudioSource soundEffectAudioSrc;
@@ -45,7 +46,8 @@ public class AudioManager : MonoBehaviour
 
     public void SetMasterVolume ()
     {
-        masterVolume = mainMenu.masterVolumeSlider.value;
+        if (mainMenu != null) masterVolume = mainMenu.masterVolumeSlider.value;
+        else masterVolume = gm.masterVolumeSlider.value;
         soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
         bgmAudioSrc.volume = masterVolume * bgmVolume;
         PlayerPrefs.SetFloat("MasterVolume", masterVolume);
@@ -53,14 +55,16 @@ public class AudioManager : MonoBehaviour
 
     public void SetSoundEffectVolume ()
     {
-        soundEffectVolume = mainMenu.soundEffectVolumeSlider.value;
+        if (mainMenu != null) soundEffectVolume = mainMenu.soundEffectVolumeSlider.value;
+        else masterVolume = soundEffectVolume = gm.soundEffectVolumeSlider.value;
         soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
         PlayerPrefs.SetFloat("SoundEffectVolume", soundEffectVolume);
     }
 
     public void SetBGMVolume ()
     {
-        bgmVolume = mainMenu.bgmVolumeSlider.value;
+        if (mainMenu != null) masterVolume = bgmVolume = mainMenu.bgmVolumeSlider.value;
+        else masterVolume = bgmVolume = gm.bgmVolumeSlider.value;
         bgmAudioSrc.volume = masterVolume * bgmVolume;
         PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
     }
