@@ -9,7 +9,7 @@ public class AudioManager : MonoBehaviour
     public MainMenu mainMenu;
     public GameMaster gm;
 	
-	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound;
+	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound, touchSound;
     public static AudioSource soundEffectAudioSrc;
     public static AudioSource bgmAudioSrc;
     //[SerializeField] AudioSource SEASrc;
@@ -42,6 +42,7 @@ public class AudioManager : MonoBehaviour
 		coinSound = Resources.Load<AudioClip> ("Coin4");
 		jumpPanelSound = Resources.Load<AudioClip> ("Boing2");
 		wallPanelSound = Resources.Load<AudioClip> ("Boing1");
+        touchSound = Resources.Load<AudioClip>("Coin5");
     }
 
     public void SetMasterVolume ()
@@ -96,6 +97,9 @@ public class AudioManager : MonoBehaviour
 			case "wallPanel":
 				soundEffectAudioSrc.PlayOneShot (wallPanelSound);
 				break;
+            case "touch":
+                soundEffectAudioSrc.PlayOneShot(touchSound);
+                break;
             default:
                 Debug.LogError("AudioManager : no corresponding audio of name \"" + clip + "\"");
                 break;

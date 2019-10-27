@@ -8,8 +8,10 @@ public class MainMenuSoundManager : MonoBehaviour
     [SerializeField] AudioClip[] sparkSounds;
     [SerializeField] AudioSource audioLoopSrc;
     [SerializeField] AudioSource audioOneShotSrc;
+    [SerializeField] Animator anim;
     AudioManager am;
     MainMenu mainMenu;
+    int r;
 
     void Start ()
     {
@@ -19,6 +21,12 @@ public class MainMenuSoundManager : MonoBehaviour
             mainMenu = am.mainMenu;
         }
         audioLoopSrc.volume = mainMenu.soundEffectVolume;
+    }
+
+    public void Dice ()
+    {
+        r = Random.Range(0, 100);
+        anim.SetInteger("RanNum", r);
     }
 
     public void PlayNeonSound1()

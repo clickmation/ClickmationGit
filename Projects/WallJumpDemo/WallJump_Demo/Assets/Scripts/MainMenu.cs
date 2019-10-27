@@ -222,6 +222,7 @@ public class MainMenu : MonoBehaviour
 
     public void Shop ()
     {
+        AudioManager.PlaySound("touch");
         if (!shop)
         {
             howTo = false;
@@ -263,6 +264,7 @@ public class MainMenu : MonoBehaviour
 
     public void HowTo ()
     {
+        AudioManager.PlaySound("touch");
         if (!howTo)
         {
             howTo = true;
@@ -299,6 +301,7 @@ public class MainMenu : MonoBehaviour
 
     public void GameStart()
     {
+        AudioManager.PlaySound("touch");
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -306,6 +309,7 @@ public class MainMenu : MonoBehaviour
 
     public void Customization()
     {
+        AudioManager.PlaySound("touch");
         if (!customization)
         {
             howTo = false;
@@ -371,6 +375,7 @@ public class MainMenu : MonoBehaviour
 
     public void Sound()
     {
+        AudioManager.PlaySound("touch");
         if (!sound)
         {
             howTo = false;
@@ -427,6 +432,7 @@ public class MainMenu : MonoBehaviour
 
     public void Buy ()
     {
+        AudioManager.PlaySound("touch");
         if (coin >= 1000)
         {
             List<int> buyableTrails = new List<int>();
@@ -531,6 +537,7 @@ public class MainMenu : MonoBehaviour
     {
         if (howToIndex < scenes.Length - 1)
         {
+            AudioManager.PlaySound("touch");
             if (howToIndex == 0) backButton.SetActive(true);
             scenes[howToIndex++].SetActive(false);
             scenes[howToIndex].SetActive(true);
@@ -542,6 +549,7 @@ public class MainMenu : MonoBehaviour
     {
         if (howToIndex > 0)
         {
+            AudioManager.PlaySound("touch");
             if (howToIndex == scenes.Length - 1) nextButton.SetActive(true);
             scenes[howToIndex--].SetActive(false);
             scenes[howToIndex].SetActive(true);
@@ -553,6 +561,7 @@ public class MainMenu : MonoBehaviour
     {
         if (trailIndex < availableTrails.Count - 1)
         {
+            AudioManager.PlaySound("touch");
             trailName.text = trails[availableTrails[++trailIndex]].name;
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
@@ -579,6 +588,7 @@ public class MainMenu : MonoBehaviour
     {
         if (trailIndex > 0)
         {
+            AudioManager.PlaySound("touch");
             trailName.text = trails[availableTrails[--trailIndex]].name;
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
@@ -605,6 +615,7 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex < availableCharacters.Count - 1)
         {
+            AudioManager.PlaySound("touch");
             characterName.text = characters[availableCharacters[++characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
@@ -630,6 +641,7 @@ public class MainMenu : MonoBehaviour
     {
         if (characterIndex > 0)
         {
+            AudioManager.PlaySound("touch");
             characterName.text = characters[availableCharacters[--characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
@@ -655,6 +667,7 @@ public class MainMenu : MonoBehaviour
     {
         if (bgmIndex < availableBGMs.Count - 1)
         {
+            AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[++bgmIndex]].name;
             PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
@@ -680,6 +693,7 @@ public class MainMenu : MonoBehaviour
     {
         if (bgmIndex > 0)
         {
+            AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[--bgmIndex]].name;
             PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
