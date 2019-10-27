@@ -459,38 +459,6 @@ public class GameMaster : MonoBehaviour
         {
             sound = true;
             soundPanel.SetActive(true);
-            //if (curTrail != null) Destroy(curTrail);
-            //if (curBGMIndex == 0) bgmBackButton.color = new Color32(200, 200, 200, 128);
-            //else if (curBGMIndex == availableBGMs.Count - 1) bgmNextButton.color = new Color32(200, 200, 200, 128);
-            //prizeObject.gameObject.SetActive(false);
-            //mainMenu.SetActive(false);
-            //shopObj.SetActive(false);
-            //howToObj.SetActive(false);
-            //cusObj.SetActive(false);
-            //soundObj.SetActive(true);
-            //bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
-            //for (int i = 0; i < availableBGMs.Count; i++)
-            //{
-            //    if (availableBGMs[i] == bgmIndex)
-            //    {
-            //        bgmIndex = i;
-            //        break;
-            //    }
-            //}
-            //bgmName.text = bgms[availableBGMs[bgmIndex]].name;
-            //AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
-            //howToButton.color = new Color32(200, 200, 200, 128);
-            //shopButton.color = new Color32(200, 200, 200, 128);
-            //customizationButton.color = new Color32(200, 200, 200, 128);
-            //soundButton.color = new Color32(255, 255, 255, 255);
-            //gameStartButton.color = new Color32(200, 200, 200, 128);
-            //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-            //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-            //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
-            //masterVolumeSlider.value = masterVolume;
-            //soundEffectVolumeSlider.value = soundEffectVolume;
-            //bgmVolumeSlider.value = bgmVolume;
-            //SaveLoad.saveload.Save();
         }
         else
         {
