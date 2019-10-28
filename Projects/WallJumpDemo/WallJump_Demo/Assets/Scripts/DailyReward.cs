@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DailyReward : MonoBehaviour
 {
+	public Animator tokenAnimator;
     public Button tokenButton;
     public Text timeLabel;
     private double tcounter;
@@ -20,7 +21,7 @@ public class DailyReward : MonoBehaviour
 	private int maxStack = 3;
 
 	
-	//lastDate도 saver에 어케 해야할거임
+	//refreshDate도 saver에 어케 해야할거임
 	
     void Start()
     {
@@ -29,6 +30,7 @@ public class DailyReward : MonoBehaviour
 			refreshStack();
 			activateButton();
 		} else {
+			tokenAnimator.SetBool("Full", IsFullStack());
 			if (curStack == 0) {
 				deactivateButton();
 			} else {
@@ -100,7 +102,6 @@ public class DailyReward : MonoBehaviour
 	{
 		//saver값 써야함
 		if (curStack >= maxStack) {
-			activateButton();
 			return true;
 		} else {
 			return false;
@@ -112,25 +113,27 @@ public class DailyReward : MonoBehaviour
 		refreshDate = currentDate.Add(aDay);
 		curStack = maxStack;
 		//curStack의 값을 maxStack의 값으로 바꿈 (maxStack은 saver에 있음)
+		tokenAnimator.SetBool("Full", IsFullStack());
 	}
 	
 	public void getReward()
 	{
 		curStack--;
 		//token갯수 ++
+		tokenAnimator.SetBool("Full", IsFullStack());
 		updateTime();
 	}
 	
 	private void activateButton()
 	{
 		tokenButton.interactable = true;
-		//animation 그거 parameter 중 activated를 true로 하면 될거임
+		tokenAnimator.SetBool("Activated", true);
 	}
 	
 	private void deactivateButton()
 	{
 		tokenButton.interactable = false;
-		//animation 그거 parameter 중 activated를 false로 하면 될거임
+		tokenAnimator.SetBool("Activated", false);
 	}
 	
 	private void validateTime()
