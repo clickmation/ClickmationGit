@@ -8,7 +8,7 @@ public class GameMaster : MonoBehaviour
 {
     public static GameMaster gameMaster;
     [SerializeField] InputController inputController;
-    public RandomMapGanerater rmg;
+    RandomMapGanerater rmg;
     public List<TriggerFunction> triggerFunctions = new List<TriggerFunction>();
     AudioManager am;
 
@@ -122,6 +122,7 @@ public class GameMaster : MonoBehaviour
             am.gm = this;
             am.SetAudioSources();
         }
+        rmg = RandomMapGanerater.randomMapGanerater;
         highScore = PlayerPrefs.GetInt("HighScore");
         PlayerPrefs.SetInt("HighScore", 0);
         adToken = PlayerPrefs.GetInt("AdToken");

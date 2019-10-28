@@ -5,6 +5,7 @@ using UnityEngine;
 public class JumpPanel : MonoBehaviour
 {
     private Movement mov;
+    [SerializeField] Transform parentMap;
     [SerializeField] PanelType panelType;
     enum PanelType
     {
@@ -20,7 +21,8 @@ public class JumpPanel : MonoBehaviour
 
     void Start ()
     {
-        dir *= GameMaster.gameMaster.rmg.mapList[GameMaster.gameMaster.rmg.mapList.Count - 1].dir;
+        parentMap = transform.parent.parent.parent;
+        if(panelType == PanelType.WALL) dir *= parentMap.lossyScale.x;
     }
 
     void OnTriggerEnter2D (Collider2D other)
