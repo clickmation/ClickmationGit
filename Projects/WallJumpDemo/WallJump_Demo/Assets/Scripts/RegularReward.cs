@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Globalization;
 
 public class RegularReward : MonoBehaviour
 {
@@ -10,18 +11,25 @@ public class RegularReward : MonoBehaviour
     public Button coinButton;
 	public Text timeLabel;
 	private double tcounter;
-	private TimeSpan currentTime;
-	private DateTime currentDate;
+	private DateTime currentDateTime;
+	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
 	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
 	private string TimeFormat;
+	private string dateFormat = "MM/dd/yyyy HH:mm:ss";
+	private CultureInfo provider = CultureInfo.InvariantCulture;
 	private bool countIsReady;
-	private bool timerSet
+	private bool timerSet;
 	
 	
 	void Start()
 	{
 		StartCoroutine("CheckTime");
+	}
+	
+	void OnEnable()
+	{
+		
 	}
 	
 	private IEnumerator CheckTime()
@@ -37,16 +45,24 @@ public class RegularReward : MonoBehaviour
 	
 	private void updateTime()
     {
-        currentTime = TimeSpan.Parse(TimeManager.sharedInstance.getCurrentTimeNow());
-        currentDate = DateTime.Parse(TimeManager.sharedInstance.getCurrentDateNow());
+        currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.getCurrentDateNow()+" "+TimeManager.sharedInstance.getCurrentTimeNow(), dateFormat, provider);
+		timerSet = true;
     }
 	
 	void Update()
 	{
 		if(timerSet)
 		{
-			
+			if(DateTime.Compare(refreshDateTime, currentDateTime) > 0) {
+				_remainingTime = refreshDateTime.Subtract(currentDateTime);
+				tcounter = _remainingTime.TotalMilliseconds;
+				countIsReady = true;
+			} else {
+				activateButton(true);
+			}
 		}
+		
+		if(countIsReady) {startCountdown();}
 	}
 	
 	public string GetRemainingTime(double x)
@@ -69,19 +85,21 @@ public class RegularReward : MonoBehaviour
 	
 	public void getReward()
 	{
+		//coinRanReward();
 		
+		updateTime();
+		activateButton(false);
 	}
 	
-	private void activateButton()
-	{
-		coinButton.interactable = true;
-		tokenAnimator.SetBool("Activated", true);
-	}
+	//public bool IsButtonActive()
+	//{
+	//	
+	//}
 	
-	private void deactivateButton()
+	private void activateButton(bool x)
 	{
-		coinButton.interactable = false;
-		tokenAnimator.SetBool("Activated", false);
+		coinButton.interactable = x;
+		coinAnimator.SetBool("Activated", x);
 	}
 	
 	private void validateTime()

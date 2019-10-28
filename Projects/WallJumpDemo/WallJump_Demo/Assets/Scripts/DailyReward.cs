@@ -9,6 +9,7 @@ public class DailyReward : MonoBehaviour
 	public Animator tokenAnimator;
     public Button tokenButton;
     public Text timeLabel;
+	public Text stackLabel;
     private double tcounter;
     private TimeSpan currentTime;
     private DateTime currentDate;
@@ -19,25 +20,31 @@ public class DailyReward : MonoBehaviour
     private bool countIsReady;
     private int curStack;
 	private int maxStack = 3;
+	
+	private bool tempActivated;
+	private bool tempFull;
 
 	
 	//refreshDate도 saver에 어케 해야할거임
+	
 	
     void Start()
     {
         StartCoroutine("CheckTime");
 		if (StackNeedsRefresh()){
 			refreshStack();
-			activateButton();
+			activateButton(IsButtonActive());
 		} else {
 			tokenAnimator.SetBool("Full", IsFullStack());
-			if (curStack == 0) {
-				deactivateButton();
-			} else {
-				activateButton();
-			}
+			activateButton(IsButtonActive());
 		}
     }
+	
+	void OnEnable()
+	{
+		tokenAnimator.SetBool("Activated", IsButtonActive());
+		tokenAnimator.SetBool("Full", IsFullStack());
+	}
 
     private IEnumerator CheckTime()
     {
@@ -80,7 +87,7 @@ public class DailyReward : MonoBehaviour
 	private void startCountdown()
 	{
 		tcounter-= Time.deltaTime * 1000;
-		timeLabel.text = GetRemainingTime(tcounter) + "Until\nMore Revive Tokens";	
+		timeLabel.text = GetRemainingTime(tcounter) + " Until\nMore Revive Tokens";	
 		
 		
 		if (tcounter <= 0) {
@@ -91,6 +98,7 @@ public class DailyReward : MonoBehaviour
 
     public bool StackNeedsRefresh()
     {
+		//안되면 DateTime.Compare(currentDate, refreshDate)>0으로 해보기
         if (currentDate.Subtract(refreshDate).TotalDays >= 0) {
             return true;
         } else {
@@ -108,10 +116,21 @@ public class DailyReward : MonoBehaviour
 		}
 	}
 	
+	public bool IsButtonActive()
+	{
+		if(curStack == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
 	public void refreshStack()
 	{
 		refreshDate = currentDate.Add(aDay);
 		curStack = maxStack;
+		stackLabel.text = curStack + "/" + maxStack;
 		//curStack의 값을 maxStack의 값으로 바꿈 (maxStack은 saver에 있음)
 		tokenAnimator.SetBool("Full", IsFullStack());
 	}
@@ -120,21 +139,18 @@ public class DailyReward : MonoBehaviour
 	{
 		curStack--;
 		//token갯수 ++
+		stackLabel.text = curStack + "/" + maxStack;
+		activateButton(IsButtonActive());
 		tokenAnimator.SetBool("Full", IsFullStack());
 		updateTime();
 	}
 	
-	private void activateButton()
+	private void activateButton(bool x)
 	{
-		tokenButton.interactable = true;
-		tokenAnimator.SetBool("Activated", true);
+		tokenButton.interactable = x;
+		tokenAnimator.SetBool("Activated", x);
 	}
 	
-	private void deactivateButton()
-	{
-		tokenButton.interactable = false;
-		tokenAnimator.SetBool("Activated", false);
-	}
 	
 	private void validateTime()
 	{
