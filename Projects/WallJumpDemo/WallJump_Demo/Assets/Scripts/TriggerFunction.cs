@@ -46,7 +46,8 @@ public class TriggerFunction : MonoBehaviour
 
     public void Trigger()
     {
-        triggerObject.SetActive(false);
+        if (!destroy) triggerObject.SetActive(false);
+        else triggerObject.SetActive(true);
     }
 
     public void Destroy ()

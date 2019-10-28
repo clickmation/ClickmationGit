@@ -26,10 +26,12 @@ public class RotationController : MonoBehaviour
         if (time == 0f)
         {
             movSprite.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
+            _movSprite.rotation = Quaternion.Euler(0, 0, -movSprite.rotation.z);
             //Debug.Log(-mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
         }
         else
         {
+            _movSprite.localRotation = Quaternion.Euler(0, 0, 0);
             float z;
             if (zeroStart) z = 0;
             else z = Mathf.Rad2Deg * movSprite.rotation.z;

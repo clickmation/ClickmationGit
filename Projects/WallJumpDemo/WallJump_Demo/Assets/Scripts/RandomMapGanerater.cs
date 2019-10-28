@@ -43,7 +43,7 @@ public class RandomMapGanerater : MonoBehaviour
         public int percent;
     }
 
-    Vector2 spawnPoint = new Vector2(-20, 0);
+    [SerializeField] Vector2 spawnPoint = new Vector2(-20, 0);
     public List<Map> mapList = new List<Map>();
     public List<GameObject> neutralList = new List<GameObject>();
 
@@ -58,7 +58,6 @@ public class RandomMapGanerater : MonoBehaviour
     public void StartSpawn()
     {
         GameObject neutral = Instantiate(neutrals[0], mapList[0].mapObj.transform.position, Quaternion.Euler(0, 0, 0), transform);
-        spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
         neutral.transform.localScale = new Vector3(-mapList[0].dir, 1, 1);
         gm.playerSpawnPoint = neutral.transform.GetChild(0).position;
         neutral.transform.SetParent(neutralList[0].transform);

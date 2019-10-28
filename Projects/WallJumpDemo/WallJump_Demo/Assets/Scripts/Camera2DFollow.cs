@@ -33,11 +33,11 @@ public class Camera2DFollow : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //if (target == null)
-        //{
-        //    FindPlayer();
-        //    return;
-        //}
+        if (target == null)
+        {
+            FindPlayer();
+            return;
+        }
 
         // only update lookahead pos if accelerating or changed direction
         float xMoveDelta = dir * Mathf.Abs((target.position - lastTargetPosition).x);

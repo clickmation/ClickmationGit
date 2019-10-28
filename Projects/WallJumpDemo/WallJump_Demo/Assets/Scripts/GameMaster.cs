@@ -379,14 +379,13 @@ public class GameMaster : MonoBehaviour
     public void Revive()
     {
         dead = false;
-        camFol.enabled = true;
         for (int i = 0; i < triggerFunctions.Count; i++) triggerFunctions[i].Trigger();
         rmg.StartSpawn();
         Instantiate(startCollider, playerSpawnPoint, Quaternion.Euler(0, 0, 0));
         GameObject mainChar = Instantiate(mainCharacter, playerSpawnPoint, Quaternion.Euler(0, 0, 0));
         mov = mainChar.GetComponent<Movement>();
-        mov.camFol = camFol;
-        mov.camShake = camShake;
+        mov.dir = rmg.mapList[0].dir;
+        camFol.enabled = true;
         camFol.target = mainChar.transform;
         inputController.mov = mov;
         inputController.col = mov.GetComponent<Collision>();
@@ -395,6 +394,8 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
         scoreText.gameObject.SetActive(true);
         deadPanel.SetActive(false);
+        mov.camFol = camFol;
+        mov.camShake = camShake;
         Time.timeScale = 1;
         overlayCanvas.alpha = 1.0f;
     }
