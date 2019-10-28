@@ -10,7 +10,6 @@ public class MapInfo : MonoBehaviour
     public Transform endPos;
     private bool spawned;
     [SerializeField] bool neutral;
-    [SerializeField] bool invert;
     public List<TriggerFunction> tf = new List<TriggerFunction>();
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -22,10 +21,5 @@ public class MapInfo : MonoBehaviour
             mapgan.Spawn();
             mapgan.Delete();
         }
-    }
-
-    public bool IsInvert()
-    {
-        return invert;
     }
 }

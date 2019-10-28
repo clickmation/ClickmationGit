@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RandomMapGanerater : MonoBehaviour
 {
-    public static RandomMapGanerater randomMapGanerater;
     [SerializeField] GameMaster gm;
 
     [SerializeField] int mapIndex;
@@ -47,11 +46,6 @@ public class RandomMapGanerater : MonoBehaviour
     [SerializeField] Vector2 spawnPoint = new Vector2(-20, 0);
     public List<Map> mapList = new List<Map>();
     public List<GameObject> neutralList = new List<GameObject>();
-
-    void Awake()
-    {
-        RandomMapGanerater.randomMapGanerater = this;
-    }
 
     public void Start()
     {
@@ -145,7 +139,7 @@ public class RandomMapGanerater : MonoBehaviour
                 mapInfo.mapIndex = mapIndex++;
                 spawnPoint = mapInfo.endPos.position;
                 tmpMap.mapObj = map;
-                tmpMap.invert = mapInfo.IsInvert();
+                tmpMap.invert = levels[i].maps[rm].invert;
                 tmpMap.dir = mapDir;
                 mapList.Add(tmpMap);
                 if (!levels[i].maps[rm].invert)
@@ -175,23 +169,5 @@ public class RandomMapGanerater : MonoBehaviour
             neutralList.RemoveAt(0);
             mapList.RemoveAt(0);
         }
-    }
-
-    //Only for RelayMap
-    public void SetMapInfoAgain (Vector2 _spawnPoint, bool invert)
-    {
-        if (mapList.Count != 0 && invert)
-        {
-            spawnPoint = _spawnPoint;
-        }
-        else if (mapList.Count != 0 && !invert)
-        {
-            neutralList[neutralList.Count - 1].transform.position = _spawnPoint;
-            spawnPoint = neutralList[neutralList.Count - 1].GetComponent<MapInfo>().endPos.position;
-        }
-        Map tmpMap = new Map();
-        tmpMap = mapList[mapList.Count - 1];
-        tmpMap.invert = invert;
-        mapList[mapList.Count - 1] = tmpMap;
     }
 }
