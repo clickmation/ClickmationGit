@@ -386,7 +386,7 @@ public class GameMaster : MonoBehaviour
         mov = mainChar.GetComponent<Movement>();
         mov.dir = rmg.mapList[0].dir;
         camFol.enabled = true;
-        camFol.target = mainChar.transform;
+        camFol.SetTarget(mainChar.transform);
         inputController.mov = mov;
         inputController.col = mov.GetComponent<Collision>();
         mov.inputController = inputController;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Camera2DFollow : MonoBehaviour
 {
     public Transform target;
+    Collision col;
     public float xDamping = 1;
     public float yDamping = 1;
     public float lookAheadFactor = 3;
@@ -28,6 +29,7 @@ public class Camera2DFollow : MonoBehaviour
         lastTargetPosition = target.position;
         offsetZ = (transform.position - target.position).z;
         transform.parent = null;
+        col = target.GetComponent<Collision>();
     }
 
     // Update is called once per frame
@@ -44,7 +46,7 @@ public class Camera2DFollow : MonoBehaviour
 
         updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
 
-        if (updateLookAheadTarget)
+        if (updateLookAheadTarget || col.onWall)
         {
             lookAheadPos = lookAheadFactor * Vector3.right * dir;
         }
@@ -73,8 +75,15 @@ public class Camera2DFollow : MonoBehaviour
             if (searchResult != null)
             {
                 target = searchResult.transform;
+                col = target.GetComponent<Collision>();
             }
             nextTimeToSearch = Time.time + 0.5f;
         }
+    }
+
+    public void SetTarget(Transform player)
+    {
+        target = player;
+        col = player.GetComponent<Collision>();
     }
 }
