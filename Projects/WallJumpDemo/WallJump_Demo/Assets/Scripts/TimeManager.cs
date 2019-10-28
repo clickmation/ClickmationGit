@@ -30,7 +30,7 @@ public class TimeManager : MonoBehaviour {
  
  
     //time fether coroutine
-    public IEnumerator getTime()
+    public IEnumerator GetTime()
     {
         Debug.Log ("==> step 1. Getting info from internet now!");
         WWW www = new WWW (_url);
@@ -56,14 +56,14 @@ public class TimeManager : MonoBehaviour {
     }
  
     //get the current date
-    public string getCurrentDateNow()
+    public string GetCurrentDateNow()
     {
         return _currentDate;
     }
  
  
     //get the current Time
-    public string getCurrentTimeNow()
+    public string GetCurrentTimeNow()
     {
         return _currentTime;
     }

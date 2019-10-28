@@ -32,7 +32,7 @@ public class DailyEventTimer : MonoBehaviour {
         Debug.Log ("==> Checking the time");
         timeLabel.text = "Checking the time";
         yield return StartCoroutine (
-            TimeManager.sharedInstance.getTime()
+            TimeManager.sharedInstance.GetTime()
         );
         updateTime ();
         Debug.Log ("==> Time check complete!");
@@ -43,7 +43,7 @@ public class DailyEventTimer : MonoBehaviour {
  
     private void updateTime()
     {
-        currentTime = TimeSpan.Parse (TimeManager.sharedInstance.getCurrentTimeNow ());
+        currentTime = TimeSpan.Parse (TimeManager.sharedInstance.GetCurrentTimeNow ());
         timerSet = true;
     }
  

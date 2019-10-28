@@ -16,7 +16,7 @@ public class DailyReward : MonoBehaviour
     private DateTime refreshDate;
     private TimeSpan _remainingTime;
 	private TimeSpan aDay = TimeSpan.FromMilliseconds(86400000);
-    private string Timeformat;
+    private string timeFormat;
     private bool countIsReady;
     private int curStack;
 	private int maxStack = 3;
@@ -32,11 +32,11 @@ public class DailyReward : MonoBehaviour
     {
         StartCoroutine("CheckTime");
 		if (StackNeedsRefresh()){
-			refreshStack();
-			activateButton(IsButtonActive());
+			RefreshStack();
+			ActivateButton(IsButtonActive());
 		} else {
 			tokenAnimator.SetBool("Full", IsFullStack());
-			activateButton(IsButtonActive());
+			ActivateButton(IsButtonActive());
 		}
     }
 	
@@ -51,9 +51,9 @@ public class DailyReward : MonoBehaviour
         Debug.Log("==> Checking the time");
         timeLabel.text = "Checking the time";
         yield return StartCoroutine(
-            TimeManager.sharedInstance.getTime()
+            TimeManager.sharedInstance.GetTime()
         );
-        updateTime();
+        UpdateTime();
         Debug.Log("==> Time check complete!");
 		
 		_remainingTime = aDay.Subtract(currentTime);
@@ -62,29 +62,29 @@ public class DailyReward : MonoBehaviour
     }
 
 
-    private void updateTime()
+    private void UpdateTime()
     {
-        currentTime = TimeSpan.Parse(TimeManager.sharedInstance.getCurrentTimeNow());
-        currentDate = DateTime.Parse(TimeManager.sharedInstance.getCurrentDateNow());
+        currentTime = TimeSpan.Parse(TimeManager.sharedInstance.GetCurrentTimeNow());
+        currentDate = DateTime.Parse(TimeManager.sharedInstance.GetCurrentDateNow());
         //curStack = saver.curStack;
     }
 
     void Update()
     {
-		if (countIsReady) {startCountdown();}
+		if (countIsReady) {StartCountdown();}
 		if (StackNeedsRefresh()) {
-			refreshStack();
+			RefreshStack();
 		}
     }
 	
 	public string GetRemainingTime(double x)
 	{
 		TimeSpan tempB = TimeSpan.FromMilliseconds(x);
-		Timeformat = string.Format("{0:D2}:{1:D2}:{2:D2}", tempB.Hours, tempB.Minutes, tempB.Seconds);
-		return Timeformat;
+		timeFormat = string.Format("{0:D2}:{1:D2}:{2:D2}", tempB.Hours, tempB.Minutes, tempB.Seconds);
+		return timeFormat;
 	}
 	
-	private void startCountdown()
+	private void StartCountdown()
 	{
 		tcounter-= Time.deltaTime * 1000;
 		timeLabel.text = GetRemainingTime(tcounter) + " Until\nMore Revive Tokens";	
@@ -92,7 +92,7 @@ public class DailyReward : MonoBehaviour
 		
 		if (tcounter <= 0) {
 			countIsReady = false;
-			validateTime ();
+			ValidateTime ();
 		}
 	}
 
@@ -126,7 +126,7 @@ public class DailyReward : MonoBehaviour
 	}
 	
 	
-	public void refreshStack()
+	public void RefreshStack()
 	{
 		refreshDate = currentDate.Add(aDay);
 		curStack = maxStack;
@@ -135,24 +135,24 @@ public class DailyReward : MonoBehaviour
 		tokenAnimator.SetBool("Full", IsFullStack());
 	}
 	
-	public void getReward()
+	public void GetReward()
 	{
 		curStack--;
 		//token갯수 ++
 		stackLabel.text = curStack + "/" + maxStack;
-		activateButton(IsButtonActive());
+		ActivateButton(IsButtonActive());
 		tokenAnimator.SetBool("Full", IsFullStack());
-		updateTime();
+		UpdateTime();
 	}
 	
-	private void activateButton(bool x)
+	private void ActivateButton(bool x)
 	{
 		tokenButton.interactable = x;
 		tokenAnimator.SetBool("Activated", x);
 	}
 	
 	
-	private void validateTime()
+	private void ValidateTime()
 	{
 		Debug.Log ("==> Validating time to make sure no speed hack!");
         StartCoroutine ("CheckTime");

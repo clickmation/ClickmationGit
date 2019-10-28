@@ -37,7 +37,7 @@ public class RegularReward : MonoBehaviour
         Debug.Log("==> Checking the time");
         timeLabel.text = "Checking the time";
         yield return StartCoroutine(
-            TimeManager.sharedInstance.getTime()
+            TimeManager.sharedInstance.GetTime()
         );
         updateTime();
         Debug.Log("==> Time check complete!");
@@ -45,7 +45,7 @@ public class RegularReward : MonoBehaviour
 	
 	private void updateTime()
     {
-        currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.getCurrentDateNow()+" "+TimeManager.sharedInstance.getCurrentTimeNow(), dateFormat, provider);
+        currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow()+" "+TimeManager.sharedInstance.GetCurrentTimeNow(), dateFormat, provider);
 		timerSet = true;
     }
 	
