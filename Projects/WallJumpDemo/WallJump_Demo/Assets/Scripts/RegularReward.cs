@@ -11,13 +11,13 @@ public class RegularReward : MonoBehaviour
     public Button coinButton;
 	public Text timeLabel;
 	private double tcounter;
+	private TimeSpan currentTime;
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
 	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
+	private string dateString;
 	private string TimeFormat;
-	private string dateFormat = "MM/dd/yyyy HH:mm:ss";
-	private CultureInfo provider = CultureInfo.InvariantCulture;
 	private bool countIsReady;
 	private bool timerSet;
 	
@@ -29,7 +29,7 @@ public class RegularReward : MonoBehaviour
 	
 	void OnEnable()
 	{
-		
+		activateButton(countIsReady);
 	}
 	
 	private IEnumerator CheckTime()
@@ -45,7 +45,12 @@ public class RegularReward : MonoBehaviour
 	
 	private void updateTime()
     {
-        currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow()+" "+TimeManager.sharedInstance.GetCurrentTimeNow(), dateFormat, provider);
+		Debug.Log("updatingTime");
+        currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow(), "MM-dd-yyyy", CultureInfo.InvariantCulture);
+		currentTime = TimeSpan.Parse(TimeManager.sharedInstance.GetCurrentTimeNow());
+		currentDateTime = currentDateTime.Add(currentTime);
+		Debug.Log("currentDateTime is : " + currentDateTime);
+		
 		timerSet = true;
     }
 	
@@ -58,7 +63,7 @@ public class RegularReward : MonoBehaviour
 				tcounter = _remainingTime.TotalMilliseconds;
 				countIsReady = true;
 			} else {
-				activateButton(true);
+				activateButton(countIsReady);
 			}
 		}
 		
@@ -85,21 +90,20 @@ public class RegularReward : MonoBehaviour
 	
 	public void getReward()
 	{
-		//coinRanReward();
+		validateTime();
+		if(DateTime.Compare(refreshDateTime, currentDateTime) <= 0)
+		{
+			//coinRanReward();
 		
-		updateTime();
-		activateButton(false);
+			refreshDateTime = currentDateTime.Add(intervalTime);
+			activateButton(countIsReady);
+		}
 	}
-	
-	//public bool IsButtonActive()
-	//{
-	//	
-	//}
 	
 	private void activateButton(bool x)
 	{
-		coinButton.interactable = x;
-		coinAnimator.SetBool("Activated", x);
+		coinButton.interactable = !x;
+		coinAnimator.SetBool("Activated", !x);
 	}
 	
 	private void validateTime()

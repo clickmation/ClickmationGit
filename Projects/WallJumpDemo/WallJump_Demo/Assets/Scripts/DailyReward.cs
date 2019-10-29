@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Globalization;
 
 public class DailyReward : MonoBehaviour
 {
@@ -65,7 +66,8 @@ public class DailyReward : MonoBehaviour
     private void UpdateTime()
     {
         currentTime = TimeSpan.Parse(TimeManager.sharedInstance.GetCurrentTimeNow());
-        currentDate = DateTime.Parse(TimeManager.sharedInstance.GetCurrentDateNow());
+        currentDate = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow(), "MM-dd-yyyy", CultureInfo.InvariantCulture);
+		Debug.Log(currentDate);
         //curStack = saver.curStack;
     }
 
@@ -96,7 +98,7 @@ public class DailyReward : MonoBehaviour
 		}
 	}
 
-    public bool StackNeedsRefresh()
+    private bool StackNeedsRefresh()
     {
 		//안되면 DateTime.Compare(currentDate, refreshDate)>0으로 해보기
         if (currentDate.Subtract(refreshDate).TotalDays >= 0) {
@@ -106,7 +108,7 @@ public class DailyReward : MonoBehaviour
 		}
     }
 	
-	public bool IsFullStack()
+	private bool IsFullStack()
 	{
 		//saver값 써야함
 		if (curStack >= maxStack) {
@@ -116,7 +118,7 @@ public class DailyReward : MonoBehaviour
 		}
 	}
 	
-	public bool IsButtonActive()
+	private bool IsButtonActive()
 	{
 		if(curStack == 0) {
 			return false;
