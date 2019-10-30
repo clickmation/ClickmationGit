@@ -289,8 +289,8 @@ public class MainMenu : MonoBehaviour
     {
         AudioManager.PlaySound("touch");
         SaveLoad.saveload.mainMenu = null;
-        //PlayerPrefs.SetInt("HighScore", highScore);
-        //PlayerPrefs.SetInt("AdToken", adToken);
+        PlayerPrefs.SetInt("CurTrailIndex", curTrailIndex);
+        PlayerPrefs.SetInt("CurCharacterIndex", curCharacterIndex);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

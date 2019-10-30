@@ -35,7 +35,6 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         SaveLoad.saveload.am = this;
-        SaveLoad.saveload.SoundLoad();
         groundJumpSound = Resources.Load<AudioClip> ("Jump2");
 		landingSound = Resources.Load<AudioClip> ("Land");
 		attackSound = Resources.Load<AudioClip> ("Clash");
