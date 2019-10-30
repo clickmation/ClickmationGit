@@ -17,9 +17,9 @@ public class AudioManager : MonoBehaviour
     public Slider.SliderEvent setMasterVolume;
     public Slider.SliderEvent setSoundEffectVolume;
     public Slider.SliderEvent setBGMVolume;
-    float masterVolume;
-    float soundEffectVolume;
-    float bgmVolume;
+    public float masterVolume;
+    public float soundEffectVolume;
+    public float bgmVolume;
 
     void Awake ()
     {
@@ -34,6 +34,8 @@ public class AudioManager : MonoBehaviour
 	
     void Start()
     {
+        SaveLoad.saveload.am = this;
+        SaveLoad.saveload.SoundLoad();
         groundJumpSound = Resources.Load<AudioClip> ("Jump2");
 		landingSound = Resources.Load<AudioClip> ("Land");
 		attackSound = Resources.Load<AudioClip> ("Clash");
@@ -51,23 +53,26 @@ public class AudioManager : MonoBehaviour
         else masterVolume = gm.masterVolumeSlider.value;
         soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
         bgmAudioSrc.volume = masterVolume * bgmVolume;
-        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        //PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        SaveLoad.saveload.SoundSave();
     }
 
     public void SetSoundEffectVolume ()
     {
         if (mainMenu != null) soundEffectVolume = mainMenu.soundEffectVolumeSlider.value;
-        else masterVolume = soundEffectVolume = gm.soundEffectVolumeSlider.value;
+        else soundEffectVolume = soundEffectVolume = gm.soundEffectVolumeSlider.value;
         soundEffectAudioSrc.volume = masterVolume * soundEffectVolume;
-        PlayerPrefs.SetFloat("SoundEffectVolume", soundEffectVolume);
+        //PlayerPrefs.SetFloat("SoundEffectVolume", soundEffectVolume);
+        SaveLoad.saveload.SoundSave();
     }
 
     public void SetBGMVolume ()
     {
-        if (mainMenu != null) masterVolume = bgmVolume = mainMenu.bgmVolumeSlider.value;
-        else masterVolume = bgmVolume = gm.bgmVolumeSlider.value;
+        if (mainMenu != null) bgmVolume = bgmVolume = mainMenu.bgmVolumeSlider.value;
+        else bgmVolume = bgmVolume = gm.bgmVolumeSlider.value;
         bgmAudioSrc.volume = masterVolume * bgmVolume;
-        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        //PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        SaveLoad.saveload.SoundSave();
     }
 	
 	public static void PlaySound (string clip)

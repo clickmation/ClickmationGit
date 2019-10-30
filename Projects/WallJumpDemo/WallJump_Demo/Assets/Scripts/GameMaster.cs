@@ -21,8 +21,7 @@ public class GameMaster : MonoBehaviour
     public Vector3 playerSpawnPoint;
     public Button attackButton;
 
-    int deathCount;
-    int scoreSum;
+    public int deathCount;
     int jumpCount;
     int killCount;
 
@@ -116,6 +115,7 @@ public class GameMaster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SaveLoad.saveload.gm = this;
         if (AudioManager.audioManager != null)
         {
             am = AudioManager.audioManager;
@@ -123,24 +123,24 @@ public class GameMaster : MonoBehaviour
             am.SetAudioSources();
         }
         rmg = RandomMapGanerater.randomMapGanerater;
-        highScore = PlayerPrefs.GetInt("HighScore");
-        PlayerPrefs.SetInt("HighScore", 0);
         adToken = PlayerPrefs.GetInt("AdToken");
         PlayerPrefs.SetInt("AdToken", 0);
         oriFever = fever;
         fever = 0;
+        SaveLoad.saveload.SoundLoad();
         masterVolumeSlider.onValueChanged = am.setMasterVolume;
         soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
         bgmVolumeSlider.onValueChanged = am.setBGMVolume;
-        masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-        soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-        bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+        //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+        //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
         masterVolumeSlider.value = masterVolume;
         soundEffectVolumeSlider.value = soundEffectVolume;
         bgmVolumeSlider.value = bgmVolume;
         am.SetMasterVolume();
         am.SetSoundEffectVolume();
         am.SetBGMVolume();
+        SaveLoad.saveload.GMLoad();
         StartCoroutine(ScoreCoroutine());
     }
 
@@ -313,7 +313,6 @@ public class GameMaster : MonoBehaviour
     {
         dead = true;
         AudioManager.PlaySound("death");
-        deathCount++;
         camFol.enabled = false;
         SpawnShockWave(shockWaveDeath, 2f);
         camShake.Shake(100);
@@ -340,11 +339,8 @@ public class GameMaster : MonoBehaviour
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
         overlayCanvas.alpha = 0.2f;
-        if (score > highScore)
-        {
-            PlayerPrefs.SetInt("HighScore", score);
-            highScore = score;
-        }
+        if (score > highScore) highScore = score;
+        deathCount++;
     }
 
     public void Pause()
@@ -418,13 +414,8 @@ public class GameMaster : MonoBehaviour
 
     public void ReTry()
     {
+        if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
-        if (dead)
-        {
-            PlayerPrefs.SetInt("Coin", coin);
-            scoreSum += score;
-        }
-        PlayerPrefs.SetInt("HighScore", highScore);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -446,22 +437,15 @@ public class GameMaster : MonoBehaviour
 
     public void MainMenu()
     {
+        if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
-        if (dead)
-        {
-            scoreSum += score;
-            PlayerPrefs.SetInt("Coin", coin);
-            PlayerPrefs.SetInt("Deaths", deathCount);
-            PlayerPrefs.SetInt("Score", scoreSum);
-        }
-        PlayerPrefs.SetInt("HighScore", highScore);
-        PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void Sound()
     {
         if (!sound)
         {
+            SaveLoad.saveload.SoundLoad();
             sound = true;
             soundPanel.SetActive(true);
         }

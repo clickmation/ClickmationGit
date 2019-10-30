@@ -145,25 +145,10 @@ public class MainMenu : MonoBehaviour
         am = AudioManager.audioManager;
         am.mainMenu = this;
         am.SetAudioSources();
-        SaveLoad.saveload.Load();
-        if (PlayerPrefs.GetInt("HighScore") != 0) highScore = PlayerPrefs.GetInt("HighScore");
+        SaveLoad.saveload.MainMenuLoad();
         highScoreText.text = highScore.ToString();
-        PlayerPrefs.SetInt("HighScore", 0);
-        allScores += PlayerPrefs.GetInt("Score");
-        PlayerPrefs.SetInt("Score", 0);
-        coin += PlayerPrefs.GetInt("Coin");
-        allCoins += PlayerPrefs.GetInt("Coin");
-        PlayerPrefs.SetInt("Coin", 0);
         coinText.text = coin.ToString();
-        allDeaths += PlayerPrefs.GetInt("Death");
-        PlayerPrefs.SetInt("Death", 0);
-        allJumps += PlayerPrefs.GetInt("Jumps");
-        PlayerPrefs.SetInt("Jumps", 0);
-        allKills += PlayerPrefs.GetInt("Kills");
-        PlayerPrefs.SetInt("Kills", 0);
-        if (PlayerPrefs.GetInt("AdToken") != 11) adToken = PlayerPrefs.GetInt("AdToken");
         adTokenText.text = adToken.ToString();
-        PlayerPrefs.SetInt("AdToken", 11);
 
         //PlayerPrefs.SetInt("CurTrailIndex", 0);
         //PlayerPrefs.SetInt("CurCharacterIndex", 0);
@@ -181,42 +166,43 @@ public class MainMenu : MonoBehaviour
             PlayerPrefs.SetInt("BGMsArray" + i, 1);
         }
 
+        trailsArray[0] = 1;
+        charactersArray[0] = 1;
+        bgmsArray[0] = 1;
 
         //for (int i = 1; i < 20; i++)
         //{
         //    PlayerPrefs.SetInt("TrailsArray" + i, 0);
         //    PlayerPrefs.SetInt("CharactersArray" + i, 0);
+        //    trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+        //    charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
         //}
 
         for (int i = 0; i < 20; i++)
         {
-            trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
-            if (trailsArray[i] == 1) availableTrails.Add(i);
-        }
-        for (int i = 0; i < 20; i++)
-        {
-            charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
-            if (charactersArray[i] == 1) availableCharacters.Add(i);
-        }
-        for (int i = 0; i < 20; i++)
-        {
             bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+
+            if (trailsArray[i] == 1) availableTrails.Add(i);
+            if (charactersArray[i] == 1) availableCharacters.Add(i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
         }
 
         masterVolumeSlider.onValueChanged = am.setMasterVolume;
         soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
         bgmVolumeSlider.onValueChanged = am.setBGMVolume;
-        masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-        soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-        bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
-        SaveLoad.saveload.Save();
+        //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
+        //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
         masterVolumeSlider.value = masterVolume;
         soundEffectVolumeSlider.value = soundEffectVolume;
         bgmVolumeSlider.value = bgmVolume;
+        SaveLoad.saveload.MainMenuSave();
+
+        SaveLoad.saveload.SoundLoad();
         am.SetMasterVolume();
         am.SetSoundEffectVolume();
         am.SetBGMVolume();
+
         AudioManager.PlayBGM(bgms[curBGMIndex].bgm);
     }
 
@@ -302,8 +288,9 @@ public class MainMenu : MonoBehaviour
     public void GameStart()
     {
         AudioManager.PlaySound("touch");
-        PlayerPrefs.SetInt("HighScore", highScore);
-        PlayerPrefs.SetInt("AdToken", adToken);
+        SaveLoad.saveload.gm = null;
+        //PlayerPrefs.SetInt("HighScore", highScore);
+        //PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -335,7 +322,7 @@ public class MainMenu : MonoBehaviour
                     break;
                 }
             }
-            SaveLoad.saveload.Save();
+            SaveLoad.saveload.MainMenuSave();
             trailName.text = trails[availableTrails[trailIndex]].name;
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
@@ -379,9 +366,10 @@ public class MainMenu : MonoBehaviour
         if (!sound)
         {
             howTo = false;
-            shop = true;
+            shop = false;
             customization = false;
             sound = true;
+            SaveLoad.saveload.SoundLoad();
             if (curTrail != null) Destroy(curTrail);
             if (curBGMIndex == 0) bgmBackButton.color = new Color32(200, 200, 200, 128);
             else if (curBGMIndex == availableBGMs.Count - 1) bgmNextButton.color = new Color32(200, 200, 200, 128);
@@ -407,13 +395,9 @@ public class MainMenu : MonoBehaviour
             customizationButton.color = new Color32(200, 200, 200, 128);
             soundButton.color = new Color32(255, 255, 255, 255);
             gameStartButton.color = new Color32(200, 200, 200, 128);
-            masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-            soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-            bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
             masterVolumeSlider.value = masterVolume;
             soundEffectVolumeSlider.value = soundEffectVolume;
             bgmVolumeSlider.value = bgmVolume;
-            SaveLoad.saveload.Save();
         }
         else
         {
@@ -474,7 +458,7 @@ public class MainMenu : MonoBehaviour
                 {
                     r = Random.Range(0, 2);
                 }
-                SaveLoad.saveload.Load();
+                SaveLoad.saveload.MainMenuLoad();
                 prizeObject.gameObject.SetActive(true);
                 if (r == 0)
                 {
@@ -524,7 +508,7 @@ public class MainMenu : MonoBehaviour
                     if (bgmsArray[i] == 1) availableBGMs.Add(i);
                 }
                 Debug.Log("Bought");
-                SaveLoad.saveload.Save();
+                SaveLoad.saveload.MainMenuSave();
             }
         }
         else
@@ -581,6 +565,7 @@ public class MainMenu : MonoBehaviour
                 trailBackButton.color = new Color32(255, 255, 255, 255);
                 trailNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 
@@ -608,6 +593,7 @@ public class MainMenu : MonoBehaviour
                 trailBackButton.color = new Color32(255, 255, 255, 255);
                 trailNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 
@@ -634,6 +620,7 @@ public class MainMenu : MonoBehaviour
                 characterBackButton.color = new Color32(255, 255, 255, 255);
                 characterNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 
@@ -660,6 +647,7 @@ public class MainMenu : MonoBehaviour
                 characterBackButton.color = new Color32(255, 255, 255, 255);
                 characterNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 
@@ -686,6 +674,7 @@ public class MainMenu : MonoBehaviour
                 bgmBackButton.color = new Color32(255, 255, 255, 255);
                 bgmNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 
@@ -712,6 +701,7 @@ public class MainMenu : MonoBehaviour
                 bgmBackButton.color = new Color32(255, 255, 255, 255);
                 bgmNextButton.color = new Color32(255, 255, 255, 255);
             }
+            SaveLoad.saveload.MainMenuSave();
         }
     }
 }
