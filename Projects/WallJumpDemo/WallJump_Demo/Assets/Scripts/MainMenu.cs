@@ -154,9 +154,9 @@ public class MainMenu : MonoBehaviour
         //PlayerPrefs.SetInt("CurCharacterIndex", 0);
         //PlayerPrefs.SetInt("CurBGMIndex", 0);
 
-        curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
-        curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
-        curBGMIndex = PlayerPrefs.GetInt("CurBGMIndex");
+        //curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
+        //curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+        //curBGMIndex = PlayerPrefs.GetInt("CurBGMIndex");
         PlayerPrefs.SetInt("TrailsArray0", 1);
         PlayerPrefs.SetInt("CharactersArray0", 1);
         PlayerPrefs.SetInt("BGMsArray0", 1);
@@ -288,7 +288,7 @@ public class MainMenu : MonoBehaviour
     public void GameStart()
     {
         AudioManager.PlaySound("touch");
-        SaveLoad.saveload.gm = null;
+        SaveLoad.saveload.mainMenu = null;
         //PlayerPrefs.SetInt("HighScore", highScore);
         //PlayerPrefs.SetInt("AdToken", adToken);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -304,11 +304,10 @@ public class MainMenu : MonoBehaviour
             customization = true;
             sound = false;
             prizeObject.gameObject.SetActive(false);
-            trailIndex = PlayerPrefs.GetInt("CurTrailIndex");
-            characterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
+            SaveLoad.saveload.MainMenuLoad();
             for (int i = 0; i < availableTrails.Count; i++)
             {
-                if (availableTrails[i] == trailIndex)
+                if (availableTrails[i] == curTrailIndex)
                 {
                     trailIndex = i;
                     break;
@@ -316,23 +315,28 @@ public class MainMenu : MonoBehaviour
             }
             for (int i = 0; i < availableCharacters.Count; i++)
             {
-                if (availableCharacters[i] == characterIndex)
+                if (availableCharacters[i] == curCharacterIndex)
                 {
                     characterIndex = i;
                     break;
                 }
             }
-            SaveLoad.saveload.MainMenuSave();
             trailName.text = trails[availableTrails[trailIndex]].name;
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             characterName.text = characters[availableCharacters[characterIndex]].name;
             //characterImage = characters[characterIndex].image;
             //bgmImage = bgms[bgmIndex].image;
-            if (curTrailIndex == 0) trailBackButton.color = new Color32(200, 200, 200, 128);
-            if (curTrailIndex == availableTrails.Count - 1) trailNextButton.color = new Color32(200, 200, 200, 128);
-            if (curCharacterIndex == 0) characterBackButton.color = new Color32(200, 200, 200, 128);
-            if (curCharacterIndex == availableCharacters.Count - 1) characterNextButton.color = new Color32(200, 200, 200, 128);
+
+            trailBackButton.color = new Color32(255, 255, 255, 255);
+            trailNextButton.color = new Color32(255, 255, 255, 255);
+            characterBackButton.color = new Color32(255, 255, 255, 255);
+            characterNextButton.color = new Color32(255, 255, 255, 255);
+
+            if (trailIndex == 0) trailBackButton.color = new Color32(200, 200, 200, 128);
+            if (trailIndex == availableTrails.Count - 1) trailNextButton.color = new Color32(200, 200, 200, 128);
+            if (characterIndex == 0) characterBackButton.color = new Color32(200, 200, 200, 128);
+            if (characterIndex == availableCharacters.Count - 1) characterNextButton.color = new Color32(200, 200, 200, 128);
             mainMenu.SetActive(false);
             howToObj.SetActive(false);
             shopObj.SetActive(false);
@@ -464,19 +468,23 @@ public class MainMenu : MonoBehaviour
                 {
                     Destroy(prizeTrailObject);
                     index = Random.Range(0, buyableTrails.Count);
-                    PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
+                    trailsArray[buyableTrails[index]] = 1;
+                    //PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
                     GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
                     prizeTrailObject = prizeTrail;
                     prizeName.text = trails[buyableTrails[index]].name;
-                    PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
+                    curTrailIndex = buyableTrails[index];
+                    //PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
                 }
                 else if (r == 1)
                 {
                     index = Random.Range(0, buyableCharacters.Count);
-                    PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
+                    charactersArray[buyableCharacters[index]] = 1;
+                    //PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
                     prizeObject.sprite = characters[buyableCharacters[index]].sprite;
                     prizeName.text = characters[buyableCharacters[index]].name;
-                    PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
+                    curCharacterIndex = buyableCharacters[index];
+                    //PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
                 }
                 //else if (r == 2)
                 //{
@@ -494,18 +502,34 @@ public class MainMenu : MonoBehaviour
 
                 for (int i = 0; i < trails.Length; i++)
                 {
-                    trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
+                    //trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
                     if (trailsArray[i] == 1) availableTrails.Add(i);
                 }
                 for (int i = 0; i < characters.Length; i++)
                 {
-                    charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
+                    //charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
                     if (charactersArray[i] == 1) availableCharacters.Add(i);
                 }
                 for (int i = 0; i < bgms.Length; i++)
                 {
-                    bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+                    //bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
                     if (bgmsArray[i] == 1) availableBGMs.Add(i);
+                }
+                for (int i = 0; i < availableTrails.Count; i++)
+                {
+                    if (availableTrails[i] == curTrailIndex)
+                    {
+                        trailIndex = i;
+                        break;
+                    }
+                }
+                for (int i = 0; i < availableCharacters.Count; i++)
+                {
+                    if (availableCharacters[i] == curCharacterIndex)
+                    {
+                        characterIndex = i;
+                        break;
+                    }
                 }
                 Debug.Log("Bought");
                 SaveLoad.saveload.MainMenuSave();
@@ -549,7 +573,8 @@ public class MainMenu : MonoBehaviour
             trailName.text = trails[availableTrails[++trailIndex]].name;
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
+            curTrailIndex = availableTrails[trailIndex];
+            //PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
             if (trailIndex == 0)
             {
                 trailBackButton.color = new Color32(200, 200, 200, 128);
@@ -577,7 +602,8 @@ public class MainMenu : MonoBehaviour
             trailName.text = trails[availableTrails[--trailIndex]].name;
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
-            PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
+            curTrailIndex = availableTrails[trailIndex];
+            //PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
             if (trailIndex == 0)
             {
                 trailBackButton.color = new Color32(200, 200, 200, 128);
@@ -604,7 +630,8 @@ public class MainMenu : MonoBehaviour
             AudioManager.PlaySound("touch");
             characterName.text = characters[availableCharacters[++characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
+            curCharacterIndex = availableCharacters[characterIndex];
+            //PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
             if (characterIndex == 0)
             {
                 characterBackButton.color = new Color32(200, 200, 200, 128);
@@ -631,7 +658,8 @@ public class MainMenu : MonoBehaviour
             AudioManager.PlaySound("touch");
             characterName.text = characters[availableCharacters[--characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
-            PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
+            curCharacterIndex = availableCharacters[characterIndex];
+            //PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
             if (characterIndex == 0)
             {
                 characterBackButton.color = new Color32(200, 200, 200, 128);

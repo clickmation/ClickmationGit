@@ -212,7 +212,7 @@ public class SaveLoad : MonoBehaviour
             }
             else
             {
-
+                Debug.Log(gm);
                 gm.masterVolume = saver.masterVolume;
                 gm.soundEffectVolume = saver.soundEffectVolume;
                 gm.bgmVolume = saver.bgmVolume;

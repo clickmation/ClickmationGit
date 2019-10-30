@@ -439,6 +439,7 @@ public class GameMaster : MonoBehaviour
     {
         if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
+        SaveLoad.saveload.gm = null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void Sound()
