@@ -26,7 +26,9 @@ public class DailyReward : MonoBehaviour
 	private bool tempFull;
 
 	
-	//refreshDate도 saver에 어케 해야할거임
+	//모든 refreshDate도 saver로 어케 보안적으로 난 임경민 믿어야할거임
+	//광고 시청 완료하믄 RefreshStack()
+	//그리고 token이랑 curstack get reward에서 잘 짝짝쿵 ㅇㅇ
 	
 	
     void Start()
@@ -56,7 +58,7 @@ public class DailyReward : MonoBehaviour
         );
         UpdateTime();
         Debug.Log("==> Time check complete!");
-		
+
 		_remainingTime = aDay.Subtract(currentTime);
 		tcounter = _remainingTime.TotalMilliseconds;
 		countIsReady = true;
