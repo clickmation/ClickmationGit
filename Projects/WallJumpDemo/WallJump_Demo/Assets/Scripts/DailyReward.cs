@@ -19,7 +19,7 @@ public class DailyReward : MonoBehaviour
 	private TimeSpan aDay = TimeSpan.FromMilliseconds(86400000);
     private string timeFormat;
     private bool countIsReady;
-    private int curStack;
+    public int curStack;
 	private int maxStack = 3;
 	
 	private bool tempActivated;
@@ -30,9 +30,23 @@ public class DailyReward : MonoBehaviour
 	//광고 시청 완료하믄 RefreshStack()
 	//그리고 token이랑 curstack get reward에서 잘 짝짝쿵 ㅇㅇ
 	
+
+    public DateTime GetRefreshDate ()
+    {
+        return refreshDate;
+    }
+
+    public void SetRefreshDate(DateTime dt)
+    {
+        refreshDate = dt;
+    }
 	
     void Start()
     {
+        SaveLoad.saveload.dw = this;
+        SaveLoad.saveload.DailyRewardLoad();
+        stackLabel.text = curStack + "/" + maxStack;
+        Debug.Log(refreshDate);
         StartCoroutine("CheckTime");
 		if (StackNeedsRefresh()){
 			RefreshStack();
@@ -70,7 +84,6 @@ public class DailyReward : MonoBehaviour
         currentTime = TimeSpan.Parse(TimeManager.sharedInstance.GetCurrentTimeNow());
         currentDate = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow(), "MM-dd-yyyy", CultureInfo.InvariantCulture);
 		Debug.Log(currentDate);
-        //curStack = saver.curStack;
     }
 
     void Update()
@@ -133,17 +146,20 @@ public class DailyReward : MonoBehaviour
 	public void RefreshStack()
 	{
 		refreshDate = currentDate.Add(aDay);
-		curStack = maxStack;
 		stackLabel.text = curStack + "/" + maxStack;
-		//curStack의 값을 maxStack의 값으로 바꿈 (maxStack은 saver에 있음)
 		tokenAnimator.SetBool("Full", IsFullStack());
-	}
+        SaveLoad.saveload.DailyRewardSave('r');
+        SaveLoad.saveload.DailyRewardLoad();
+        Debug.Log(refreshDate);
+    }
 	
 	public void GetReward()
 	{
-		curStack--;
-		//token갯수 ++
-		stackLabel.text = curStack + "/" + maxStack;
+        SaveLoad.saveload.TokenLoad();
+        SaveLoad.saveload.TokenSave('+');
+        SaveLoad.saveload.DailyRewardSave('-');
+        SaveLoad.saveload.DailyRewardLoad();
+        stackLabel.text = curStack + "/" + maxStack;
 		ActivateButton(IsButtonActive());
 		tokenAnimator.SetBool("Full", IsFullStack());
 		UpdateTime();

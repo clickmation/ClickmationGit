@@ -23,10 +23,10 @@ public class MainMenu : MonoBehaviour
     public int highScore;
     public int allScores;
     public int coin;
-    public int allCoins;
-    public int allDeaths;
-    public int allJumps;
-    public int allKills;
+    //public int allCoins;
+    //public int allDeaths;
+    //public int allJumps;
+    //public int allKills;
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;
@@ -383,10 +383,10 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(true);
-            bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
+            //bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
             for (int i = 0; i < availableBGMs.Count; i++)
             {
-                if (availableBGMs[i] == bgmIndex)
+                if (availableBGMs[i] == curBGMIndex)
                 {
                     bgmIndex = i;
                     break;
@@ -685,7 +685,8 @@ public class MainMenu : MonoBehaviour
         {
             AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[++bgmIndex]].name;
-            PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
+            curBGMIndex = availableBGMs[bgmIndex];
+            //PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
             if (bgmIndex == 0)
             {
@@ -712,7 +713,8 @@ public class MainMenu : MonoBehaviour
         {
             AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[--bgmIndex]].name;
-            PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
+            curBGMIndex = availableBGMs[bgmIndex];
+            //PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
             if (bgmIndex == 0)
             {

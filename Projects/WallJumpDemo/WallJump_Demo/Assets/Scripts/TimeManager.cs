@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour {
     */ 
  
     public static TimeManager sharedInstance = null;
-    private string _url = "http://18.191.60.168/ServerTime.php";
+    private string _url = "http://18.191.60.168/ServerTime_KO.php";
     private string _timeData;
     private string _currentTime;
     private string _currentDate;

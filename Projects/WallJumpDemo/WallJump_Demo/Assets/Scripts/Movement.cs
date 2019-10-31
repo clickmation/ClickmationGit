@@ -107,8 +107,6 @@ public class Movement : MonoBehaviour
         else Debug.LogError("There's no GameMaster.");
         playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
         sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
-        PlayerPrefs.SetInt("CurTrailIndex", 0);
-        PlayerPrefs.SetInt("CurCharacterIndex", 0);
         _speed = speed;
         speedMultiflier = 1f;
         if (GetComponent<Collision>() != null) col = GetComponent<Collision>();

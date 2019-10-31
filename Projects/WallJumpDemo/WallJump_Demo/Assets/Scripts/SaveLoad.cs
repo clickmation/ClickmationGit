@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -10,24 +11,9 @@ public class SaveLoad : MonoBehaviour
     public MainMenu mainMenu;
     public GameMaster gm;
     public AudioManager am;
+    public DailyReward dw;
 
-    [SerializeField] int highScore;
-    [SerializeField] int allScores;
-    [SerializeField] int coin;
-    [SerializeField] int allCoins;
-    [SerializeField] int allDeaths;
-    [SerializeField] int allJumps;
-    [SerializeField] int allKills;
-    [SerializeField] int adToken;
-    [SerializeField] int curTrailIndex;
-    [SerializeField] int curCharacterIndex;
-    [SerializeField] int curBGMIndex;
-    [SerializeField] int[] trailsArray;
-    [SerializeField] int[] charactersArray;
-    [SerializeField] int[] bgmsArray;
-    [SerializeField] float masterVolume;
-    [SerializeField] float soundEffectVolume;
-    [SerializeField] float bgmVolume;
+    private SaveManager tmpSaver = new SaveManager();
 
     // Use this for initialization
     void Awake()
@@ -36,8 +22,6 @@ public class SaveLoad : MonoBehaviour
         {
             saveload = this;
         }
-        //DontDestroyOnLoad(this.gameObject);
-        //Debug.LogError ("saveload Awake");
     }
 
     public void MainMenuSave()
@@ -46,13 +30,10 @@ public class SaveLoad : MonoBehaviour
         FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
 
         SaveManager saver = new SaveManager();
+        saver = tmpSaver;
         saver.highScore = mainMenu.highScore;
         saver.allScores = mainMenu.allScores;
         saver.coin = mainMenu.coin;
-        saver.allCoins = mainMenu.allCoins;
-        saver.allDeaths = mainMenu.allDeaths;
-        saver.allJumps = mainMenu.allJumps;
-        saver.allKills = mainMenu.allKills;
         saver.adToken = mainMenu.adToken;
         saver.curTrailIndex = mainMenu.curTrailIndex;
         saver.curCharacterIndex = mainMenu.curCharacterIndex;
@@ -79,15 +60,10 @@ public class SaveLoad : MonoBehaviour
             FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
             SaveManager saver = (SaveManager)binary.Deserialize(fstream);
             fstream.Close();
-            //Debug.Log("Loaded.");
 
             mainMenu.highScore = saver.highScore;
             mainMenu.allScores = saver.allScores;
             mainMenu.coin = saver.coin;
-            mainMenu.allCoins = saver.allCoins;
-            mainMenu.allDeaths = saver.allDeaths;
-            mainMenu.allJumps = saver.allJumps;
-            mainMenu.allKills = saver.allKills;
             mainMenu.adToken = saver.adToken;
             mainMenu.curTrailIndex = saver.curTrailIndex;
             mainMenu.curCharacterIndex = saver.curCharacterIndex;
@@ -101,6 +77,7 @@ public class SaveLoad : MonoBehaviour
             mainMenu.masterVolume = saver.masterVolume;
             mainMenu.soundEffectVolume = saver.soundEffectVolume;
             mainMenu.bgmVolume = saver.bgmVolume;
+            tmpSaver = saver;
         }
     }
 
@@ -108,35 +85,14 @@ public class SaveLoad : MonoBehaviour
     {
         if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
         {
-            trailsArray = new int[20];
-            charactersArray = new int[20];
-            bgmsArray = new int[20]; 
-
             BinaryFormatter binary = new BinaryFormatter();
             FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
             SaveManager saver = (SaveManager)binary.Deserialize(fstream);
             fstream.Close();
 
             gm.highScore = saver.highScore;
-            allScores = saver.allScores;
-            coin = saver.coin;
-            allCoins = saver.allCoins;
-            allDeaths = saver.allDeaths;
-            allJumps = saver.allJumps;
-            allKills = saver.allKills;
-            adToken = saver.adToken;
-            curTrailIndex = saver.curTrailIndex;
-            curCharacterIndex = saver.curCharacterIndex;
-            curBGMIndex = saver.curBGMIndex;
-            for (int i = 0; i < 20; i++)
-            {
-                trailsArray[i] = saver.trailsArray[i];
-                charactersArray[i] = saver.charactersArray[i];
-                bgmsArray[i] = saver.bgmsArray[i];
-            }
-            masterVolume = saver.masterVolume;
-            soundEffectVolume = saver.soundEffectVolume;
-            bgmVolume = saver.bgmVolume;
+            gm.adToken = saver.adToken;
+            tmpSaver = saver;
         }
     }
 
@@ -144,47 +100,15 @@ public class SaveLoad : MonoBehaviour
     {
         BinaryFormatter binary = new BinaryFormatter();
         FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
-        //Debug.Log(Application.persistentDataPath + "/saveFile.WJM");
 
         SaveManager saver = new SaveManager();
 
+        saver = tmpSaver;
         saver.highScore = gm.highScore;
-        saver.allScores = allScores + gm.score;
-        saver.coin = coin + gm.coin;
-        saver.allCoins = allCoins + gm.coin;
-        saver.allDeaths = allDeaths + gm.deathCount;
-        saver.allJumps = allJumps; ;
-        saver.allKills = allKills;
-        saver.adToken = adToken;
-        saver.curTrailIndex = curTrailIndex;
-        saver.curCharacterIndex = curCharacterIndex;
-        saver.curBGMIndex = curBGMIndex;
-        for (int i = 0; i < 20; i++)
-        {
-            saver.trailsArray[i] = trailsArray[i];
-            saver.charactersArray[i] = charactersArray[i];
-            saver.bgmsArray[i] = bgmsArray[i];
-        }
-        saver.masterVolume = masterVolume;
-        saver.soundEffectVolume = soundEffectVolume;
-        saver.bgmVolume = bgmVolume;
-
-        //allScores = 0;
-        //coin = 0;
-        //allCoins = 0;
-        //allDeaths = 0;
-        //allJumps = 0;
-        //allKills = 0;
-        //adToken = 0;
-        //curTrailIndex = 0;
-        //curCharacterIndex = 0;
-        //curBGMIndex = 0;
-        //trailsArray = null;
-        //charactersArray = null;
-        //bgmsArray = null;
-        //masterVolume = 0f;
-        //soundEffectVolume = 0f;
-        //bgmVolume = 0f;
+        saver.allScores = tmpSaver.allScores + gm.score;
+        saver.coin = tmpSaver.coin + gm.coin;
+        saver.allCoins = tmpSaver.allCoins + gm.coin;
+        saver.allDeaths = tmpSaver.allDeaths + gm.deathCount;
 
         binary.Serialize(fstream, saver);
         fstream.Close();
@@ -194,10 +118,6 @@ public class SaveLoad : MonoBehaviour
     {
         if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
         {
-            trailsArray = new int[20];
-            charactersArray = new int[20];
-            bgmsArray = new int[20];
-
             BinaryFormatter binary = new BinaryFormatter();
             FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
             SaveManager saver = (SaveManager)binary.Deserialize(fstream);
@@ -218,27 +138,7 @@ public class SaveLoad : MonoBehaviour
                 gm.bgmVolume = saver.bgmVolume;
             }
 
-            //PlayerPrefs.SetFloat("MasterVolume", saver.masterVolume);
-            //PlayerPrefs.SetFloat("SoundEffectVolume", saver.soundEffectVolume);
-            //PlayerPrefs.SetFloat("BGMVolume", saver.bgmVolume);gm.highScore = saver.highScore;
-
-            highScore = saver.highScore;
-            allScores = saver.allScores;
-            coin = saver.coin;
-            allCoins = saver.allCoins;
-            allDeaths = saver.allDeaths;
-            allJumps = saver.allJumps;
-            allKills = saver.allKills;
-            adToken = saver.adToken;
-            curTrailIndex = saver.curTrailIndex;
-            curCharacterIndex = saver.curCharacterIndex;
-            curBGMIndex = saver.curBGMIndex;
-            for (int i = 0; i < 20; i++)
-            {
-                trailsArray[i] = saver.trailsArray[i];
-                charactersArray[i] = saver.charactersArray[i];
-                bgmsArray[i] = saver.bgmsArray[i];
-            }
+            tmpSaver = saver;
         }
     }
 
@@ -249,48 +149,82 @@ public class SaveLoad : MonoBehaviour
 
         SaveManager saver = new SaveManager();
 
+        saver = tmpSaver;
         saver.masterVolume = am.masterVolume;
         saver.soundEffectVolume = am.soundEffectVolume;
         saver.bgmVolume = am.bgmVolume;
-        //PlayerPrefs.SetFloat("MasterVolume", 0);
-        //PlayerPrefs.SetFloat("SoundEffectVolume", 0);
-        //PlayerPrefs.SetFloat("BGMVolume", 0);
 
-        saver.highScore = highScore;
-        saver.allScores = allScores;
-        saver.coin = coin;
-        saver.allCoins = allCoins;
-        saver.allDeaths = allDeaths;
-        saver.allJumps = allJumps;
-        saver.allKills = allKills;
-        saver.adToken = adToken;
-        saver.curTrailIndex = curTrailIndex;
-        saver.curCharacterIndex = curCharacterIndex;
-        saver.curBGMIndex = curBGMIndex;
-        for (int i = 0; i < 20; i++)
+        binary.Serialize(fstream, saver);
+        fstream.Close();
+    }
+
+    public void TokenLoad()
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
         {
-            saver.trailsArray[i] = trailsArray[i];
-            saver.charactersArray[i] = charactersArray[i];
-            saver.bgmsArray[i] = bgmsArray[i];
-        }
+            BinaryFormatter binary = new BinaryFormatter();
+            FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
+            SaveManager saver = (SaveManager)binary.Deserialize(fstream);
+            fstream.Close();
 
-        //highScore = 0;
-        //allScores = 0;
-        //coin = 0;
-        //allCoins = 0;
-        //allDeaths = 0;
-        //allJumps = 0;
-        //allKills = 0;
-        //adToken = 0;
-        //curTrailIndex = 0;
-        //curCharacterIndex = 0;
-        //curBGMIndex = 0;
-        //trailsArray = null;
-        //charactersArray = null;
-        //bgmsArray = null;
-        //masterVolume = 0f;
-        //soundEffectVolume = 0f;
-        //bgmVolume = 0f;
+            if (mainMenu != null) mainMenu.adToken = tmpSaver.adToken;
+            else gm.adToken = tmpSaver.adToken;
+            tmpSaver = saver;
+        }
+    }
+
+    public void TokenSave(char s)
+    {
+        BinaryFormatter binary = new BinaryFormatter();
+        FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
+
+        SaveManager saver = new SaveManager();
+
+        saver = tmpSaver;
+        if (s == '+') saver.adToken = ++tmpSaver.adToken;
+        else if (s == '-') saver.adToken = --tmpSaver.adToken;
+        else Debug.LogError("What the fuck are you doing?");
+
+        if (mainMenu != null)
+        {
+            mainMenu.adToken = tmpSaver.adToken;
+            mainMenu.adTokenText.text = mainMenu.adToken.ToString();
+        }
+        else gm.adToken = tmpSaver.adToken;
+
+        binary.Serialize(fstream, saver);
+        fstream.Close();
+    }
+
+    public void DailyRewardLoad()
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
+        {
+            BinaryFormatter binary = new BinaryFormatter();
+            FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
+            SaveManager saver = (SaveManager)binary.Deserialize(fstream);
+            fstream.Close();
+
+            dw.SetRefreshDate(saver.refreshDate);
+            dw.curStack = saver.curStack;
+
+            tmpSaver = saver;
+        }
+    }
+
+    public void DailyRewardSave(char s)
+    {
+        BinaryFormatter binary = new BinaryFormatter();
+        FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
+
+        SaveManager saver = new SaveManager();
+
+        saver = tmpSaver;
+
+        saver.refreshDate = dw.GetRefreshDate();
+        if (s == '-') saver.curStack = tmpSaver.curStack - 1;
+        else if (s == 'r') saver.curStack = 3;
+        else Debug.LogError("What the fuck are you doing?");
 
         binary.Serialize(fstream, saver);
         fstream.Close();
@@ -333,4 +267,11 @@ class SaveManager
     public float masterVolume;
     public float soundEffectVolume;
     public float bgmVolume;
+
+    [Space]
+
+    [Header("Rewards")]
+
+    public DateTime refreshDate;
+    public int curStack;
 }

@@ -364,7 +364,8 @@ public class GameMaster : MonoBehaviour
 
     public void TokenRevive ()
     {
-        adToken -= 1;
+        SaveLoad.saveload.TokenSave('-');
+        SaveLoad.saveload.TokenLoad();
         Revive();
     }
 
