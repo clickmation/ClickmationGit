@@ -15,21 +15,32 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(120000);
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;
 	private bool timerSet;
-	
-	
-	void Start()
+
+    public DateTime GetRefreshDateTime()
+    {
+        return refreshDateTime;
+    }
+
+    public void SetRefreshDateTime(DateTime dt)
+    {
+        refreshDateTime = dt;
+    }
+
+    void Start()
 	{
+        SaveLoad.saveload.rr = this;
+        SaveLoad.saveload.RegularRewardLoad();
 		StartCoroutine("CheckTime");
 	}
 	
 	void OnEnable()
 	{
-		activateButton(countIsReady);
+		ActivateButton(countIsReady);
 	}
 	
 	private IEnumerator CheckTime()
@@ -39,11 +50,11 @@ public class RegularReward : MonoBehaviour
         yield return StartCoroutine(
             TimeManager.sharedInstance.GetTime()
         );
-        updateTime();
+        UpdateTime();
         Debug.Log("==> Time check complete!");
     }
 	
-	private void updateTime()
+	private void UpdateTime()
     {
 		Debug.Log("updatingTime");
         currentDateTime = DateTime.ParseExact(TimeManager.sharedInstance.GetCurrentDateNow(), "MM-dd-yyyy", CultureInfo.InvariantCulture);
@@ -62,12 +73,13 @@ public class RegularReward : MonoBehaviour
 				_remainingTime = refreshDateTime.Subtract(currentDateTime);
 				tcounter = _remainingTime.TotalMilliseconds;
 				countIsReady = true;
-			} else {
-				activateButton(countIsReady);
+                ActivateButton(countIsReady);
+            } else {
+				ActivateButton(countIsReady);
 			}
 		}
 		
-		if(countIsReady) {startCountdown();}
+		if(countIsReady) {StartCountdown();}
 	}
 	
 	public string GetRemainingTime(double x)
@@ -77,36 +89,40 @@ public class RegularReward : MonoBehaviour
 		return TimeFormat;
 	}
 	
-	private void startCountdown()
+	private void StartCountdown()
 	{
 		timerSet = false;
 		tcounter -= Time.deltaTime * 1000;
-		
-		if (tcounter <= 0){
+        timeLabel.text = GetRemainingTime(tcounter) + " Until\nFREE COIN";
+
+        if (tcounter <= 0){
 			countIsReady = false;
-			validateTime();
+			ValidateTime();
 		}
 	}
 	
-	public void getReward()
+	public void GetReward()
 	{
-		validateTime();
+		ValidateTime();
 		if(DateTime.Compare(refreshDateTime, currentDateTime) <= 0)
 		{
 			//coinRanReward();
 		
 			refreshDateTime = currentDateTime.Add(intervalTime);
-			activateButton(countIsReady);
+            SaveLoad.saveload.RegularRewardSave();
+            SaveLoad.saveload.RegularRewardLoad();
+            ActivateButton(countIsReady);
+            Debug.Log(refreshDateTime);
 		}
 	}
 	
-	private void activateButton(bool x)
+	private void ActivateButton(bool x)
 	{
 		coinButton.interactable = !x;
 		coinAnimator.SetBool("Activated", !x);
 	}
 	
-	private void validateTime()
+	private void ValidateTime()
 	{
 		Debug.Log ("==> Validating time to make sure no speed hack!");
         StartCoroutine ("CheckTime");

@@ -11,7 +11,8 @@ public class SaveLoad : MonoBehaviour
     public MainMenu mainMenu;
     public GameMaster gm;
     public AudioManager am;
-    public DailyReward dw;
+    public DailyReward dr;
+    public RegularReward rr;
 
     private SaveManager tmpSaver = new SaveManager();
 
@@ -205,8 +206,8 @@ public class SaveLoad : MonoBehaviour
             SaveManager saver = (SaveManager)binary.Deserialize(fstream);
             fstream.Close();
 
-            dw.SetRefreshDate(saver.refreshDate);
-            dw.curStack = saver.curStack;
+            dr.SetRefreshDate(saver.refreshDate);
+            dr.curStack = saver.curStack;
 
             tmpSaver = saver;
         }
@@ -221,10 +222,40 @@ public class SaveLoad : MonoBehaviour
 
         saver = tmpSaver;
 
-        saver.refreshDate = dw.GetRefreshDate();
+        saver.refreshDate = dr.GetRefreshDate();
         if (s == '-') saver.curStack = tmpSaver.curStack - 1;
         else if (s == 'r') saver.curStack = 3;
         else Debug.LogError("What the fuck are you doing?");
+
+        binary.Serialize(fstream, saver);
+        fstream.Close();
+    }
+
+    public void RegularRewardLoad()
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
+        {
+            BinaryFormatter binary = new BinaryFormatter();
+            FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
+            SaveManager saver = (SaveManager)binary.Deserialize(fstream);
+            fstream.Close();
+
+            rr.SetRefreshDateTime(saver.refreshDateTime);
+
+            tmpSaver = saver;
+        }
+    }
+
+    public void RegularRewardSave()
+    {
+        BinaryFormatter binary = new BinaryFormatter();
+        FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
+
+        SaveManager saver = new SaveManager();
+
+        saver = tmpSaver;
+
+        saver.refreshDateTime = rr.GetRefreshDateTime();
 
         binary.Serialize(fstream, saver);
         fstream.Close();
@@ -273,5 +304,6 @@ class SaveManager
     [Header("Rewards")]
 
     public DateTime refreshDate;
+    public DateTime refreshDateTime;
     public int curStack;
 }

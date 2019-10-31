@@ -43,7 +43,7 @@ public class DailyReward : MonoBehaviour
 	
     void Start()
     {
-        SaveLoad.saveload.dw = this;
+        SaveLoad.saveload.dr = this;
         SaveLoad.saveload.DailyRewardLoad();
         stackLabel.text = curStack + "/" + maxStack;
         Debug.Log(refreshDate);
