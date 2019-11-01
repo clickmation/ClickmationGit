@@ -102,13 +102,17 @@ public class RegularReward : MonoBehaviour
 			ValidateTime();
 		}
 	}
-	
-	public void GetReward()
+
+    public void ShowAd()
+    {
+        ADManager.adManager.ShowRewardedAd('r');
+    }
+
+    public void GetReward()
 	{
 		ValidateTime();
 		if(DateTime.Compare(refreshDateTime, currentDateTime) <= 0)
 		{
-            ADManager.adManager.ShowRewardedAd();
             SaveLoad.saveload.RandomCoinSave(CoinRanReward());
             SaveLoad.saveload.MainMenuLoad();
             SaveLoad.saveload.mainMenu.coinText.text = SaveLoad.saveload.mainMenu.coin.ToString();

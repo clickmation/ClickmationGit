@@ -151,10 +151,14 @@ public class DailyReward : MonoBehaviour
         SaveLoad.saveload.DailyRewardSave('r');
         SaveLoad.saveload.DailyRewardLoad();
     }
+
+    public void ShowAd()
+    {
+        ADManager.adManager.ShowRewardedAd('d');
+    }
 	
 	public void GetReward()
     {
-        ADManager.adManager.ShowRewardedAd();
         SaveLoad.saveload.TokenLoad();
         SaveLoad.saveload.TokenSave('+');
         SaveLoad.saveload.DailyRewardSave('-');

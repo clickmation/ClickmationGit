@@ -371,8 +371,7 @@ public class GameMaster : MonoBehaviour
 
     public void AdRevive ()
     {
-        ADManager.adManager.ShowRewardedAd();
-        Revive();
+        ADManager.adManager.ShowRewardedAd('g');
     }
     public void Revive()
     {

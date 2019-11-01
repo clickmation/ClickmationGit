@@ -28,7 +28,7 @@ public class ADManager : MonoBehaviour
         }
         else
         {
-            DestroyObject(this.gameObject);
+            Destroy(this.gameObject);
         }
     }
 
@@ -102,10 +102,12 @@ public class ADManager : MonoBehaviour
         rewardedAd.LoadAd(request, rewardedAdID);
     }
 
-    public void ShowRewardedAd()
+    char rt;
+    public void ShowRewardedAd(char rewardType)
     {
         if (rewardedAd.IsLoaded())
         {
+            rt = rewardType;
             rewardedAd.Show();
         }
         else
@@ -137,9 +139,21 @@ public class ADManager : MonoBehaviour
         double amount = args.Amount;
         Debug.Log("You have been rewarded with  " + amount.ToString() + " " + type);
 
-        
-
-
+        switch (rt)
+        {
+            case 'd':
+                SaveLoad.saveload.dr.GetReward();
+                break;
+            case 'r':
+                SaveLoad.saveload.rr.GetReward();
+                break;
+            case 'g':
+                GameMaster.gameMaster.Revive();
+                break;
+            default:
+                Debug.LogError("Noooo......");
+                break;
+        }
     }
 
 
