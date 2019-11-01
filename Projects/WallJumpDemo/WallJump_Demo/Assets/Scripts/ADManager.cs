@@ -13,11 +13,9 @@ public class ADManager : MonoBehaviour
     private BannerView bannerView;
     private string bannerID = "ca-app-pub-3940256099942544/6300978111";
 
-    private RewardedAd rewardedAd;
-
-    //private RewardedAd rewardedReviveAd;
-    //private RewardedAd rewardedTokenAd;
-    //private RewardedAd rewardedCoinAd;
+    private RewardedAd rewardedReviveAd;
+    private RewardedAd rewardedTokenAd;
+    private RewardedAd rewardedCoinAd;
 
     void Awake()
     {
@@ -36,15 +34,13 @@ public class ADManager : MonoBehaviour
     {
         MobileAds.Initialize(appID);
 
-        rewardedAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
-        //this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        //this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        //this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-
-        //this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
-        //this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
-        //this.rewardedCoinAd.OnUserEarnedReward += HandleUserEarnedCoinReward;
+        this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
+        this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
+        this.rewardedCoinAd.OnUserEarnedReward += HandleUserEarnedCoinReward;
 
         RequestBanner();
     }
@@ -57,7 +53,6 @@ public class ADManager : MonoBehaviour
         rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
         rewardedAd.OnAdOpening += HandleRewardedAdOpening;
         rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
-        rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
         rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
         AdRequest request = new AdRequest.Builder().Build();
@@ -90,93 +85,75 @@ public class ADManager : MonoBehaviour
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleRewardedAdClosed event received");
+
+        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+
+        this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
+        this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
+        this.rewardedCoinAd.OnUserEarnedReward += HandleUserEarnedCoinReward;
     }
 
-    public void HandleUserEarnedReward(object sender, Reward args)
+    public void HandleUserEarnedReviveReward(object sender, Reward args)
     {
         string type = args.Type;
         double amount = args.Amount;
         MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
         Debug.Log(args.Type);
 
-        switch (rewardType)
-        {
-            case "Revive":
-                GameMaster.gameMaster.Revive();
-                break;
-            case "Token":
-                SaveLoad.saveload.dr.GetReward();
-                break;
-            case "Coin":
-                SaveLoad.saveload.rr.GetReward();
-                break;
-        }
+        GameMaster.gameMaster.Revive();
+        AdRequest request = new AdRequest.Builder().Build();
+        rewardedReviveAd.LoadAd(request);
     }
-
-    //public void HandleUserEarnedReviveReward(object sender, Reward args)
-    //{
-    //    string type = args.Type;
-    //    double amount = args.Amount;
-    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
-    //    Debug.Log(args.Type);
-
-
-    //    GameMaster.gameMaster.Revive();
-    //}
-    //public void HandleUserEarnedTokenReward(object sender, Reward args)
-    //{
-    //    string type = args.Type;
-    //    double amount = args.Amount;
-    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
-    //    Debug.Log(args.Type);
-
-
-    //    SaveLoad.saveload.dr.GetReward();
-    //}
-    //public void HandleUserEarnedCoinReward(object sender, Reward args)
-    //{
-    //    string type = args.Type;
-    //    double amount = args.Amount;
-    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
-    //    Debug.Log(args.Type);
-
-
-    //    SaveLoad.saveload.rr.GetReward();
-    //}
-
-    string rewardType;
-    public void ShowRewardedAd(string rt)
+    public void HandleUserEarnedTokenReward(object sender, Reward args)
     {
-        if (this.rewardedAd.IsLoaded())
+        string type = args.Type;
+        double amount = args.Amount;
+        MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+        Debug.Log(args.Type);
+
+        SaveLoad.saveload.dr.GetReward();
+
+        AdRequest request = new AdRequest.Builder().Build();
+        rewardedTokenAd.LoadAd(request);
+    }
+    public void HandleUserEarnedCoinReward(object sender, Reward args)
+    {
+        string type = args.Type;
+        double amount = args.Amount;
+        MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+        Debug.Log(args.Type);
+
+        SaveLoad.saveload.rr.GetReward();
+
+        AdRequest request = new AdRequest.Builder().Build();
+        rewardedCoinAd.LoadAd(request);
+    }
+
+    public void ShowReviveRewardedAd()
+    {
+        if (this.rewardedReviveAd.IsLoaded())
         {
-            rewardType = rt;
-            this.rewardedAd.Show();
+            this.rewardedReviveAd.Show();
         }
     }
 
-    //public void ShowReviveRewardedAd()
-    //{
-    //    if (this.rewardedReviveAd.IsLoaded())
-    //    {
-    //        this.rewardedReviveAd.Show();
-    //    }
-    //}
+    public void ShowTokenRewardedAd()
+    {
+        if (this.rewardedTokenAd.IsLoaded())
+        {
+            this.rewardedTokenAd.Show();
+        }
+    }
 
-    //public void ShowTokenRewardedAd()
-    //{
-    //    if (this.rewardedTokenAd.IsLoaded())
-    //    {
-    //        this.rewardedTokenAd.Show();
-    //    }
-    //}
-
-    //public void ShowCoinRewardedAd()
-    //{
-    //    if (this.rewardedCoinAd.IsLoaded())
-    //    {
-    //        this.rewardedCoinAd.Show();
-    //    }
-    //}
+    public void ShowCoinRewardedAd()
+    {
+        if (this.rewardedCoinAd.IsLoaded())
+        {
+            this.rewardedCoinAd.Show();
+        }
+    }
 
     public void RequestBanner()
     {

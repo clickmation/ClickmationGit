@@ -155,7 +155,7 @@ public class DailyReward : MonoBehaviour
 
     public void ShowAd()
     {
-        ADManager.adManager.ShowRewardedAd("Token");
+        ADManager.adManager.ShowTokenRewardedAd();
     }
 	
 	public void GetReward()
@@ -168,7 +168,8 @@ public class DailyReward : MonoBehaviour
 		ActivateButton(IsButtonActive());
 		tokenAnimator.SetBool("Full", IsFullStack());
 		UpdateTime();
-	}
+        SaveLoad.saveload.mainMenu.PopUpUIActivate();
+    }
 	
 	private void ActivateButton(bool x)
 	{
