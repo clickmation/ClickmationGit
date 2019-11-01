@@ -15,7 +15,7 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(10000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(60000);
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;
@@ -42,7 +42,8 @@ public class RegularReward : MonoBehaviour
 	
 	void OnEnable()
 	{
-		ActivateButton(countIsReady);
+		StartCoroutine("CheckTime");
+		ActivateButton(IsButtonActive());
 	}
 	
 	private IEnumerator CheckTime()
@@ -75,9 +76,9 @@ public class RegularReward : MonoBehaviour
 				_remainingTime = refreshDateTime.Subtract(currentDateTime);
 				tcounter = _remainingTime.TotalMilliseconds;
 				countIsReady = true;
-                ActivateButton(countIsReady);
+                ActivateButton(IsButtonActive());
             } else {
-				ActivateButton(countIsReady);
+				ActivateButton(IsButtonActive());
 			}
 		}
 		
@@ -119,7 +120,7 @@ public class RegularReward : MonoBehaviour
             refreshDateTime = currentDateTime.Add(intervalTime);
             SaveLoad.saveload.RegularRewardSave();
             SaveLoad.saveload.RegularRewardLoad();
-            ActivateButton(countIsReady);
+            ActivateButton(IsButtonActive());
             Debug.Log(refreshDateTime);
 		}
 	}
@@ -131,10 +132,19 @@ public class RegularReward : MonoBehaviour
         return ranCoin[r];
     }
 	
+	private bool IsButtonActive()
+	{
+		if(DateTime.Compare(refreshDateTime, currentDateTime)>0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	private void ActivateButton(bool x)
 	{
-		coinButton.interactable = !x;
-		coinAnimator.SetBool("Activated", !x);
+		coinButton.interactable = x;
+		coinAnimator.SetBool("Activated", x);
 	}
 	
 	private void ValidateTime()

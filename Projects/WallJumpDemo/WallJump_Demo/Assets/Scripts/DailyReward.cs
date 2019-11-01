@@ -59,6 +59,7 @@ public class DailyReward : MonoBehaviour
 	
 	void OnEnable()
 	{
+        StartCoroutine("CheckTime");
 		tokenAnimator.SetBool("Activated", IsButtonActive());
 		tokenAnimator.SetBool("Full", IsFullStack());
 	}
