@@ -143,7 +143,7 @@ public class DailyReward : MonoBehaviour
 		}
 	}
 	
-	
+
 	public void RefreshStack()
 	{
 		refreshDate = currentDate.Add(aDay);

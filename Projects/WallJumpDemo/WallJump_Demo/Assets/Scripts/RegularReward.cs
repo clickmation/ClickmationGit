@@ -125,7 +125,7 @@ public class RegularReward : MonoBehaviour
         }
     }
 
-    public int CoinRanReward()
+    private int CoinRanReward()
     {
         int r = UnityEngine.Random.Range(0, ranCoin.Count);
         Debug.Log(ranCoin[r]);
