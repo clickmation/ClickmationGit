@@ -13,11 +13,11 @@ public class ADManager : MonoBehaviour
     private BannerView bannerView;
     private string bannerID = "ca-app-pub-3940256099942544/6300978111";
 
-    private InterstitialAd fullScreenAd;
-    private string fullScreenAdID = "ca-app-pub-3940256099942544/1033173712";
+    private RewardedAd rewardedAd;
 
-    private RewardBasedVideoAd rewardedAd;
-    private string rewardedAdID = "ca-app-pub-3940256099942544/5224354917";
+    //private RewardedAd rewardedReviveAd;
+    //private RewardedAd rewardedTokenAd;
+    //private RewardedAd rewardedCoinAd;
 
     void Awake()
     {
@@ -36,24 +36,147 @@ public class ADManager : MonoBehaviour
     {
         MobileAds.Initialize(appID);
 
-        RequestFullScreenAd();
+        rewardedAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
-        rewardedAd = RewardBasedVideoAd.Instance;
+        //this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        //this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        //this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
-        RequestRewardedAd();
-
-
-        rewardedAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
-
-        rewardedAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-
-        rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
-
-        rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+        //this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
+        //this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
+        //this.rewardedCoinAd.OnUserEarnedReward += HandleUserEarnedCoinReward;
 
         RequestBanner();
     }
 
+    public RewardedAd CreateAndLoadRewardedAd (string adUnitId)
+    {
+        RewardedAd rewardedAd = new RewardedAd(adUnitId);
+
+        rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+        rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
+        rewardedAd.OnAdOpening += HandleRewardedAdOpening;
+        rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+        rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+        rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+
+        AdRequest request = new AdRequest.Builder().Build();
+        rewardedAd.LoadAd(request);
+        return rewardedAd;
+    }
+
+    public void HandleRewardedAdLoaded(object sender, EventArgs args)
+    {
+        MonoBehaviour.print("HandleRewardedAdLoaded event received");
+    }
+
+    public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
+    {
+        MonoBehaviour.print(
+            "HandleRewardedAdFailedToLoad event received with message: " + args.Message);
+    }
+
+    public void HandleRewardedAdOpening(object sender, EventArgs args)
+    {
+        MonoBehaviour.print("HandleRewardedAdOpening event received");
+    }
+
+    public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
+    {
+        MonoBehaviour.print(
+            "HandleRewardedAdFailedToShow event received with message: " + args.Message);
+    }
+
+    public void HandleRewardedAdClosed(object sender, EventArgs args)
+    {
+        MonoBehaviour.print("HandleRewardedAdClosed event received");
+    }
+
+    public void HandleUserEarnedReward(object sender, Reward args)
+    {
+        string type = args.Type;
+        double amount = args.Amount;
+        MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+        Debug.Log(args.Type);
+
+        switch (rewardType)
+        {
+            case "Revive":
+                GameMaster.gameMaster.Revive();
+                break;
+            case "Token":
+                SaveLoad.saveload.dr.GetReward();
+                break;
+            case "Coin":
+                SaveLoad.saveload.rr.GetReward();
+                break;
+        }
+    }
+
+    //public void HandleUserEarnedReviveReward(object sender, Reward args)
+    //{
+    //    string type = args.Type;
+    //    double amount = args.Amount;
+    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+    //    Debug.Log(args.Type);
+
+
+    //    GameMaster.gameMaster.Revive();
+    //}
+    //public void HandleUserEarnedTokenReward(object sender, Reward args)
+    //{
+    //    string type = args.Type;
+    //    double amount = args.Amount;
+    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+    //    Debug.Log(args.Type);
+
+
+    //    SaveLoad.saveload.dr.GetReward();
+    //}
+    //public void HandleUserEarnedCoinReward(object sender, Reward args)
+    //{
+    //    string type = args.Type;
+    //    double amount = args.Amount;
+    //    MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
+    //    Debug.Log(args.Type);
+
+
+    //    SaveLoad.saveload.rr.GetReward();
+    //}
+
+    string rewardType;
+    public void ShowRewardedAd(string rt)
+    {
+        if (this.rewardedAd.IsLoaded())
+        {
+            rewardType = rt;
+            this.rewardedAd.Show();
+        }
+    }
+
+    //public void ShowReviveRewardedAd()
+    //{
+    //    if (this.rewardedReviveAd.IsLoaded())
+    //    {
+    //        this.rewardedReviveAd.Show();
+    //    }
+    //}
+
+    //public void ShowTokenRewardedAd()
+    //{
+    //    if (this.rewardedTokenAd.IsLoaded())
+    //    {
+    //        this.rewardedTokenAd.Show();
+    //    }
+    //}
+
+    //public void ShowCoinRewardedAd()
+    //{
+    //    if (this.rewardedCoinAd.IsLoaded())
+    //    {
+    //        this.rewardedCoinAd.Show();
+    //    }
+    //}
 
     public void RequestBanner()
     {
@@ -69,98 +192,5 @@ public class ADManager : MonoBehaviour
     public void HideBanner()
     {
         bannerView.Hide();
-    }
-
-    public void RequestFullScreenAd()
-    {
-        fullScreenAd = new InterstitialAd(fullScreenAdID);
-
-        AdRequest request = new AdRequest.Builder().Build();
-
-        fullScreenAd.LoadAd(request);
-
-    }
-
-    public void ShowFullScreenAd()
-    {
-        if (fullScreenAd.IsLoaded())
-        {
-            fullScreenAd.Show();
-            RequestFullScreenAd();
-        }
-        else
-        {
-            Debug.Log("Full screen ad not loaded");
-            RequestFullScreenAd();
-        }
-    }
-
-    public void RequestRewardedAd()
-    {
-        AdRequest request = new AdRequest.Builder().Build();
-
-        rewardedAd.LoadAd(request, rewardedAdID);
-    }
-
-    char rt;
-    public void ShowRewardedAd(char rewardType)
-    {
-        if (rewardedAd.IsLoaded())
-        {
-            rt = rewardType;
-            rewardedAd.Show();
-        }
-        else
-        {
-            Debug.Log("Rewarded ad not loaded");
-        }
-    }
-
-
-
-    public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
-    {
-        Debug.Log("Rewarded Video ad loaded successfully");
-
-    }
-
-    public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
-    {
-        Debug.Log("Failed to load rewarded video ad : " + args.Message);
-
-
-    }
-
-
-
-    public void HandleRewardBasedVideoRewarded(object sender, Reward args)
-    {
-        string type = args.Type;
-        double amount = args.Amount;
-        Debug.Log("You have been rewarded with  " + amount.ToString() + " " + type);
-
-        switch (rt)
-        {
-            case 'd':
-                SaveLoad.saveload.dr.GetReward();
-                break;
-            case 'r':
-                SaveLoad.saveload.rr.GetReward();
-                break;
-            case 'g':
-                GameMaster.gameMaster.Revive();
-                break;
-            default:
-                Debug.LogError("Noooo......");
-                break;
-        }
-    }
-
-
-    public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
-    {
-        Debug.Log("Rewarded video has closed");
-        RequestRewardedAd();
-
     }
 }

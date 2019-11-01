@@ -45,6 +45,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool howTo;
     [SerializeField] bool customization;
     [SerializeField] bool sound;
+    [SerializeField] bool popUp;
+
     [Space]
 
     [Header("Panels")]
@@ -56,6 +58,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject soundObj;
     [SerializeField] GameObject adTokenButton;
     [SerializeField] GameObject adCoinButton;
+    [SerializeField] GameObject popUpUI;
 
     [Space]
 
@@ -746,6 +749,20 @@ public class MainMenu : MonoBehaviour
                 bgmNextButton.color = new Color32(255, 255, 255, 255);
             }
             SaveLoad.saveload.MainMenuSave();
+        }
+    }
+
+    public void PopUpUIActivate()
+    {
+        if (!popUp)
+        {
+            popUp = true;
+            popUpUI.SetActive(true);
+        }
+        else
+        {
+            popUp = false;
+            popUpUI.SetActive(false);
         }
     }
 

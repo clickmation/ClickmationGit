@@ -106,7 +106,7 @@ public class RegularReward : MonoBehaviour
 
     public void ShowAd()
     {
-        ADManager.adManager.ShowRewardedAd('r');
+        ADManager.adManager.ShowRewardedAd("Coin");
     }
 
     public void GetReward()
@@ -121,9 +121,10 @@ public class RegularReward : MonoBehaviour
             SaveLoad.saveload.RegularRewardSave();
             SaveLoad.saveload.RegularRewardLoad();
             ActivateButton(IsButtonActive());
-            Debug.Log(refreshDateTime);
-		}
-	}
+            //Debug.Log(refreshDateTime);
+            SaveLoad.saveload.mainMenu.PopUpUIActivate();
+        }
+    }
 
     public int CoinRanReward()
     {

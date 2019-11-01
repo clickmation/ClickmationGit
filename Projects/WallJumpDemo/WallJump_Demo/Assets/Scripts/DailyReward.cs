@@ -155,7 +155,7 @@ public class DailyReward : MonoBehaviour
 
     public void ShowAd()
     {
-        ADManager.adManager.ShowRewardedAd('d');
+        ADManager.adManager.ShowRewardedAd("Token");
     }
 	
 	public void GetReward()
