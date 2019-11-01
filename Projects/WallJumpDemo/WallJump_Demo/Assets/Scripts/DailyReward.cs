@@ -153,7 +153,8 @@ public class DailyReward : MonoBehaviour
     }
 	
 	public void GetReward()
-	{
+    {
+        ADManager.adManager.ShowRewardedAd();
         SaveLoad.saveload.TokenLoad();
         SaveLoad.saveload.TokenSave('+');
         SaveLoad.saveload.DailyRewardSave('-');

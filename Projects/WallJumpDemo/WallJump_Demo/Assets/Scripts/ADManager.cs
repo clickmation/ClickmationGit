@@ -6,7 +6,7 @@ using System;
 
 public class ADManager : MonoBehaviour
 {
-    public static ADManager instance;
+    public static ADManager adManager;
 
     private string appID = "ca-app-pub-3575537359490368~8192022467";
 
@@ -22,9 +22,9 @@ public class ADManager : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        if (instance == null)
+        if (adManager == null)
         {
-            instance = this;
+            adManager = this;
         }
         else
         {
@@ -50,6 +50,8 @@ public class ADManager : MonoBehaviour
         rewardedAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
 
         rewardedAd.OnAdClosed += HandleRewardBasedVideoClosed;
+
+        RequestBanner();
     }
 
 

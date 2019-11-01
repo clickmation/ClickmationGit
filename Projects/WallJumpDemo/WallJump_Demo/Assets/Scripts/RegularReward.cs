@@ -15,7 +15,7 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(10000);
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;
@@ -37,7 +37,7 @@ public class RegularReward : MonoBehaviour
 	{
         SaveLoad.saveload.rr = this;
         SaveLoad.saveload.RegularRewardLoad();
-		StartCoroutine("CheckTime");
+        StartCoroutine("CheckTime");
 	}
 	
 	void OnEnable()
@@ -108,6 +108,7 @@ public class RegularReward : MonoBehaviour
 		ValidateTime();
 		if(DateTime.Compare(refreshDateTime, currentDateTime) <= 0)
 		{
+            ADManager.adManager.ShowRewardedAd();
             SaveLoad.saveload.RandomCoinSave(CoinRanReward());
             SaveLoad.saveload.MainMenuLoad();
             SaveLoad.saveload.mainMenu.coinText.text = SaveLoad.saveload.mainMenu.coin.ToString();

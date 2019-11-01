@@ -54,6 +54,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject howToObj;
     [SerializeField] GameObject cusObj;
     [SerializeField] GameObject soundObj;
+    [SerializeField] GameObject adTokenButton;
+    [SerializeField] GameObject adCoinButton;
 
     [Space]
 
@@ -217,6 +219,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(true);
             howToButton.color = new Color32 (200, 200, 200, 128);
             shopButton.color = new Color32(255, 255, 255, 255);
             customizationButton.color = new Color32 (200, 200, 200, 128);
@@ -237,6 +241,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32 (255, 255, 255, 255);
             customizationButton.color = new Color32 (255, 255, 255, 255);
             soundButton.color = new Color32(255, 255, 255, 255);
@@ -260,6 +266,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32 (200, 200, 200, 128);
             customizationButton.color = new Color32 (200, 200, 200, 128);
@@ -274,6 +282,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             shopButton.color = new Color32 (255, 255, 255, 255);
             customizationButton.color = new Color32(255, 255, 255, 255);
             soundButton.color = new Color32(255, 255, 255, 255);
@@ -338,6 +348,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(true);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32 (200, 200, 200, 128);
             shopButton.color = new Color32(200, 200, 200, 128);
             customizationButton.color = new Color32(255, 255, 255, 255);
@@ -353,6 +365,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32 (255, 255, 255, 255);
             soundButton.color = new Color32(255, 255, 255, 255);
@@ -379,6 +393,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(true);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             //bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
             for (int i = 0; i < availableBGMs.Count; i++)
             {
@@ -407,6 +423,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32(255, 255, 255, 255);
             customizationButton.color = new Color32(255, 255, 255, 255);
@@ -729,5 +747,10 @@ public class MainMenu : MonoBehaviour
             }
             SaveLoad.saveload.MainMenuSave();
         }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
