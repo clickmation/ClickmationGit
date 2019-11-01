@@ -46,6 +46,7 @@ public class JumpPanel : MonoBehaviour
             else if (panelType == PanelType.WALL)
             {
                 mov.panelJumped = true;
+                mov.RezeroStop();
                 mov.Jump(1, SetVec(dir, vecX, vecY));
             }
             AudioManager.PlaySound("jumpPanel");

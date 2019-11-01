@@ -40,6 +40,7 @@ public class GameMaster : MonoBehaviour
     public int coin;
     public Text coinText;
     public int adToken;
+    [SerializeField] private int revivable;
 
     [Space]
 
@@ -128,6 +129,8 @@ public class GameMaster : MonoBehaviour
         oriFever = fever;
         fever = 0;
         SaveLoad.saveload.SoundLoad();
+        //SaveLoad.saveload.TokenLoad();
+        //SaveLoad.saveload.TokenSave('+');
         masterVolumeSlider.onValueChanged = am.setMasterVolume;
         soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
         bgmVolumeSlider.onValueChanged = am.setBGMVolume;
@@ -142,6 +145,7 @@ public class GameMaster : MonoBehaviour
         am.SetBGMVolume();
         SaveLoad.saveload.GMLoad();
         StartCoroutine(ScoreCoroutine());
+        revivable = 1;
     }
 
     public void Jumpcount (int c)
@@ -313,6 +317,7 @@ public class GameMaster : MonoBehaviour
     {
         dead = true;
         AudioManager.PlaySound("death");
+        inputController.gameObject.SetActive(false);
         camFol.enabled = false;
         SpawnShockWave(shockWaveDeath, 2f);
         camShake.Shake(100);
@@ -325,15 +330,19 @@ public class GameMaster : MonoBehaviour
     IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        if (adToken == 0)
+        if (revivable == 1)
         {
-            adReviveButton.SetActive(true);
-            tokenReviveButton.SetActive(false);
-        }
-        else
-        {
-            adReviveButton.SetActive(false);
-            tokenReviveButton.SetActive(true);
+            Debug.Log(revivable);
+            if (adToken == 0)
+            {
+                adReviveButton.SetActive(true);
+                tokenReviveButton.SetActive(false);
+            }
+            else
+            {
+                adReviveButton.SetActive(false);
+                tokenReviveButton.SetActive(true);
+            }
         }
         deadPanel.SetActive(true);
         scoreText.gameObject.SetActive(false);
@@ -377,6 +386,10 @@ public class GameMaster : MonoBehaviour
     public void Revive()
     {
         dead = false;
+        revivable--;
+        adReviveButton.SetActive(false);
+        tokenReviveButton.SetActive(false);
+        inputController.gameObject.SetActive(true);
         for (int i = 0; i < triggerFunctions.Count; i++) triggerFunctions[i].Trigger();
         rmg.StartSpawn();
         Instantiate(startCollider, playerSpawnPoint, Quaternion.Euler(0, 0, 0));

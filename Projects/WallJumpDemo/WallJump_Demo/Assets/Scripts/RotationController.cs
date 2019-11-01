@@ -27,7 +27,6 @@ public class RotationController : MonoBehaviour
         {
             movSprite.rotation = Quaternion.Euler(0, 0, -mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
             _movSprite.rotation = Quaternion.Euler(0, 0, -movSprite.rotation.z);
-            //Debug.Log(-mov.dir * Mathf.Rad2Deg * Mathf.Asin(vec.normalized.y));
         }
         else
         {
@@ -43,6 +42,7 @@ public class RotationController : MonoBehaviour
                 yield return new WaitForSeconds(Time.deltaTime);
             }
             movSprite.rotation = Quaternion.Euler(0, 0, r);
+            mov.Rezero();
         }
     }
 }

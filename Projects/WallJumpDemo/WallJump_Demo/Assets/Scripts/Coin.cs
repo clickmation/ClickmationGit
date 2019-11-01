@@ -5,6 +5,8 @@ using System.Collections;
 
 public class Coin : MonoBehaviour
 {
+    [SerializeField] bool coinS;
+    [SerializeField] GameObject triggerParticle;
     public int coinAddAmount;
     public float feverAdder;
 
@@ -12,10 +14,14 @@ public class Coin : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            GameMaster.gameMaster.AddCoin(coinAddAmount);
-            GameMaster.gameMaster.FeverAdd(feverAdder);
-            AudioManager.PlaySound("coin");
-            Destroy(this.gameObject);
+            if (!coinS || (coinS && other.GetComponent<Movement>().attacking))
+            {
+                GameMaster.gameMaster.AddCoin(coinAddAmount);
+                GameMaster.gameMaster.FeverAdd(feverAdder);
+                AudioManager.PlaySound("coin");
+                Destroy(Instantiate(triggerParticle, transform.position, Quaternion.Euler(0, 0, 0)), 3f);
+                Destroy(this.gameObject);
+            }
         }
     }
 }

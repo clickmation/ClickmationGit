@@ -65,10 +65,13 @@ public class Movement : MonoBehaviour
     public bool wallJumped;
     [SerializeField] private bool boosted;
     public bool jumping = true;
-    private bool _jumping;
     [SerializeField] private bool jumpButtonDown;
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
+    private bool rezero;
+    private float rotZ;
+    private float yVel;
+    [SerializeField] private Transform rotTransform;
 
     //public float lastVelocity;
     public float lastSpeed;
@@ -136,16 +139,18 @@ public class Movement : MonoBehaviour
         if (!col.onWall)
         {
 
-           if (!panelJumped) rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
+            if (!panelJumped) rb.velocity = (new Vector2(dir * _speed, rb.velocity.y));
+            if (rezero) rotTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, rotZ, rb.velocity.y / yVel));
             if (!jumping && rb.velocity.y > 0 && !touchJumped && !attacking)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
             else if (rb.velocity.y < 0)
             {
-                if (jumping) jumping = false;
-                if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
-                _jumping = jumping;
+                //if (jumping) jumping = false;
+                //if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
+                //_jumping = jumping;
+                rezero = false;
             }
             //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
@@ -156,6 +161,19 @@ public class Movement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
             }
         }
+    }
+
+    public void Rezero()
+    {
+        rotZ = Mathf.Rad2Deg * rotTransform.rotation.z;
+        yVel = Mathf.Abs(rb.velocity.y);
+        rezero = true;
+    }
+
+    public void RezeroStop()
+    {
+        rezero = false;
+        rotTransform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     IEnumerator attackCoroutine;
@@ -275,7 +293,7 @@ public class Movement : MonoBehaviour
         {
             jumpable = false;
             jumping = true;
-            _jumping = jumping;
+            //_jumping = jumping;
             rb.gravityScale = gravity;
             gm.Jumpcount(1);
             if (side == -1)
@@ -450,6 +468,7 @@ public class Movement : MonoBehaviour
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
         playerParticle.SetActive(false);
         camFol.dir = -dir;
+        RezeroStop();
         rotCon.SetRotation(0f, new Vector2 (0, -1), false);
         if (col.onGround)
         {
