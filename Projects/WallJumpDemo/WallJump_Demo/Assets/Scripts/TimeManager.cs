@@ -17,7 +17,6 @@ public class TimeManager : MonoBehaviour {
     private string _currentTime;
     private string _currentDate;
  
- 
     //make sure there is only one instance of this always.
     void Awake() {
         if (sharedInstance == null) {

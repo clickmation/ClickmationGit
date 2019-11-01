@@ -15,11 +15,13 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(120000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;
 	private bool timerSet;
+
+    [SerializeField] List<int> ranCoin = new List<int>();
 
     public DateTime GetRefreshDateTime()
     {
@@ -106,15 +108,23 @@ public class RegularReward : MonoBehaviour
 		ValidateTime();
 		if(DateTime.Compare(refreshDateTime, currentDateTime) <= 0)
 		{
-			//coinRanReward();
-		
-			refreshDateTime = currentDateTime.Add(intervalTime);
+            SaveLoad.saveload.RandomCoinSave(CoinRanReward());
+            SaveLoad.saveload.MainMenuLoad();
+            SaveLoad.saveload.mainMenu.coinText.text = SaveLoad.saveload.mainMenu.coin.ToString();
+            refreshDateTime = currentDateTime.Add(intervalTime);
             SaveLoad.saveload.RegularRewardSave();
             SaveLoad.saveload.RegularRewardLoad();
             ActivateButton(countIsReady);
             Debug.Log(refreshDateTime);
 		}
 	}
+
+    public int CoinRanReward()
+    {
+        int r = UnityEngine.Random.Range(0, ranCoin.Count);
+        Debug.Log(ranCoin[r]);
+        return ranCoin[r];
+    }
 	
 	private void ActivateButton(bool x)
 	{

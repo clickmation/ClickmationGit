@@ -150,7 +150,6 @@ public class DailyReward : MonoBehaviour
 		tokenAnimator.SetBool("Full", IsFullStack());
         SaveLoad.saveload.DailyRewardSave('r');
         SaveLoad.saveload.DailyRewardLoad();
-        Debug.Log(refreshDate);
     }
 	
 	public void GetReward()

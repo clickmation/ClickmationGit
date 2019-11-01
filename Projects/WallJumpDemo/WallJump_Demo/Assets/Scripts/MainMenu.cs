@@ -23,10 +23,6 @@ public class MainMenu : MonoBehaviour
     public int highScore;
     public int allScores;
     public int coin;
-    //public int allCoins;
-    //public int allDeaths;
-    //public int allJumps;
-    //public int allKills;
     public int adToken;
     public int curTrailIndex;
     public int curCharacterIndex;

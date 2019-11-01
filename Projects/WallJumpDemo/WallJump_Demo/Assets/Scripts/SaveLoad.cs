@@ -260,6 +260,34 @@ public class SaveLoad : MonoBehaviour
         binary.Serialize(fstream, saver);
         fstream.Close();
     }
+
+    //public void Load()
+    //{
+    //    if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
+    //    {
+    //        BinaryFormatter binary = new BinaryFormatter();
+    //        FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
+    //        SaveManager saver = (SaveManager)binary.Deserialize(fstream);
+    //        fstream.Close();
+
+    //        tmpSaver = saver;
+    //    }
+    //}
+
+    public void RandomCoinSave(int c)
+    {
+        BinaryFormatter binary = new BinaryFormatter();
+        FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
+
+        SaveManager saver = new SaveManager();
+
+        saver = tmpSaver;
+
+        saver.coin = tmpSaver.coin + c;
+
+        binary.Serialize(fstream, saver);
+        fstream.Close();
+    }
 }
 
 [System.Serializable]
