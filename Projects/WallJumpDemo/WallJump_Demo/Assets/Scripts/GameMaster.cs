@@ -109,6 +109,17 @@ public class GameMaster : MonoBehaviour
     public Slider soundEffectVolumeSlider;
     public Slider bgmVolumeSlider;
 
+    [Space]
+
+    [Header("JumpAdd")]
+
+    public AddJumpScore[] addJumpScores;
+    [System.Serializable]
+    public struct AddJumpScore
+    {
+        public int score;
+        public int addJump;
+    }
 
     void Awake ()
     {

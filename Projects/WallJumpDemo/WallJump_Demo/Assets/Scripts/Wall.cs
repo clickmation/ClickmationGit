@@ -4,11 +4,29 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour
 {
+    GameMaster gm;
     public int wallStaminaCount;
     public float wallSlideSpeed;
     [SerializeField] float vecX;
     [SerializeField] float vecY;
     [SerializeField] float force;
+
+    void Start ()
+    {
+        if (GameMaster.gameMaster != null)
+        {
+            gm = GameMaster.gameMaster;
+            Debug.Log(wallStaminaCount);
+            for (int i = gm.addJumpScores.Length - 1; i >= 0; i--) {
+                if (gm.score >= gm.addJumpScores[i].score)
+                {
+                    wallStaminaCount += gm.addJumpScores[i].addJump;
+                    Debug.Log(gm.addJumpScores[i].addJump);
+                    break;
+                }
+            }
+        }
+    }
 
     public Vector2 SetVec (float dir, float x, float y)
     {
