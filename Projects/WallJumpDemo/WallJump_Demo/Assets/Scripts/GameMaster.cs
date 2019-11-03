@@ -86,6 +86,7 @@ public class GameMaster : MonoBehaviour
     [Header("Score")]
 
     public int score;
+    public int realScore;
     public int scoreAdd;
     public int scoreMultiplier = 1;
     public int highScore;
@@ -314,6 +315,7 @@ public class GameMaster : MonoBehaviour
         {
             yield return new WaitForSeconds(scoreAddDelay);
             score += scoreAdd * scoreMultiplier;
+            realScore += scoreAdd;
             scoreText.text = score.ToString();
             if (score > highScore)
             {

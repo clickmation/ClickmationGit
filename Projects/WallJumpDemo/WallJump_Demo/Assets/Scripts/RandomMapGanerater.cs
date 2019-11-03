@@ -77,7 +77,7 @@ public class RandomMapGanerater : MonoBehaviour
         int tmp = 0;
         for (int i = 0; i < scoreCuts.Length - 1; i++)
         {
-            if (scoreCuts[i].scoreCut <= gm.score && gm.score < scoreCuts[i + 1].scoreCut)
+            if (scoreCuts[i].scoreCut <= gm.realScore && gm.realScore < scoreCuts[i + 1].scoreCut)
             {
                 sum = 0;
                 for (int j = 0; j < scoreCuts[i].percentBlocks.Length; j++)
