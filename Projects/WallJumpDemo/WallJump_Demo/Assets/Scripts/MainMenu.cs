@@ -173,6 +173,7 @@ public class MainMenu : MonoBehaviour
 
         trailsArray[0] = 1;
         charactersArray[0] = 1;
+        charactersArray[1] = 1;
         bgmsArray[0] = 1;
 
         //for (int i = 1; i < 20; i++)
