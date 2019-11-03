@@ -94,6 +94,8 @@ public class GameMaster : MonoBehaviour
     public float scoreAddDelay;
     public Text deadPanelScore;
     public Text pausePanelScore;
+    public Transform inGameUI;
+    public GameObject scorePlusText;
 
     [Space]
 
@@ -146,6 +148,8 @@ public class GameMaster : MonoBehaviour
         SaveLoad.saveload.GMLoad();
         StartCoroutine(ScoreCoroutine());
         revivable = 1;
+
+        ADManager.adManager.RequestBanner();
     }
 
     public void Jumpcount (int c)
@@ -307,6 +311,15 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    public void AddScore (int s)
+    {
+        score += s;
+        GameObject spt = Instantiate(scorePlusText, inGameUI);
+        spt.GetComponent<Text>().text = "+" + s.ToString();
+        scoreText.text = score.ToString();
+        Destroy(spt, 1f);
+    }
+
     public void AddCoin(int c)
     {
         coin += c;
@@ -454,6 +467,7 @@ public class GameMaster : MonoBehaviour
         if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
         SaveLoad.saveload.gm = null;
+        ADManager.adManager.HideBanner();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void Sound()

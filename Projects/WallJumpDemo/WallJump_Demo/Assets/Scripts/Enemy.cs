@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
 	[SerializeField]
 	public GameObject deathParticle;
+    public int score;
     [SerializeField] EnemyType enemyType;
     enum EnemyType
     {
@@ -28,6 +29,7 @@ public class Enemy : MonoBehaviour
                 {
                     GameMaster.gameMaster.SpawnShockWave(mov.shockWaveKill, 2f);
                     GameMaster.gameMaster.KillCount(1);
+                    GameMaster.gameMaster.AddScore(score);
                     mov.camShake.Shake(10);
                     AudioManager.PlaySound("kill");
                     GameObject clone;
