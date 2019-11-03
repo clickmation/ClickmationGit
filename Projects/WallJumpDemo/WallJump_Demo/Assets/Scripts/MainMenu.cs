@@ -368,7 +368,7 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            adTokenButton.SetActive(false);
+            adTokenButton.SetActive(true);
             adCoinButton.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32 (255, 255, 255, 255);

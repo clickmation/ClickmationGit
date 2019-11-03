@@ -147,7 +147,7 @@ public class Movement : MonoBehaviour
             }
             else if (rb.velocity.y < 0)
             {
-                //if (jumping) jumping = false;
+                if (jumping) jumping = false;
                 //if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
                 //_jumping = jumping;
                 rezero = false;
