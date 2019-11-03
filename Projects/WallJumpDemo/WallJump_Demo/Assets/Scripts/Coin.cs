@@ -5,6 +5,7 @@ using System.Collections;
 
 public class Coin : MonoBehaviour
 {
+    [SerializeField] Animator anim;
     [SerializeField] bool coinS;
     [SerializeField] GameObject triggerParticle;
     public int coinAddAmount;
@@ -23,6 +24,10 @@ public class Coin : MonoBehaviour
                 AudioManager.PlaySound("coin");
                 Destroy(Instantiate(triggerParticle, transform.position, Quaternion.Euler(0, 0, 0)), 3f);
                 Destroy(this.gameObject);
+            }
+            else if (coinS && !other.GetComponent<Movement>().attacking)
+            {
+                anim.SetTrigger("Death");
             }
         }
     }

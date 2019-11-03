@@ -41,8 +41,6 @@ public class ADManager : MonoBehaviour
         this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
         this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
         this.rewardedCoinAd.OnUserEarnedReward += HandleUserEarnedCoinReward;
-
-        RequestBanner();
     }
 
     public RewardedAd CreateAndLoadRewardedAd (string adUnitId)
