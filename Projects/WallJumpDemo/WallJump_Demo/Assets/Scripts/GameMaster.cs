@@ -358,7 +358,6 @@ public class GameMaster : MonoBehaviour
         yield return new WaitForSeconds(2f);
         if (revivable == 1)
         {
-            Debug.Log(revivable);
             if (adToken == 0)
             {
                 adReviveButton.SetActive(true);
