@@ -572,7 +572,7 @@ public class MainMenu : MonoBehaviour
         prizeImage.gameObject.SetActive(false);
         Destroy(prizeTrailObject);
         GameObject coinObj = Instantiate(coinObject, prizeImage.transform.position, prizeImage.transform.rotation);
-        coinObj.transform.localScale *= 750;
+        coinObj.transform.localScale *= 7.5f;
         prizeCoinObject = coinObj;
         prizeName.text = c.ToString();
         coinText.text = coin.ToString();
