@@ -46,6 +46,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool customization;
     [SerializeField] bool sound;
     [SerializeField] bool popUp;
+    [SerializeField] bool quitCheck;
 
     [Space]
 
@@ -59,6 +60,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject adTokenButton;
     [SerializeField] GameObject adCoinButton;
     [SerializeField] GameObject popUpUI;
+    [SerializeField] GameObject quitChenkUI;
 
     [Space]
 
@@ -792,6 +794,52 @@ public class MainMenu : MonoBehaviour
         {
             popUp = false;
             popUpUI.SetActive(false);
+        }
+    }
+
+    public void QuitChecnk()
+    {
+        if (!quitCheck)
+        {
+            quitCheck = true;
+            mainMenu.SetActive(false);
+            shopObj.SetActive(false);
+            howToObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
+            quitChenkUI.SetActive(true);
+        }
+        else
+        {
+            quitCheck = false;
+            if (shop)
+            {
+                shop = false;
+                Shop();
+            }
+            else if (howTo)
+            {
+                howTo = false;
+                HowTo();
+            }
+            else if (customization)
+            {
+                customization = false;
+                Customization();
+            }
+            else if (sound)
+            {
+                sound = false;
+                Sound();
+            }
+            else if (mainMenu)
+            {
+                mainMenu.SetActive(true);
+                adTokenButton.SetActive(true);
+            }
+            quitChenkUI.SetActive(false);
         }
     }
 
