@@ -74,10 +74,12 @@ public class MainMenu : MonoBehaviour
 
     [Header("Shop")]
 
-    //public int shopIndex;
+    [SerializeField] GameObject coinObject;
+    public Image prizeImage;
     public Text prizeName;
     public SpriteRenderer prizeObject;
     public GameObject prizeTrailObject;
+    [SerializeField] GameObject prizeCoinObject;
 
     [Space]
 
@@ -480,10 +482,12 @@ public class MainMenu : MonoBehaviour
                     r = Random.Range(0, 2);
                 }
                 SaveLoad.saveload.MainMenuLoad();
-                prizeObject.gameObject.SetActive(true);
                 if (r == 0)
                 {
+                    prizeObject.gameObject.SetActive(true);
+                    prizeImage.gameObject.SetActive(false);
                     Destroy(prizeTrailObject);
+                    Destroy(prizeCoinObject);
                     index = Random.Range(0, buyableTrails.Count);
                     trailsArray[buyableTrails[index]] = 1;
                     //PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
@@ -495,10 +499,14 @@ public class MainMenu : MonoBehaviour
                 }
                 else if (r == 1)
                 {
+                    prizeObject.gameObject.SetActive(false);
+                    prizeImage.gameObject.SetActive(true);
+                    Destroy(prizeTrailObject);
+                    Destroy(prizeCoinObject);
                     index = Random.Range(0, buyableCharacters.Count);
                     charactersArray[buyableCharacters[index]] = 1;
                     //PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
-                    prizeObject.sprite = characters[buyableCharacters[index]].sprite;
+                    prizeImage.sprite = characters[buyableCharacters[index]].sprite;
                     prizeName.text = characters[buyableCharacters[index]].name;
                     curCharacterIndex = buyableCharacters[index];
                     //PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
@@ -556,6 +564,18 @@ public class MainMenu : MonoBehaviour
         {
             Debug.LogError("Not enough coins");
         }
+    }
+
+    public void AdCoinUI(int c)
+    {
+        prizeObject.gameObject.SetActive(false);
+        prizeImage.gameObject.SetActive(false);
+        Destroy(prizeTrailObject);
+        GameObject coinObj = Instantiate(coinObject, prizeImage.transform.position, prizeImage.transform.rotation);
+        coinObj.transform.localScale *= 750;
+        prizeCoinObject = coinObj;
+        prizeName.text = c.ToString();
+        coinText.text = coin.ToString();
     }
 
     public void HowToNext ()

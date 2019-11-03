@@ -284,6 +284,7 @@ public class SaveLoad : MonoBehaviour
         saver = tmpSaver;
 
         saver.coin = tmpSaver.coin + c;
+        mainMenu.AdCoinUI(c);
 
         binary.Serialize(fstream, saver);
         fstream.Close();
