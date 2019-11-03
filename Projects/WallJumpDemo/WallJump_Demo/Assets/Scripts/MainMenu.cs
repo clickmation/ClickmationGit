@@ -80,6 +80,8 @@ public class MainMenu : MonoBehaviour
     public SpriteRenderer prizeObject;
     public GameObject prizeTrailObject;
     [SerializeField] GameObject prizeCoinObject;
+    [SerializeField] Transform shopTransform;
+    private string defaultString = "What's prize?";
 
     [Space]
 
@@ -236,6 +238,12 @@ public class MainMenu : MonoBehaviour
                 Destroy(prizeTrailObject);
                 prizeTrailObject = null;
             }
+            if (prizeCoinObject != null)
+            {
+                Destroy(prizeCoinObject);
+                prizeCoinObject = null;
+            }
+            prizeName.text = defaultString;
         }
         else
         {
@@ -571,10 +579,10 @@ public class MainMenu : MonoBehaviour
         prizeObject.gameObject.SetActive(false);
         prizeImage.gameObject.SetActive(false);
         Destroy(prizeTrailObject);
-        GameObject coinObj = Instantiate(coinObject, prizeImage.transform.position, prizeImage.transform.rotation);
-        coinObj.transform.localScale *= 7.5f;
+        GameObject coinObj = Instantiate(coinObject, prizeImage.transform.position, prizeImage.transform.rotation, shopTransform);
+        coinObj.transform.localScale *= 750;
         prizeCoinObject = coinObj;
-        prizeName.text = c.ToString();
+        prizeName.text = "+" + c.ToString() + " Coins";
         coinText.text = coin.ToString();
     }
 
