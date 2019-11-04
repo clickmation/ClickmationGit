@@ -7,6 +7,36 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     AudioManager am;
+    LanguageSet ls;
+
+    [Space]
+
+    [Header("Texts")]
+
+    public Text startText;
+    public Text howToText;
+    public Text shopText;
+    public Text customizationText;
+    public Text quitCheckText;
+    public Text getTokenText;
+    public Text getCoinText;
+
+    public Text coinButtonText;
+
+    public Text[] tutText;
+
+    public Text trailText;
+    public Text skinText;
+
+    public Text soundText;
+    public Text masterText;
+    public Text soundEffectText;
+    public Text bgmText;
+
+    public Text congratulationText;
+
+    public Text yesText;
+    public Text noText;
 
     [Space]
 
@@ -83,7 +113,6 @@ public class MainMenu : MonoBehaviour
     public GameObject prizeTrailObject;
     [SerializeField] GameObject prizeCoinObject;
     [SerializeField] Transform shopTransform;
-    private string defaultString = "What's prize?";
 
     [Space]
 
@@ -150,12 +179,15 @@ public class MainMenu : MonoBehaviour
     {
         SaveLoad.saveload.mainMenu = this;
         am = AudioManager.audioManager;
+        ls = LanguageSet.ls;
+        ls.mm = this;
         am.mainMenu = this;
         am.SetAudioSources();
         SaveLoad.saveload.MainMenuLoad();
         highScoreText.text = highScore.ToString();
         coinText.text = coin.ToString();
         adTokenText.text = adToken.ToString();
+        MainMenuLanguageSet();
 
         //PlayerPrefs.SetInt("CurTrailIndex", 0);
         //PlayerPrefs.SetInt("CurCharacterIndex", 0);
@@ -246,7 +278,8 @@ public class MainMenu : MonoBehaviour
                 Destroy(prizeCoinObject);
                 prizeCoinObject = null;
             }
-            prizeName.text = defaultString;
+            prizeImage.gameObject.SetActive(false);
+            prizeName.text = ls.language.whatsPrize;
         }
         else
         {
@@ -846,5 +879,31 @@ public class MainMenu : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void MainMenuLanguageSet()
+    {
+        startText.text = ls.language.start;
+        howToText.text = ls.language.howTo;
+        shopText.text = ls.language.shop;
+        customizationText.text = ls.language.customization;
+        quitCheckText.text = ls.language.quitCheck;
+        getTokenText.text = ls.language.getToken;
+        getCoinText.text = ls.language.getCoin;
+
+        prizeName.text = ls.language.whatsPrize;
+        coinButtonText.text = "1000 " + ls.language.coin;
+        for (int i = 0; i < tutText.Length; i++) tutText[i].text = ls.language.tut[i];
+        trailText.text = ls.language.trail;
+        skinText.text = ls.language.skin;
+        soundText.text = ls.language.sound;
+        masterText.text = ls.language.master;
+        soundEffectText.text = ls.language.soundEffect;
+        bgmText.text = ls.language.bgm;
+
+        congratulationText.text = ls.language.congratulation;
+
+        yesText.text = ls.language.yes;
+        noText.text = ls.language.no;
     }
 }

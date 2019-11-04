@@ -7,7 +7,9 @@ using System.Globalization;
 
 public class DailyReward : MonoBehaviour
 {
-	public Animator tokenAnimator;
+    LanguageSet ls;
+
+    public Animator tokenAnimator;
     public Button tokenButton;
     public Text timeLabel;
 	public Text stackLabel;
@@ -45,6 +47,7 @@ public class DailyReward : MonoBehaviour
     {
         SaveLoad.saveload.dr = this;
         SaveLoad.saveload.DailyRewardLoad();
+        ls = LanguageSet.ls;
         stackLabel.text = curStack + "/" + maxStack;
         Debug.Log(refreshDate);
         StartCoroutine("CheckTime");
@@ -105,7 +108,7 @@ public class DailyReward : MonoBehaviour
 	private void StartCountdown()
 	{
 		tcounter-= Time.deltaTime * 1000;
-		timeLabel.text = GetRemainingTime(tcounter) + " Until\nMore Revive Tokens";	
+		timeLabel.text = GetRemainingTime(tcounter) + ls.language.until + "\n" + ls.language.untilToken;	
 		
 		
 		if (tcounter <= 0) {

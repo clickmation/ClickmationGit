@@ -7,6 +7,8 @@ using System.Globalization;
 
 public class RegularReward : MonoBehaviour
 {
+    LanguageSet ls;
+
 	public Animator coinAnimator;
     public Button coinButton;
 	public Text timeLabel;
@@ -37,6 +39,7 @@ public class RegularReward : MonoBehaviour
 	{
         SaveLoad.saveload.rr = this;
         SaveLoad.saveload.RegularRewardLoad();
+        ls = LanguageSet.ls;
         StartCoroutine("CheckTime");
 	}
 	
@@ -96,7 +99,7 @@ public class RegularReward : MonoBehaviour
 	{
 		timerSet = false;
 		tcounter -= Time.deltaTime * 1000;
-        timeLabel.text = GetRemainingTime(tcounter) + " Until\nFREE COIN";
+        timeLabel.text = GetRemainingTime(tcounter) + ls.language.until + "\n" + ls.language.untilCoin;
 
         if (tcounter <= 0){
 			countIsReady = false;
