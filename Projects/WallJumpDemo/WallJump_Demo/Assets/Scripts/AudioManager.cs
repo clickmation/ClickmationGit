@@ -132,11 +132,11 @@ public class AudioManager : MonoBehaviour
 
     IEnumerator FeverInAudioCoroutine()
     {
-        //highPass.enabled = true;
+        highPass.enabled = true;
         reverb.enabled = true;
         for (float t = 0; t < 1f; t += Time.deltaTime)
         {
-            //highPass.cutoffFrequency = Mathf.Lerp(10, 1381, t);
+            highPass.cutoffFrequency = Mathf.Lerp(10, 2000, t);
             reverb.decayTime = Mathf.Lerp(0.1f, 1f, t);
             reverb.decayHFRatio = Mathf.Lerp(0.1f, 0.5f, t);
             reverb.reverbLevel = Mathf.Lerp(-10000, 0, t);
@@ -147,7 +147,7 @@ public class AudioManager : MonoBehaviour
             reverb.density = Mathf.Lerp(0, 100, t);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        //highPass.cutoffFrequency = 1381;
+        highPass.cutoffFrequency = 2000;
         reverb.decayTime = 1;
         reverb.decayHFRatio = 0.5f;
         reverb.reverbLevel = 0;
@@ -162,7 +162,7 @@ public class AudioManager : MonoBehaviour
     {
         for (float t = 1f; t > 0; t -= Time.deltaTime)
         {
-            //highPass.cutoffFrequency = Mathf.Lerp(10, 1381, t);
+            highPass.cutoffFrequency = Mathf.Lerp(10, 2000, t);
             reverb.decayTime = Mathf.Lerp(0.1f, 1f, t);
             reverb.decayHFRatio = Mathf.Lerp(0.1f, 0.5f, t);
             reverb.reverbLevel = Mathf.Lerp(-10000, 0, t);
@@ -173,7 +173,7 @@ public class AudioManager : MonoBehaviour
             reverb.density = Mathf.Lerp(0, 100, t);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        //highPass.cutoffFrequency = 10;
+        highPass.cutoffFrequency = 10;
         reverb.decayTime = 0.1f;
         reverb.decayHFRatio = 0.1f;
         reverb.reverbLevel = -10000;
@@ -182,7 +182,7 @@ public class AudioManager : MonoBehaviour
         reverb.lfReference = 20;
         reverb.diffusion = 0;
         reverb.density = 0;
-        //highPass.enabled = false;
+        highPass.enabled = false;
         reverb.enabled = false;
     }
 
