@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
                 {
                     GameMaster.gameMaster.SpawnShockWave(mov.shockWaveKill, 2f);
                     GameMaster.gameMaster.KillCount(1);
-                    GameMaster.gameMaster.AddScore(score);
+                    GameMaster.gameMaster.AddScore(score * GameMaster.gameMaster.scoreMultiplier);
                     mov.camShake.Shake(10);
                     AudioManager.PlaySound("kill");
                     GameObject clone;

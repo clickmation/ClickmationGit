@@ -287,6 +287,7 @@ public class GameMaster : MonoBehaviour
     {
         feverStructs[index].started = true;
         scoreMultiplier++;
+        if (scoreMultiplier == 2) am.FeverAudio(true);
         if (index == 0) feverEffect.SetActive(true);
         while (feverStructs[index].fever >= feverStructs[index].feverStopPoint)
         {
@@ -295,6 +296,7 @@ public class GameMaster : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         scoreMultiplier--;
+        if (scoreMultiplier == 1) am.FeverAudio(false);
         feverStructs[index].started = false;
         if (index == 0)
         {
@@ -480,6 +482,7 @@ public class GameMaster : MonoBehaviour
         Time.timeScale = 1;
         SaveLoad.saveload.gm = null;
         ADManager.adManager.HideBanner();
+        am.FeverAudioDefaultSet();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void Sound()

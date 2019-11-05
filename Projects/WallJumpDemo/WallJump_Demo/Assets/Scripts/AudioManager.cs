@@ -8,6 +8,9 @@ public class AudioManager : MonoBehaviour
     public static AudioManager audioManager;
     public MainMenu mainMenu;
     public GameMaster gm;
+
+    [SerializeField] AudioReverbFilter reverb;
+    [SerializeField] AudioHighPassFilter highPass;
 	
 	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound, touchSound;
     public static AudioSource soundEffectAudioSrc;
@@ -119,5 +122,80 @@ public class AudioManager : MonoBehaviour
             bgmAudioSrc.Play();
             Debug.Log("Played");
         }
+    }
+
+    public void FeverAudio(bool fever)
+    {
+        if (fever) StartCoroutine(FeverInAudioCoroutine());
+        else StartCoroutine(FeverOutAudioCoroutine());
+    }
+
+    IEnumerator FeverInAudioCoroutine()
+    {
+        //highPass.enabled = true;
+        reverb.enabled = true;
+        for (float t = 0; t < 1f; t += Time.deltaTime)
+        {
+            //highPass.cutoffFrequency = Mathf.Lerp(10, 1381, t);
+            reverb.decayTime = Mathf.Lerp(0.1f, 1f, t);
+            reverb.decayHFRatio = Mathf.Lerp(0.1f, 0.5f, t);
+            reverb.reverbLevel = Mathf.Lerp(-10000, 0, t);
+            reverb.reverbDelay = Mathf.Lerp(0, 0.04f, t);
+            reverb.hfReference = Mathf.Lerp(1000, 5000, t);
+            reverb.lfReference = Mathf.Lerp(20, 250, t);
+            reverb.diffusion = Mathf.Lerp(0, 100, t);
+            reverb.density = Mathf.Lerp(0, 100, t);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        //highPass.cutoffFrequency = 1381;
+        reverb.decayTime = 1;
+        reverb.decayHFRatio = 0.5f;
+        reverb.reverbLevel = 0;
+        reverb.reverbDelay = 0.04f;
+        reverb.hfReference = 5000;
+        reverb.lfReference = 250;
+        reverb.diffusion = 100;
+        reverb.density = 100;
+    }
+
+    IEnumerator FeverOutAudioCoroutine()
+    {
+        for (float t = 1f; t > 0; t -= Time.deltaTime)
+        {
+            //highPass.cutoffFrequency = Mathf.Lerp(10, 1381, t);
+            reverb.decayTime = Mathf.Lerp(0.1f, 1f, t);
+            reverb.decayHFRatio = Mathf.Lerp(0.1f, 0.5f, t);
+            reverb.reverbLevel = Mathf.Lerp(-10000, 0, t);
+            reverb.reverbDelay = Mathf.Lerp(0, 0.04f, t);
+            reverb.hfReference = Mathf.Lerp(1000, 5000, t);
+            reverb.lfReference = Mathf.Lerp(20, 250, t);
+            reverb.diffusion = Mathf.Lerp(0, 100, t);
+            reverb.density = Mathf.Lerp(0, 100, t);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        //highPass.cutoffFrequency = 10;
+        reverb.decayTime = 0.1f;
+        reverb.decayHFRatio = 0.1f;
+        reverb.reverbLevel = -10000;
+        reverb.reverbDelay = 0;
+        reverb.hfReference = 1000;
+        reverb.lfReference = 20;
+        reverb.diffusion = 0;
+        reverb.density = 0;
+        //highPass.enabled = false;
+        reverb.enabled = false;
+    }
+
+    public void FeverAudioDefaultSet()
+    {
+        reverb.decayTime = 0.1f;
+        reverb.decayHFRatio = 0.1f;
+        reverb.reverbLevel = -10000;
+        reverb.reverbDelay = 0;
+        reverb.hfReference = 1000;
+        reverb.lfReference = 20;
+        reverb.diffusion = 0;
+        reverb.density = 0;
+        reverb.enabled = false;
     }
 }
