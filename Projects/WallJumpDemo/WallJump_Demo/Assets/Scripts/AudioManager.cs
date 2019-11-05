@@ -188,6 +188,7 @@ public class AudioManager : MonoBehaviour
 
     public void FeverAudioDefaultSet()
     {
+        highPass.cutoffFrequency = 10;
         reverb.decayTime = 0.1f;
         reverb.decayHFRatio = 0.1f;
         reverb.reverbLevel = -10000;
@@ -196,6 +197,7 @@ public class AudioManager : MonoBehaviour
         reverb.lfReference = 20;
         reverb.diffusion = 0;
         reverb.density = 0;
+        highPass.enabled = false;
         reverb.enabled = false;
     }
 }

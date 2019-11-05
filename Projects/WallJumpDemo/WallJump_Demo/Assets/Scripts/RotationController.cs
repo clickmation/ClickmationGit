@@ -9,11 +9,6 @@ public class RotationController : MonoBehaviour
     [SerializeField] private Transform _movSprite;
     private IEnumerator setRotationCoroutine;
 
-    void Start ()
-    {
-        
-    }
-
     public void SetRotation (float time, Vector2 vec, bool zeroStart)
     {
         if (setRotationCoroutine != null) StopCoroutine(setRotationCoroutine);

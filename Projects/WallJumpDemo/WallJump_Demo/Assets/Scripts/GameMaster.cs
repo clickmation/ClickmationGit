@@ -11,6 +11,7 @@ public class GameMaster : MonoBehaviour
     RandomMapGanerater rmg;
     public List<TriggerFunction> triggerFunctions = new List<TriggerFunction>();
     AudioManager am;
+    LanguageSet ls;
 
     [SerializeField] GameObject mainCharacter;
     [SerializeField] GameObject startCollider;
@@ -24,6 +25,29 @@ public class GameMaster : MonoBehaviour
     public int deathCount;
     int jumpCount;
     int killCount;
+
+    [Space]
+
+    [Header("Texts")]
+
+    public Text pauseText;
+    public Text retryText;
+    public Text resumeText;
+    public Text mainmenuText;
+    public Text mainmenuDeadText;
+    public Text gameOverText;
+    public Text reviveAdText;
+    public Text reviveTokenText;
+
+    public Text deadRetryText;
+    public Text quitToMainText;
+    public Text scoreLostToRetryText;
+    public Text scoreLostToMainMenuText;
+
+    public Text yesRetryText;
+    public Text noRetryText;
+    public Text yesMainMenuText;
+    public Text noMainMenuText;
 
     [Space]
 
@@ -137,6 +161,8 @@ public class GameMaster : MonoBehaviour
             am.gm = this;
             am.SetAudioSources();
         }
+        ls = LanguageSet.ls;
+        GameSceneLanguageSet();
         rmg = RandomMapGanerater.randomMapGanerater;
         adToken = PlayerPrefs.GetInt("AdToken");
         PlayerPrefs.SetInt("AdToken", 0);
@@ -264,9 +290,7 @@ public class GameMaster : MonoBehaviour
     public void FeverAdd (float f)
     {
         feverStructs[feverIndex].fever += f;
-        //if (feverStructs[feverIndex].fever >= oriFever) feverStructs[feverIndex].fever = oriFever;
         feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
-        //if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
         while (feverIndex < feverStructs.Length)
         {
             if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
@@ -457,6 +481,7 @@ public class GameMaster : MonoBehaviour
     {
         if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
+        am.FeverAudioDefaultSet();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -498,5 +523,25 @@ public class GameMaster : MonoBehaviour
             sound = false;
             soundPanel.SetActive(false);
         }
+    }
+
+    public void GameSceneLanguageSet()
+    {
+        pauseText.text = ls.language.pause;
+        retryText.text = ls.language.retry;
+        resumeText.text = ls.language.resume;
+        mainmenuText.text = ls.language.mainmenu;
+        mainmenuDeadText.text = ls.language.mainmenu;
+        gameOverText.text = ls.language.gameOver;
+        reviveAdText.text = ls.language.revive;
+        reviveTokenText.text = ls.language.revive;
+        deadRetryText.text = ls.language.deadRetry;
+        quitToMainText.text = ls.language.quitToMain;
+        scoreLostToRetryText.text = ls.language.scoreLost;
+        scoreLostToMainMenuText.text = ls.language.scoreLost;
+        yesRetryText.text = ls.language.yes;
+        noRetryText.text = ls.language.no;
+        yesMainMenuText.text = ls.language.yes;
+        noMainMenuText.text = ls.language.no;
     }
 }
