@@ -16,6 +16,7 @@ public class RandomMapGanerater : MonoBehaviour
     public struct Level
     {
         public string levelName;
+        public GameObject[] neutrals;
         public Map[] maps;
     }
 
@@ -69,6 +70,7 @@ public class RandomMapGanerater : MonoBehaviour
         neutral.transform.SetParent(neutralList[0].transform);
     }
 
+    int preLevel;
     public void Spawn()
     {
         string difficulty = null;
@@ -129,12 +131,13 @@ public class RandomMapGanerater : MonoBehaviour
             {
                 if (mapList.Count != 0 && mapList[mapList.Count - 1].invert)
                 {
-                    int rn = Random.Range(1, neutrals.Length);
-                    GameObject neutral = Instantiate(neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                    int rn = Random.Range(1, levels[preLevel].neutrals.Length);
+                    GameObject neutral = Instantiate(levels[preLevel].neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
                     neutral.transform.localScale = new Vector3(mapDir, 1, 1);
                     spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
                     neutralList.Add(neutral);
                 }
+                preLevel = i;
                 Map tmpMap = new Map();
                 MapInfo mapInfo;
                 int rm = Random.Range(0, levels[i].maps.Length);
@@ -150,8 +153,8 @@ public class RandomMapGanerater : MonoBehaviour
                 mapList.Add(tmpMap);
                 if (!levels[i].maps[rm].invert)
                 {
-                    int rn = Random.Range(1, neutrals.Length);
-                    GameObject neutral = Instantiate(neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                    int rn = Random.Range(1, levels[i].neutrals.Length);
+                    GameObject neutral = Instantiate(levels[i].neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
                     neutral.transform.localScale = new Vector3(mapDir, 1, 1);
                     spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
                     neutralList.Add(neutral);
