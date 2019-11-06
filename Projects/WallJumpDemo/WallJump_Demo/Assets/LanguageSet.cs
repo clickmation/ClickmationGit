@@ -40,11 +40,9 @@ public class LanguageSet : MonoBehaviour
         else language = languages[PlayerPrefs.GetInt("Language")];
     }
 
-    public void LanguageTest ()
+    public void LanguageTest (int i)
     {
-        languageInt = PlayerPrefs.GetInt("Language");
-        languageInt++;
-        if (languageInt > 2) languageInt = 0;
+        languageInt = i;
         PlayerPrefs.SetInt("Language", languageInt);
         language = languages[PlayerPrefs.GetInt("Language")];
         mm.MainMenuLanguageSet();

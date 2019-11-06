@@ -906,4 +906,19 @@ public class MainMenu : MonoBehaviour
         yesText.text = ls.language.yes;
         noText.text = ls.language.no;
     }
+
+    public void SetEnglish()
+    {
+        LanguageSet.ls.LanguageTest(0);
+    }
+
+    public void SetKorean()
+    {
+        LanguageSet.ls.LanguageTest(1);
+    }
+
+    public void SetJapanese()
+    {
+        LanguageSet.ls.LanguageTest(2);
+    }
 }

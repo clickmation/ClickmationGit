@@ -82,6 +82,7 @@ public class GameMaster : MonoBehaviour
 
     public float fever;
     private float oriFever;
+    [SerializeField] Text scoreMultiplierText;
     [SerializeField] int feverIndex;
     [SerializeField] private bool fevered;
     public GameObject feverEffect;
@@ -90,7 +91,10 @@ public class GameMaster : MonoBehaviour
     public struct FeverStruct
     {
         public bool started;
+        public bool coroutineStarted;
         public float fever;
+        public float feverNormalEater;
+        public float feverModeEater;
         public float feverEater;
         public float feverStartPoint;
         public float feverStopPoint;
@@ -293,7 +297,7 @@ public class GameMaster : MonoBehaviour
         feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
         while (feverIndex < feverStructs.Length)
         {
-            if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) StartCoroutine(FeverCoroutine(feverIndex));
+            if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) FeverOn(feverIndex);
             if (feverStructs[feverIndex].fever > oriFever)
             {
                 if (feverIndex < feverStructs.Length - 1) feverStructs[feverIndex + 1].fever += feverStructs[feverIndex].fever - oriFever;
@@ -304,30 +308,56 @@ public class GameMaster : MonoBehaviour
             else break;
         }
         if (feverIndex == feverStructs.Length - 1 && feverStructs[feverIndex].fever > oriFever) feverStructs[feverIndex].fever = oriFever;
+        if (feverIndex < feverStructs.Length) StartCoroutine(FeverCoroutine(feverIndex));
         feverIndex = 0;
     }
 
     IEnumerator FeverCoroutine(int index)
     {
-        feverStructs[index].started = true;
-        scoreMultiplier++;
-        if (scoreMultiplier == 2) am.FeverAudio(true);
-        if (index == 0) feverEffect.SetActive(true);
-        while (feverStructs[index].fever >= feverStructs[index].feverStopPoint)
+        if (!feverStructs[index].coroutineStarted)
         {
-            feverStructs[index].fever -= feverStructs[index].feverEater;
-            feverStructs[index].feverImage.localScale = new Vector3(feverStructs[index].fever  / oriFever, 1, 1);
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-        scoreMultiplier--;
-        if (scoreMultiplier == 1) am.FeverAudio(false);
-        feverStructs[index].started = false;
-        if (index == 0)
-        {
-            feverEffect.SetActive(false);
-            for (int i = 1; i < feverStructs.Length; i++)
+            feverStructs[index].coroutineStarted = true;
+            while (feverStructs[index].fever >= 0)
             {
-                feverStructs[i].fever = 0;
+                feverStructs[index].fever -= feverStructs[index].feverEater;
+                feverStructs[index].feverImage.localScale = new Vector3(feverStructs[index].fever / oriFever, 1, 1);
+                if (feverStructs[index].fever < feverStructs[index].feverStopPoint) FeverOff(index);
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            feverStructs[index].fever = 0;
+            feverStructs[index].coroutineStarted = false;
+        }
+    }
+
+    void FeverOn(int index)
+    {
+        if (!feverStructs[index].started)
+        {
+            feverStructs[index].started = true;
+            scoreMultiplier++;
+            feverStructs[index].feverEater = feverStructs[index].feverModeEater;
+            scoreMultiplierText.text = "x" + scoreMultiplier.ToString();
+            if (scoreMultiplier == 2) am.FeverAudio(true);
+            if (index == 0) feverEffect.SetActive(true);
+        }
+    }
+
+    void FeverOff(int index)
+    {
+        if (feverStructs[index].started)
+        {
+            scoreMultiplier--;
+            feverStructs[index].feverEater = feverStructs[index].feverNormalEater;
+            scoreMultiplierText.text = "x" + scoreMultiplier.ToString();
+            if (scoreMultiplier == 1) am.FeverAudio(false);
+            feverStructs[index].started = false;
+            if (index == 0)
+            {
+                feverEffect.SetActive(false);
+                for (int i = 1; i < feverStructs.Length; i++)
+                {
+                    feverStructs[i].fever = 0;
+                }
             }
         }
     }
