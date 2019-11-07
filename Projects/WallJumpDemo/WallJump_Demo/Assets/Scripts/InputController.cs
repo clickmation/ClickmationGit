@@ -23,10 +23,8 @@ public class InputController : MonoBehaviour
     [Header("Colliders")]
 
     public Collider2D touchJump;
-    //[SerializeField] private Collider2D boost;
     public Collider2D jump;
     public Collider2D attack;
-    //public GameObject attackButton;
     private List<Collider2D> colTypes = new List<Collider2D>();
     public Text testText;
 
@@ -48,18 +46,18 @@ public class InputController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             //if (Input.GetTouch(i).phase == TouchPhase.Began)
             {
-                //Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
-                //Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
-                //RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
-                //Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.GetTouch(i).position), Quaternion.Euler(0, 0, 0), camera.transform);
+            //Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
+            //Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
+            //RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
+            //Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.GetTouch(i).position), Quaternion.Euler(0, 0, 0), camera.transform);
 
-                Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
-                Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
-                RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
-                Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
-                int i = 0;
+            Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
+            Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
+            RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
+            Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
+            int i = 0;
 
-                if (hit)
+            if (hit)
                 {
                     colTypes.Add(hit.collider);
                     //else if (colType == boost)
@@ -94,6 +92,7 @@ public class InputController : MonoBehaviour
             //if (Input.GetTouch(i).phase == TouchPhase.Ended)
             {
                 int i = 0;
+
                 //if (colType == touchJump)
                 //{
                 //    if (isClicked)
@@ -130,5 +129,10 @@ public class InputController : MonoBehaviour
         Vector3 mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 tempVector = new Vector2(mPos.x - mov.transform.position.x, mPos.y - mov.transform.position.y);
         return tempVector;
+    }
+
+    public void ColTypesReSet()
+    {
+        colTypes.Clear();
     }
 }

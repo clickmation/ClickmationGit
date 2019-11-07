@@ -481,6 +481,7 @@ public class GameMaster : MonoBehaviour
         camFol.SetTarget(mainChar.transform);
         inputController.mov = mov;
         inputController.col = mov.GetComponent<Collision>();
+        inputController.ColTypesReSet();
         mov.inputController = inputController;
         attackButton.onClick = mov.attackFunction;
         StartCoroutine(ScoreCoroutine());
