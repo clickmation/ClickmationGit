@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioReverbFilter reverb;
     [SerializeField] AudioHighPassFilter highPass;
 	
-	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound, touchSound;
+	public static AudioClip groundJumpSound, landingSound, attackSound, killSound, deathSound, coinSound, jumpPanelSound, wallPanelSound, touchSound, coinSSound, coinSFailSound;
     public static AudioSource soundEffectAudioSrc;
     public static AudioSource bgmAudioSrc;
     //[SerializeField] AudioSource SEASrc;
@@ -47,6 +47,8 @@ public class AudioManager : MonoBehaviour
 		jumpPanelSound = Resources.Load<AudioClip> ("Boing2");
 		wallPanelSound = Resources.Load<AudioClip> ("Boing1");
         touchSound = Resources.Load<AudioClip>("Coin5");
+		coinSSound = Resources.Load<AudioClip>("Clap");
+		coinSFailSound = Resources.Load<AudioClip>("Thump");
     }
 
     public void SetMasterVolume ()
@@ -106,6 +108,12 @@ public class AudioManager : MonoBehaviour
 				break;
             case "touch":
                 soundEffectAudioSrc.PlayOneShot(touchSound);
+                break;
+			case "coinS":
+                soundEffectAudioSrc.PlayOneShot(coinSSound);
+                break;
+			case "coinSFail":
+                soundEffectAudioSrc.PlayOneShot(coinSFailSound);
                 break;
             default:
                 Debug.LogError("AudioManager : no corresponding audio of name \"" + clip + "\"");
