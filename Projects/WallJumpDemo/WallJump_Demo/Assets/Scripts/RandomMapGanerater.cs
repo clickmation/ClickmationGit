@@ -10,6 +10,7 @@ public class RandomMapGanerater : MonoBehaviour
     [SerializeField] int mapIndex;
     public int mapDir;
     public int wherePlayerIs;
+    public string curDifficulty;
 
     public Level[] levels;
     [System.Serializable]
@@ -155,6 +156,7 @@ public class RandomMapGanerater : MonoBehaviour
                 {
                     mapDir = mapDir == 1 ? -1 : 1;
                 }
+                curDifficulty = difficulty;
                 break;
             }
         }
