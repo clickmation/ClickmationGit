@@ -19,7 +19,7 @@ public class MapInfo : MonoBehaviour
         {
             spawned = true;
             mapgan.wherePlayerIs = mapIndex;
-            mapgan.Spawn();
+            mapgan.MapSpawn();
             mapgan.Delete();
         }
     }
