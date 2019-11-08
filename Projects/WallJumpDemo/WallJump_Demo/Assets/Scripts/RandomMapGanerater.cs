@@ -135,6 +135,7 @@ public class RandomMapGanerater : MonoBehaviour
                 {
                     NeutralSpawn();
                 }
+                curDifficulty = difficulty;
                 Map tmpMap = new Map();
                 MapInfo mapInfo;
                 int rm = Random.Range(0, levels[i].maps.Length);
@@ -156,7 +157,6 @@ public class RandomMapGanerater : MonoBehaviour
                 {
                     mapDir = mapDir == 1 ? -1 : 1;
                 }
-                curDifficulty = difficulty;
                 break;
             }
         }
