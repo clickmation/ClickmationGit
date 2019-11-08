@@ -218,40 +218,11 @@ public class RandomMapGanerater : MonoBehaviour
         {
             if (_difficulty == levels[i].levelName)
             {
-                //if (mapList.Count != 0 && mapList[mapList.Count - 1].invert)
-                //{
-                //    int rn = Random.Range(1, levels[preLevel].neutrals.Length);
-                //    GameObject neutral = Instantiate(levels[preLevel].neutrals[rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
-                //    neutral.transform.localScale = new Vector3(mapDir, 1, 1);
-                //    spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
-                //    neutralList.Add(neutral);
-                //}
-                //preLevel = i;
-                //Map tmpMap = new Map();
-                //MapInfo mapInfo;
-                //int rm = Random.Range(0, levels[i].maps.Length);
-                //GameObject map = Instantiate(levels[i].maps[rm].mapObj, spawnPoint, Quaternion.Euler(0, 0, 0), transform);
-                //map.transform.localScale = new Vector3(mapDir, 1, 1);
-                //mapInfo = map.GetComponent<MapInfo>();
-                //mapInfo.mapgan = this;
-                //mapInfo.mapIndex = mapIndex++;
-                //spawnPoint = mapInfo.endPos.position;
-                //tmpMap.mapObj = map;
-                //tmpMap.invert = mapInfo.IsInvert();
-                //tmpMap.dir = mapDir;
-                //mapList.Add(tmpMap);
-                //if (!levels[i].maps[rm].invert)
-                //{
-                    int _rn = Random.Range(1, levels[i].neutrals.Length);
-                    GameObject neutral = Instantiate(levels[i].neutrals[_rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
-                    neutral.transform.localScale = new Vector3(mapDir, 1, 1);
-                    spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
-                    neutralList.Add(neutral);
-                //}
-                //else
-                //{
-                //    mapDir = mapDir == 1 ? -1 : 1;
-                //}
+                int _rn = Random.Range(1, levels[i].neutrals.Length);
+                GameObject neutral = Instantiate(levels[i].neutrals[_rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+                neutral.transform.localScale = new Vector3(mapDir, 1, 1);
+                spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
+                neutralList.Add(neutral);
                 break;
             }
         }

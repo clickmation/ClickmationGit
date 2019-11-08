@@ -21,12 +21,14 @@ public class Coin : MonoBehaviour
                 GameMaster.gameMaster.AddCoin(coinAddAmount);
                 GameMaster.gameMaster.FeverAdd(feverAdder);
                 GameMaster.gameMaster.AddScore(score * GameMaster.gameMaster.scoreMultiplier);
-                AudioManager.PlaySound("coin");
+                if (!coinS) AudioManager.PlaySound("coin");
+                else AudioManager.PlaySound("coinS");
                 Destroy(Instantiate(triggerParticle, transform.position, Quaternion.Euler(0, 0, 0)), 3f);
                 Destroy(this.gameObject);
             }
             else if (coinS && !other.GetComponent<Movement>().attacking)
             {
+                AudioManager.PlaySound("coinSFail");
                 anim.SetTrigger("Death");
             }
         }
