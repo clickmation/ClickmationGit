@@ -11,6 +11,16 @@ public class Coin : MonoBehaviour
     public int coinAddAmount;
     public int score;
     public float feverAdder;
+    [SerializeField] int coinSPercent;
+
+    void Start()
+    {
+        if (coinS)
+        {
+            int r = Random.Range(0, 100);
+            if (r > coinSPercent) Destroy(this.gameObject);
+        }
+    }
 
     void OnTriggerEnter2D (Collider2D other)
     {
