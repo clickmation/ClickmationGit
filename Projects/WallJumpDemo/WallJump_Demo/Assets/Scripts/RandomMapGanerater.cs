@@ -52,6 +52,14 @@ public class RandomMapGanerater : MonoBehaviour
     public List<Map> mapList = new List<Map>();
     public List<GameObject> neutralList = new List<GameObject>();
 
+    public PercentCut[] percentCuts;
+    [System.Serializable]
+    public struct PercentCut
+    {
+        public string difficulty;
+        public int percentCut;
+    }
+
     void Awake()
     {
         RandomMapGanerater.randomMapGanerater = this;
@@ -258,5 +266,20 @@ public class RandomMapGanerater : MonoBehaviour
         tmpMap = mapList[mapList.Count - 1];
         tmpMap.invert = invert;
         mapList[mapList.Count - 1] = tmpMap;
+    }
+
+    public bool CoinSActive()
+    {
+        for (int i= 0; i < percentCuts.Length; i++)
+        {
+            if (curDifficulty == percentCuts[i].difficulty)
+            {
+                int r = Random.Range(0, 100);
+                if (r <= percentCuts[i].percentCut) return true;
+                else return false;
+                break;
+            }
+        }
+        return false;
     }
 }
