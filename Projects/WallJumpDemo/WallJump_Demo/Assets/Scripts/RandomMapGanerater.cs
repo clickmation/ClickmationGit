@@ -152,9 +152,9 @@ public class RandomMapGanerater : MonoBehaviour
                 mapInfo = map.GetComponent<MapInfo>();
                 mapInfo.mapgan = this;
                 mapInfo.mapIndex = mapIndex++;
-                Vector3 tmpVec = spawnPoint;
-                spawnPoint = mapInfo.endPos.position;
-                gm.SetDeathYPosition(tmpVec.y, spawnPoint.y);
+                //Vector3 tmpVec = spawnPoint;
+                //spawnPoint = mapInfo.endPos.position;
+                //gm.SetDeathYPosition(tmpVec.y, spawnPoint.y);
                 tmpMap.mapObj = map;
                 tmpMap.invert = mapInfo.IsInvert();
                 tmpMap.dir = mapDir;
