@@ -29,7 +29,7 @@ public class RandomMapGanerater : MonoBehaviour
         public int dir;
     }
 
-    public GameObject[] neutrals;
+    public GameObject startingNeutral;
 
     public ScoreCut[] mapScoreCuts;
 
@@ -67,7 +67,7 @@ public class RandomMapGanerater : MonoBehaviour
 
     public void Start()
     {
-        GameObject neutral = Instantiate(neutrals[0], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
+        GameObject neutral = Instantiate(startingNeutral, spawnPoint, Quaternion.Euler(0, 0, 0), transform);
         spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
         neutralList.Add(neutral);
         MapSpawn();
@@ -75,7 +75,7 @@ public class RandomMapGanerater : MonoBehaviour
 
     public void StartSpawn()
     {
-        GameObject neutral = Instantiate(neutrals[0], mapList[0].mapObj.transform.position, Quaternion.Euler(0, 0, 0), transform);
+        GameObject neutral = Instantiate(startingNeutral, mapList[0].mapObj.transform.position, Quaternion.Euler(0, 0, 0), transform);
         neutral.transform.localScale = new Vector3(-mapList[0].dir, 1, 1);
         gm.playerSpawnPoint = neutral.transform.GetChild(0).position;
         neutral.transform.SetParent(neutralList[0].transform);
@@ -152,7 +152,9 @@ public class RandomMapGanerater : MonoBehaviour
                 mapInfo = map.GetComponent<MapInfo>();
                 mapInfo.mapgan = this;
                 mapInfo.mapIndex = mapIndex++;
+                Vector3 tmpVec = spawnPoint;
                 spawnPoint = mapInfo.endPos.position;
+                gm.SetDeathYPosition(tmpVec.y, spawnPoint.y);
                 tmpMap.mapObj = map;
                 tmpMap.invert = mapInfo.IsInvert();
                 tmpMap.dir = mapDir;
@@ -277,7 +279,6 @@ public class RandomMapGanerater : MonoBehaviour
                 int r = Random.Range(0, 100);
                 if (r <= percentCuts[i].percentCut) return true;
                 else return false;
-                break;
             }
         }
         return false;

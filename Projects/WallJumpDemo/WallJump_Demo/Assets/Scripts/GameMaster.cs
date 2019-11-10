@@ -556,6 +556,12 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    public void SetDeathYPosition(float startY, float endY)
+    {
+        mov.SetDeathYPosition(startY, endY);
+    }
+
+
     public void GameSceneLanguageSet()
     {
         pauseText.text = ls.language.pause;

@@ -6,7 +6,7 @@ public class MapInfo : MonoBehaviour
 {
     public RandomMapGanerater mapgan;
     public int mapIndex;
-    public string nextLevel;
+    //public string nextLevel;
     public Transform endPos;
     private bool spawned;
     [SerializeField] bool neutral;
@@ -21,6 +21,7 @@ public class MapInfo : MonoBehaviour
             mapgan.wherePlayerIs = mapIndex;
             mapgan.MapSpawn();
             mapgan.Delete();
+            GameMaster.gameMaster.SetDeathYPosition(transform.position.y, endPos.position.y);
         }
     }
 

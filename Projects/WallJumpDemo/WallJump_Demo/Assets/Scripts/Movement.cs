@@ -59,6 +59,8 @@ public class Movement : MonoBehaviour
     public bool attackable;
     public float attackTime;
     public float attackCoolTime;
+    [SerializeField] float deathYPos;
+    [SerializeField] float deathYOffset;
     private float gravity;
 
     public bool touchJumped;
@@ -161,6 +163,8 @@ public class Movement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
             }
         }
+
+        if (transform.position.y < deathYPos) gm.Dead();
     }
 
     public void Rezero()
@@ -592,6 +596,12 @@ public class Movement : MonoBehaviour
     //{
     //    //stamina += 0;
     //}
+
+    public void SetDeathYPosition(float startY, float endY)
+    {
+        float tmp = startY < endY ? startY : endY;
+        deathYPos = tmp + deathYOffset;
+    }
 
     public void OnCollisionEnter2D (Collision2D other)
     {
