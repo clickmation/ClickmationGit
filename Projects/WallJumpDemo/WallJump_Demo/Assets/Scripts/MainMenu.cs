@@ -191,51 +191,25 @@ public class MainMenu : MonoBehaviour
         adTokenText.text = adToken.ToString();
         MainMenuLanguageSet();
 
-        //PlayerPrefs.SetInt("CurTrailIndex", 0);
-        //PlayerPrefs.SetInt("CurCharacterIndex", 0);
-        //PlayerPrefs.SetInt("CurBGMIndex", 0);
-
-        //curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
-        //curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
-        //curBGMIndex = PlayerPrefs.GetInt("CurBGMIndex");
-        //PlayerPrefs.SetInt("TrailsArray0", 1);
-        //PlayerPrefs.SetInt("CharactersArray0", 1);
-        //PlayerPrefs.SetInt("BGMsArray0", 1);
-
-        //for (int i = 0; i < bgms.Length; i++)
-        //{
-        //    PlayerPrefs.SetInt("BGMsArray" + i, 1);
-        //}
-
         trailsArray[0] = 1;
         charactersArray[0] = 1;
         charactersArray[1] = 1;
         bgmsArray[0] = 1;
         bgmsArray[1] = 1;
 
-        //for (int i = 1; i < 21; i++)
-        //{
-        //    PlayerPrefs.SetInt("TrailsArray" + i, 0);
-        //    PlayerPrefs.SetInt("CharactersArray" + i, 0);
-        //    trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
-        //    charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
-        //}
-
         for (int i = 0; i < 21; i++)
         {
-            //bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
-
             if (trailsArray[i] == 1) availableTrails.Add(i);
             if (charactersArray[i] == 1) availableCharacters.Add(i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
         }
 
-        masterVolumeSlider.value = masterVolume;
-        soundEffectVolumeSlider.value = soundEffectVolume;
-        bgmVolumeSlider.value = bgmVolume;
         masterVolumeSlider.onValueChanged = am.setMasterVolume;
         soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
         bgmVolumeSlider.onValueChanged = am.setBGMVolume;
+        masterVolumeSlider.value = masterVolume;
+        soundEffectVolumeSlider.value = soundEffectVolume;
+        bgmVolumeSlider.value = bgmVolume;
         SaveLoad.saveload.MainMenuSave();
 
         SaveLoad.saveload.SoundLoad();
@@ -244,7 +218,6 @@ public class MainMenu : MonoBehaviour
         am.SetBGMVolume();
 
         AudioManager.PlayBGM(bgms[curBGMIndex].bgm);
-        Debug.Log(curBGMIndex);
     }
 
     public void Shop ()
@@ -381,8 +354,6 @@ public class MainMenu : MonoBehaviour
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             characterName.text = characters[availableCharacters[characterIndex]].name;
-            //characterImage = characters[characterIndex].image;
-            //bgmImage = bgms[bgmIndex].image;
 
             trailBackButton.color = new Color32(255, 255, 255, 255);
             trailNextButton.color = new Color32(255, 255, 255, 255);
@@ -445,7 +416,6 @@ public class MainMenu : MonoBehaviour
             soundObj.SetActive(true);
             adTokenButton.SetActive(false);
             adCoinButton.SetActive(false);
-            //bgmIndex = PlayerPrefs.GetInt("CurBGMIndex");
             for (int i = 0; i < availableBGMs.Count; i++)
             {
                 if (availableBGMs[i] == curBGMIndex)
@@ -512,10 +482,6 @@ public class MainMenu : MonoBehaviour
             {
                 if (charactersArray[i] == 0) buyableCharacters.Add(i);
             }
-            //for (int i = 0; i < bgms.Length; i++)
-            //{
-            //    if (bgmsArray[i] == 0) buyableBGMs.Add(i);
-            //}
             if (buyableTrails.Count == 0 && buyableCharacters.Count == 0 && buyableBGMs.Count == 0)
             {
                 Debug.LogError("There's no buyable items.");
@@ -549,12 +515,10 @@ public class MainMenu : MonoBehaviour
                     Destroy(prizeCoinObject);
                     index = Random.Range(0, buyableTrails.Count);
                     trailsArray[buyableTrails[index]] = 1;
-                    //PlayerPrefs.SetInt("TrailsArray" + buyableTrails[index], 1);
                     GameObject prizeTrail = Instantiate(trails[buyableTrails[index]].trail, prizeObject.transform.position, Quaternion.Euler(0, 0, 0), prizeObject.transform);
                     prizeTrailObject = prizeTrail;
                     prizeName.text = trails[buyableTrails[index]].name;
                     curTrailIndex = buyableTrails[index];
-                    //PlayerPrefs.SetInt("CurTrailIndex", buyableTrails[index]);
                 }
                 else if (r == 1)
                 {
@@ -564,11 +528,9 @@ public class MainMenu : MonoBehaviour
                     Destroy(prizeCoinObject);
                     index = Random.Range(0, buyableCharacters.Count);
                     charactersArray[buyableCharacters[index]] = 1;
-                    //PlayerPrefs.SetInt("CharactersArray" + buyableCharacters[index], 1);
                     prizeImage.sprite = characters[buyableCharacters[index]].sprite;
                     prizeName.text = characters[buyableCharacters[index]].name;
                     curCharacterIndex = buyableCharacters[index];
-                    //PlayerPrefs.SetInt("CurCharacterIndex", buyableCharacters[index]);
                 }
                 //else if (r == 2)
                 //{
@@ -586,17 +548,14 @@ public class MainMenu : MonoBehaviour
 
                 for (int i = 0; i < trails.Length; i++)
                 {
-                    //trailsArray[i] = PlayerPrefs.GetInt("TrailsArray" + i);
                     if (trailsArray[i] == 1) availableTrails.Add(i);
                 }
                 for (int i = 0; i < characters.Length; i++)
                 {
-                    //charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
                     if (charactersArray[i] == 1) availableCharacters.Add(i);
                 }
                 for (int i = 0; i < bgms.Length; i++)
                 {
-                    //bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
                     if (bgmsArray[i] == 1) availableBGMs.Add(i);
                 }
                 for (int i = 0; i < availableTrails.Count; i++)
@@ -670,7 +629,6 @@ public class MainMenu : MonoBehaviour
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curTrailIndex = availableTrails[trailIndex];
-            //PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
             if (trailIndex == 0)
             {
                 trailBackButton.color = new Color32(200, 200, 200, 128);
@@ -699,7 +657,6 @@ public class MainMenu : MonoBehaviour
             Destroy(curTrail);
             curTrail = Instantiate(trails[availableTrails[trailIndex]].trail, show.position, Quaternion.Euler(0, 0, 0), show);
             curTrailIndex = availableTrails[trailIndex];
-            //PlayerPrefs.SetInt("CurTrailIndex", availableTrails[trailIndex]);
             if (trailIndex == 0)
             {
                 trailBackButton.color = new Color32(200, 200, 200, 128);
@@ -727,7 +684,6 @@ public class MainMenu : MonoBehaviour
             characterName.text = characters[availableCharacters[++characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             curCharacterIndex = availableCharacters[characterIndex];
-            //PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
             if (characterIndex == 0)
             {
                 characterBackButton.color = new Color32(200, 200, 200, 128);
@@ -755,7 +711,6 @@ public class MainMenu : MonoBehaviour
             characterName.text = characters[availableCharacters[--characterIndex]].name;
             curSprite.sprite = characters[availableCharacters[characterIndex]].sprite;
             curCharacterIndex = availableCharacters[characterIndex];
-            //PlayerPrefs.SetInt("CurCharacterIndex", availableCharacters[characterIndex]);
             if (characterIndex == 0)
             {
                 characterBackButton.color = new Color32(200, 200, 200, 128);
@@ -782,7 +737,6 @@ public class MainMenu : MonoBehaviour
             AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[++bgmIndex]].name;
             curBGMIndex = availableBGMs[bgmIndex];
-            //PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
             if (bgmIndex == 0)
             {
@@ -810,7 +764,6 @@ public class MainMenu : MonoBehaviour
             AudioManager.PlaySound("touch");
             bgmName.text = bgms[availableBGMs[--bgmIndex]].name;
             curBGMIndex = availableBGMs[bgmIndex];
-            //PlayerPrefs.SetInt("CurBGMIndex", availableBGMs[bgmIndex]);
             AudioManager.PlayBGM(bgms[availableBGMs[bgmIndex]].bgm);
             if (bgmIndex == 0)
             {

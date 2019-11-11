@@ -514,11 +514,13 @@ public class GameMaster : MonoBehaviour
         if (!reTryCheckTriggered)
         {
             reTryCheckTriggered = true;
+            pausePanel.SetActive(false);
             reTryCheckPanel.SetActive(true);
         }
         else
         {
             reTryCheckTriggered = false;
+            pausePanel.SetActive(true);
             reTryCheckPanel.SetActive(false);
         }
     }
@@ -538,11 +540,13 @@ public class GameMaster : MonoBehaviour
         if (!mainmenuCheckTriggered)
         {
             mainmenuCheckTriggered = true;
+            pausePanel.SetActive(false);
             mainmenuCheckPanel.SetActive(true);
         }
         else
         {
             mainmenuCheckTriggered = false;
+            pausePanel.SetActive(true);
             mainmenuCheckPanel.SetActive(false);
         }
     }
@@ -553,6 +557,7 @@ public class GameMaster : MonoBehaviour
         Time.timeScale = 1;
         SaveLoad.saveload.gm = null;
         ADManager.adManager.HideBanner();
+        am.gm = null;
         am.FeverAudioDefaultSet();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }

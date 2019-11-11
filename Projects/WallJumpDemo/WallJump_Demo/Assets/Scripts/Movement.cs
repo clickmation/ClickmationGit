@@ -23,16 +23,6 @@ public class Movement : MonoBehaviour
     public Button.ButtonClickedEvent attackFunction;
     [SerializeField] private Transform attackCoolTimeBar;
 
-    //[SerializeField] GameObject deadPanel;
-    //[SerializeField] GameObject pausePanel;
-
-    //[Space]
-
-    //[Header("Bool")]
-
-    //[SerializeField] bool onGround;
-    //[SerializeField] bool onWall;
-
     [Space]
 
     [Header("Default")]
@@ -42,12 +32,6 @@ public class Movement : MonoBehaviour
     [SerializeField] private RotationController rotCon;
     public float speed;
     [SerializeField] private float _speed;
-    //public float boostingTime;
-    //public float maxSpeed;
-    //public float addSpeed;
-    //private float _addSpeed;
-    //public float addingTime;
-    //[SerializeField]private bool adding = false;
     public float dir;
     private float speedMultiflier;
     public Transform cam;
@@ -75,8 +59,8 @@ public class Movement : MonoBehaviour
     private float yVel;
     [SerializeField] private Transform rotTransform;
 
-    //public float lastVelocity;
     public float lastSpeed;
+    bool particleTrail;
 
     [Space]
 
@@ -93,14 +77,13 @@ public class Movement : MonoBehaviour
 
     public bool jump;
     public bool boost;
-    //public Transform inputController;
     public InputController inputController;
 
     [Space]
 
     [Header("Effects")]
 
-    [SerializeField] GameObject playerParticle;
+    [SerializeField] GameObject playerTrail;
     [SerializeField] GameObject jumpParticle;
     [SerializeField] GameObject dragParticle;
     [SerializeField] GameObject attackTrail;
@@ -110,7 +93,8 @@ public class Movement : MonoBehaviour
     {
         if (GameMaster.gameMaster != null) gm = GameMaster.gameMaster;
         else Debug.LogError("There's no GameMaster.");
-        playerParticle = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
+        playerTrail = Instantiate(trails[PlayerPrefs.GetInt("CurTrailIndex")], transform);
+        if (PlayerPrefs.GetInt("CurTrailIndex") < 7) particleTrail = true;
         sprite.sprite = sprites[PlayerPrefs.GetInt("CurCharacterIndex")];
         _speed = speed;
         speedMultiflier = 1f;
@@ -120,8 +104,6 @@ public class Movement : MonoBehaviour
         camFol.dir = dir;
         GameObject _deathParticle = Instantiate(gm.deathParticle, this.transform.position, Quaternion.identity) as GameObject;
         Destroy(_deathParticle, 3f);
-        //StartCoroutine(StaminaCoroutine());
-        //StartCoroutine(FeverCoroutine());
     }
 
     // Update is called once per frame
@@ -150,11 +132,8 @@ public class Movement : MonoBehaviour
             else if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
-                //if (jumping != _jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
-                //_jumping = jumping;
                 rezero = false;
             }
-            //if (!wallJumped && !touchJumped) lastVelocity = rb.velocity.x;
         }
         else
         {
@@ -185,7 +164,6 @@ public class Movement : MonoBehaviour
     {
         if (attackable)
         {
-            //if (attackCoroutine != null) StopCoroutine(attackCoroutine);
             attackCoroutine = AttackCoroutine();
             animator.SetTrigger("Attack");
             rotCon.SetRotation(0, Vector2.zero, false);
@@ -212,7 +190,6 @@ public class Movement : MonoBehaviour
         attacking = true;
         attackable = false;
         if (panelJumped) panelJumped = false;
-        //float tmpV = rb.velocity.y;
         rb.velocity = (new Vector2(dir * _speed, 0));
         rb.gravityScale = 0;
         _speed = 0;
@@ -242,26 +219,6 @@ public class Movement : MonoBehaviour
         attackable = true;
     }
 
-    //public void Boost()
-    //{
-    //    if (!col.onWall)
-    //    {
-    //        if (!adding)
-    //        {
-    //            adding = true;
-    //            staminaFunction = staminaEat;
-    //            StartCoroutine(AddingSpeedCoroutine(addingTime));
-    //        }
-    //        else if (adding)
-    //        {
-    //            adding = false;
-    //            _addSpeed = 0;
-    //            curBoostStaminaEater = 0;
-    //            if (jumpable && col.onGround) staminaFunction = staminaAdd;
-    //        }
-    //    }
-    //}
-
     public void JumpButtonDown()
     {
         jumpButtonDown = true;
@@ -277,7 +234,6 @@ public class Movement : MonoBehaviour
                 gm.WallJump();
                 Jump(-1, Vector2.zero);
                 AudioManager.PlaySound("groundJump");
-                //lightningParticle.SetActive(false);
             }
             else
             {
@@ -297,14 +253,11 @@ public class Movement : MonoBehaviour
         {
             jumpable = false;
             jumping = true;
-            //_jumping = jumping;
             rb.gravityScale = gravity;
             gm.Jumpcount(1);
             if (side == -1)
             {
-                //lastVelocity *= -1f;
                 dir *= -1f;
-                //if (Mathf.Abs(lastVelocity) > maxSpeed && !panelJumped) lastVelocity = Mathf.Sign(lastVelocity) * maxSpeed;
                 if (vec == Vector2.zero)
                 {
                     wallJumped = true;
@@ -312,22 +265,16 @@ public class Movement : MonoBehaviour
                     rb.velocity = new Vector2(dir * _speed, 0);
                     rb.velocity += jumpForce * Vector2.up;
                     rotCon.SetRotation(0.1f, rb.velocity,true);
-                    //Debug.Log(dir + ", " + rb.velocity);
-                    // WallJump
                 }
                 else
                 {
                     touchJumped = true;
                     if (col.wall != null) col.wall = null;
                     panelJumped = true;
-                    //adding = false;
-                    //_addSpeed = 0;
-                    //lastSpeed = _speed;
                     _speed = Mathf.Abs(vec.x);
                     rb.velocity = new Vector2(0, 0);
                     rb.velocity += vec;
                     rotCon.SetRotation(0.1f, rb.velocity, true);
-                    // TouchJump
                 }
                 if (col.wall != null) col.wall = null;
             }
@@ -354,7 +301,6 @@ public class Movement : MonoBehaviour
                         panelJumped = true;
                         rb.velocity = Vector2.zero;
                         rb.velocity += vec;
-                        //Debug.Log(rb.velocity);
                     }
                 }
             }
@@ -362,68 +308,9 @@ public class Movement : MonoBehaviour
             camShake.Shake(5);
             GameObject _jumpParticle = Instantiate(jumpParticle, this.transform.position, Quaternion.identity) as GameObject;
             Destroy(_jumpParticle, 3f);
-            //Debug.Log("Jumped");
         }
     }
 
-    //IEnumerator SpeedLerp()
-    //{
-    //    boosted = true;
-    //    float x = Mathf.Pow(boostingTime, 1 / maxSpeed);
-    //    float t = Mathf.Pow(x, _speed);
-
-    //    while (t <= boostingTime)
-    //    {
-    //        if (col.onWall)
-    //        {
-    //            boosted = false;
-    //            break;
-    //        }
-    //        if (!attacking && !panelJumped)
-    //        {
-    //            t += Time.deltaTime;
-    //            _speed = Mathf.Log(t, x);
-    //            if (t > boostingTime) boosted = false;
-    //        }
-    //        yield return new WaitForSeconds(Time.deltaTime);
-    //    }
-    //}
-    //IEnumerator AddingSpeedCoroutine(float lerpTime)
-    //{
-    //    curBoostStaminaEater = boostStaminaEater;
-    //    float startSpeed = 0;
-    //    float endSpeed = addSpeed;
-    //    for (float t = 0; t <= 1 * lerpTime; t += Time.deltaTime)
-    //    {
-    //        if (!adding)
-    //        {
-    //            _addSpeed = 0;
-    //            curBoostStaminaEater = 0;
-    //            break;
-    //        }
-    //        _addSpeed = Mathf.Lerp(startSpeed, endSpeed, t / lerpTime);
-    //        yield return new WaitForSeconds(Time.deltaTime);
-    //    }
-    //}
-
-    //public void DragJump ()
-    //{
-    //    if (col.onWall)
-    //    {
-    //        touchJumped = true;
-    //        if (col.wall != null) col.wall = null;
-    //        boosted = false;
-    //        jumpingDir = GetJumpingDirection();
-    //        speedMultiflier = Mathf.Abs(jumpingDir.x);
-    //        _speed = speed * speedMultiflier;
-    //        dir = Mathf.Sign(jumpingDir.x);
-    //        lastVelocity *= -1f;
-    //        rb.velocity = new Vector2(lastVelocity, 0);
-    //        rb.velocity += jumpForce * jumpingDir;
-    //        stamina -= staminaTouchJumpEater;
-    //        staminaFunction = staminaMaintain;
-    //    }
-    //}
     Vector2 GetJumpingDirection()
     {
         Vector3 camPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -446,31 +333,23 @@ public class Movement : MonoBehaviour
                 Jump(1, Vector2.zero);
             }
             AudioManager.PlaySound("landing");
-            //Debug.Log("Entered");
         }
         if (col.onWall) gm.Dead();
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
-        //if (fever >= oriFever)
-        //{
-        //    fever = oriFever;
-        //    fevered = true;
-        //    feverEffect.SetActive(true);
-        //}
         _speed = speed;
         gm.StaminaActiveFalse();
     }
     public void OnGroundExitFunction()
     {
         lastSpeed = _speed;
-        //Debug.Log("Exited");
     }
     public void OnWallEnterFunction()
     {
-        //Debug.Log("OnWallEnter");
         dragParticle.SetActive(true);
         dragParticle.transform.localPosition = new Vector3(dir * 0.5f, -0.5f, 0);
-        playerParticle.SetActive(false);
+        if (particleTrail) playerTrail.SetActive(false);
+        else playerTrail.GetComponent<TrailRenderer>().emitting = false;
         camFol.dir = -dir;
         RezeroStop();
         rotCon.SetRotation(0f, new Vector2 (0, -1), false);
@@ -478,18 +357,10 @@ public class Movement : MonoBehaviour
         {
             gm.Dead();
         }
-        //camFol.updateLookAheadTarget = !camFol.updateLookAheadTarget;
         if (col.wall.GetComponent<Wall>() != null)
         {
             wallSlideSpeed = col.wall.GetComponent<Wall>().wallSlideSpeed;
         }
-        //StopCoroutine(SpeedLerp());
-        //if (adding)
-        //{
-        //    adding = false;
-        //    _addSpeed = 0;
-        //    curBoostStaminaEater = 0;
-        //}
         if (jumping) jumping = false;
         if (wallJumped) wallJumped = false;
         if (touchJumped) touchJumped = false;
@@ -506,96 +377,23 @@ public class Movement : MonoBehaviour
             inputController.touchJump.gameObject.SetActive(true);
             inputController.jump.gameObject.SetActive(false);
             inputController.attack.gameObject.SetActive(false);
-            //inputController.attackButton.SetActive(false);
             jumpingArrow.SetActive(true);
             jumpingArrow.transform.rotation = Quaternion.Euler (0, 90 + dir * 90, 0);
             gm.StaminaActiveTrue(col.wall.GetComponent<Wall>().wallStaminaCount);
         }
-        //else if (col.wallTag == "WallPanel")
-        //{
-        //    jumpable = true;
-        //    wallJumped = true;
-        //    panelJumped = true;
-        //    AudioManager.PlaySound("wallPanel");
-        //    Jump(-1, Vector2.zero);
-        //}
     }
 
     public void OnWallExitFuntion()
     {
-        if (!jumping)
-        {
-            camFol.dir *= -dir;
-            //dir = camFol.dir;
-        }
+        if (!jumping) camFol.dir *= -dir;
         if (!jumping) rotCon.SetRotation(0.2f, Vector2.zero, false);
         inputController.jump.gameObject.SetActive(true);
         inputController.attack.gameObject.SetActive(true);
-        //inputController.attackButton.SetActive(true);
-        //}
-        //inputController.jumpDir.gameObject.SetActive(false);
         dragParticle.SetActive(false);
-        //dragParticle.GetComponent<ParticleSystem>().emission.enabled = false;
-        playerParticle.SetActive(true);
+        if (particleTrail) playerTrail.SetActive(true);
+        else playerTrail.GetComponent<TrailRenderer>().emitting = true;
         jumpingArrow.SetActive(false);
     }
-
-    //public void WallJumpedFalse()
-    //{
-    //    wallJumped = false;
-    //}
-
-    //public void ShockWaveSpawnFunction (float scale)
-    //{
-    //    GameObject sw = Instantiate(shockWave, transform.position, Quaternion.Euler(0, 0, 0));
-    //    sw.transform.localScale = 10 * scale * Vector3.one;
-    //}
-
-    //IEnumerator StaminaCoroutine()
-    //{
-    //    while (!GameMaster.gameMaster.dead)
-    //    {
-    //        staminaFunction.Invoke();
-    //        staminaImage.rectTransform.localScale = new Vector3(stamina / oriStamina, 1, 1);
-    //        if (stamina <= 0)
-    //        {
-    //            Debug.LogError("Dead");
-    //            GameMaster.gameMaster.Dead();
-    //            break;
-    //        }
-    //        yield return new WaitForFixedUpdate();
-    //    }
-    //}
-    //IEnumerator FeverCoroutine()
-    //{
-    //    while (!dead)
-    //    {
-    //        fever -= feverEater;
-    //        if (fever <= 0)
-    //        {
-    //            fever = 0;
-    //            fevered = false;
-    //            feverEffect.SetActive(false);
-    //        }
-    //        feverImage.rectTransform.localScale = new Vector3(fever / oriFever, 1, 1);
-    //        yield return new WaitForFixedUpdate();
-    //    }
-    //}
-
-    //public void StaminaEat()
-    //{
-    //    stamina -= _staminaEater;
-    //    if (stamina <= 0) stamina = 0;
-    //}
-    //public void StaminaAdd()
-    //{
-    //    stamina += staminaAdder;
-    //    if (stamina >= oriStamina) stamina = oriStamina;
-    //}
-    //public void StaminaMaintain()
-    //{
-    //    //stamina += 0;
-    //}
 
     public void SetDeathYPosition(float startY, float endY)
     {
@@ -608,7 +406,6 @@ public class Movement : MonoBehaviour
         if ((transform.position.y - other.transform.position.y) < 0.4f && !col.onGround)
         {
             _speed = 0;
-            //Debug.Log("Hey");
         }
     }
 
