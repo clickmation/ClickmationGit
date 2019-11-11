@@ -57,7 +57,7 @@ public class RandomMapGanerater : MonoBehaviour
     [System.Serializable]
     public struct PercentCut
     {
-        public string difficulty;
+        public int scoreCut;
         public int percentCut;
     }
 
@@ -231,7 +231,7 @@ public class RandomMapGanerater : MonoBehaviour
         {
             if (_difficulty == levels[i].levelName)
             {
-                int _rn = Random.Range(1, levels[i].neutrals.Length);
+                int _rn = Random.Range(0, levels[i].neutrals.Length);
                 GameObject neutral = Instantiate(levels[i].neutrals[_rn], spawnPoint, Quaternion.Euler(0, 0, 0), transform);
                 neutral.transform.localScale = new Vector3(mapDir, 1, 1);
                 spawnPoint = neutral.GetComponent<MapInfo>().endPos.position;
@@ -273,12 +273,13 @@ public class RandomMapGanerater : MonoBehaviour
 
     public bool CoinSActive()
     {
-        for (int i= 0; i < percentCuts.Length; i++)
+        int _r;
+        for (int i = 0; i < percentCuts.Length - 1; i++)
         {
-            if (curDifficulty == percentCuts[i].difficulty)
+            if (percentCuts[i].scoreCut <= gm.realScore && gm.realScore < percentCuts[i + 1].scoreCut)
             {
-                int r = Random.Range(0, 100);
-                if (r <= percentCuts[i].percentCut) return true;
+                _r = Random.Range(0, 100);
+                if (_r <= percentCuts[i].percentCut) return true;
                 else return false;
             }
         }

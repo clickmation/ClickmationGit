@@ -17,7 +17,7 @@ public class Wall : MonoBehaviour
         {
             gm = GameMaster.gameMaster;
             for (int i = gm.addJumpScores.Length - 1; i >= 0; i--) {
-                if (gm.score >= gm.addJumpScores[i].score)
+                if (gm.realScore >= gm.addJumpScores[i].score)
                 {
                     wallStaminaCount += gm.addJumpScores[i].addJump;
                     break;

@@ -17,7 +17,7 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(60000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;

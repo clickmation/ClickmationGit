@@ -302,9 +302,9 @@ class SaveManager
     public int curTrailIndex;
     public int curCharacterIndex;
     public int curBGMIndex;
-    public int[] trailsArray = new int[20];
-    public int[] charactersArray = new int[20];
-    public int[] bgmsArray = new int[20];
+    public int[] trailsArray = new int[21];
+    public int[] charactersArray = new int[21];
+    public int[] bgmsArray = new int[21];
 
     [Space]
 

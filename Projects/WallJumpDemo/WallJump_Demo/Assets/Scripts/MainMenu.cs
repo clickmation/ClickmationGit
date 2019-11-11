@@ -57,9 +57,9 @@ public class MainMenu : MonoBehaviour
     public int curTrailIndex;
     public int curCharacterIndex;
     public int curBGMIndex;
-    public int[] trailsArray = new int[20];
-    public int[] charactersArray = new int[20];
-    public int[] bgmsArray = new int[20];
+    public int[] trailsArray = new int[21];
+    public int[] charactersArray = new int[21];
+    public int[] bgmsArray = new int[21];
     public float masterVolume;
     public float soundEffectVolume;
     public float bgmVolume;
@@ -75,6 +75,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool howTo;
     [SerializeField] bool customization;
     [SerializeField] bool sound;
+    [SerializeField] bool credit;
     [SerializeField] bool popUp;
     [SerializeField] bool quitCheck;
 
@@ -87,6 +88,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject howToObj;
     [SerializeField] GameObject cusObj;
     [SerializeField] GameObject soundObj;
+    [SerializeField] GameObject creditObj;
     [SerializeField] GameObject adTokenButton;
     [SerializeField] GameObject adCoinButton;
     [SerializeField] GameObject popUpUI;
@@ -196,21 +198,22 @@ public class MainMenu : MonoBehaviour
         //curTrailIndex = PlayerPrefs.GetInt("CurTrailIndex");
         //curCharacterIndex = PlayerPrefs.GetInt("CurCharacterIndex");
         //curBGMIndex = PlayerPrefs.GetInt("CurBGMIndex");
-        PlayerPrefs.SetInt("TrailsArray0", 1);
-        PlayerPrefs.SetInt("CharactersArray0", 1);
-        PlayerPrefs.SetInt("BGMsArray0", 1);
+        //PlayerPrefs.SetInt("TrailsArray0", 1);
+        //PlayerPrefs.SetInt("CharactersArray0", 1);
+        //PlayerPrefs.SetInt("BGMsArray0", 1);
 
-        for (int i = 1; i < bgms.Length; i++)
-        {
-            PlayerPrefs.SetInt("BGMsArray" + i, 1);
-        }
+        //for (int i = 0; i < bgms.Length; i++)
+        //{
+        //    PlayerPrefs.SetInt("BGMsArray" + i, 1);
+        //}
 
         trailsArray[0] = 1;
         charactersArray[0] = 1;
         charactersArray[1] = 1;
         bgmsArray[0] = 1;
+        bgmsArray[1] = 1;
 
-        //for (int i = 1; i < 20; i++)
+        //for (int i = 1; i < 21; i++)
         //{
         //    PlayerPrefs.SetInt("TrailsArray" + i, 0);
         //    PlayerPrefs.SetInt("CharactersArray" + i, 0);
@@ -218,24 +221,21 @@ public class MainMenu : MonoBehaviour
         //    charactersArray[i] = PlayerPrefs.GetInt("CharactersArray" + i);
         //}
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 21; i++)
         {
-            bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
+            //bgmsArray[i] = PlayerPrefs.GetInt("BGMsArray" + i);
 
             if (trailsArray[i] == 1) availableTrails.Add(i);
             if (charactersArray[i] == 1) availableCharacters.Add(i);
             if (bgmsArray[i] == 1) availableBGMs.Add(i);
         }
 
-        masterVolumeSlider.onValueChanged = am.setMasterVolume;
-        soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
-        bgmVolumeSlider.onValueChanged = am.setBGMVolume;
-        //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-        //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-        //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
         masterVolumeSlider.value = masterVolume;
         soundEffectVolumeSlider.value = soundEffectVolume;
         bgmVolumeSlider.value = bgmVolume;
+        masterVolumeSlider.onValueChanged = am.setMasterVolume;
+        soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
+        bgmVolumeSlider.onValueChanged = am.setBGMVolume;
         SaveLoad.saveload.MainMenuSave();
 
         SaveLoad.saveload.SoundLoad();
@@ -244,6 +244,7 @@ public class MainMenu : MonoBehaviour
         am.SetBGMVolume();
 
         AudioManager.PlayBGM(bgms[curBGMIndex].bgm);
+        Debug.Log(curBGMIndex);
     }
 
     public void Shop ()
@@ -478,6 +479,20 @@ public class MainMenu : MonoBehaviour
             shopButton.color = new Color32(255, 255, 255, 255);
             customizationButton.color = new Color32(255, 255, 255, 255);
             gameStartButton.color = new Color32(255, 255, 255, 255);
+        }
+    }
+
+    public void Credit()
+    {
+        if (!credit)
+        {
+            credit = true;
+            creditObj.SetActive(true);
+        }
+        else
+        {
+            credit = false;
+            creditObj.SetActive(false);
         }
     }
 

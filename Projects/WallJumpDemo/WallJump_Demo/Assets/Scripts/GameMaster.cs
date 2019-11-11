@@ -87,6 +87,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] int feverIndex;
     [SerializeField] private bool fevered;
     public GameObject feverEffect;
+    [SerializeField] Color32[] feverColor;
     [SerializeField] FeverStruct[] feverStructs;
     [System.Serializable]
     public struct FeverStruct
@@ -295,7 +296,7 @@ public class GameMaster : MonoBehaviour
     public void FeverAdd (float f)
     {
         feverStructs[feverIndex].fever += f;
-        feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
+        feverStructs[feverIndex].feverImage.localScale = new Vector3(1, feverStructs[feverIndex].fever / oriFever, 1);
         while (feverIndex < feverStructs.Length)
         {
             if (!feverStructs[feverIndex].started && feverStructs[feverIndex].fever >= feverStructs[feverIndex].feverStartPoint) FeverOn(feverIndex);
@@ -303,7 +304,7 @@ public class GameMaster : MonoBehaviour
             {
                 if (feverIndex < feverStructs.Length - 1) feverStructs[feverIndex + 1].fever += feverStructs[feverIndex].fever - oriFever;
                 feverStructs[feverIndex].fever = oriFever;
-                feverStructs[feverIndex].feverImage.localScale = new Vector3(feverStructs[feverIndex].fever / oriFever, 1, 1);
+                feverStructs[feverIndex].feverImage.localScale = new Vector3(1, feverStructs[feverIndex].fever / oriFever, 1);
                 feverIndex++;
             }
             else break;
@@ -321,7 +322,7 @@ public class GameMaster : MonoBehaviour
             while (feverStructs[index].fever >= 0)
             {
                 feverStructs[index].fever -= feverStructs[index].feverEater;
-                feverStructs[index].feverImage.localScale = new Vector3(feverStructs[index].fever / oriFever, 1, 1);
+                feverStructs[index].feverImage.localScale = new Vector3(1, feverStructs[index].fever / oriFever, 1);
                 if (feverStructs[index].fever < feverStructs[index].feverStopPoint) FeverOff(index);
                 yield return new WaitForSeconds(Time.deltaTime);
             }
@@ -337,6 +338,7 @@ public class GameMaster : MonoBehaviour
             feverStructs[index].started = true;
             scoreMultiplier++;
             feverStructs[index].feverEater = feverStructs[index].feverModeEater;
+            feverStructs[index].feverImage.GetComponent<Image>().color = feverColor[index];
             scoreMultiplierText.text = "x" + scoreMultiplier.ToString();
             if (scoreMultiplier == 2) am.FeverAudio(true);
             if (index == 0) feverEffect.SetActive(true);
@@ -349,6 +351,7 @@ public class GameMaster : MonoBehaviour
         {
             scoreMultiplier--;
             feverStructs[index].feverEater = feverStructs[index].feverNormalEater;
+            feverStructs[index].feverImage.GetComponent<Image>().color = new Color32(220, 220, 220, 159);
             scoreMultiplierText.text = "x" + scoreMultiplier.ToString();
             if (scoreMultiplier == 1) am.FeverAudio(false);
             feverStructs[index].started = false;
