@@ -33,12 +33,13 @@ public class RandomMapGanerater : MonoBehaviour
 
     public ScoreCut[] mapScoreCuts;
 
-    public ScoreCut[] neutralScoreCuts;
+    //public ScoreCut[] neutralScoreCuts;
     [System.Serializable]
     public struct ScoreCut
     {
         public int scoreCut;
-        public PercentBlock[] percentBlocks;
+        public PercentBlock[] mapPercentBlocks;
+        public PercentBlock[] neutralPercentBlocks;
     }
 
     [System.Serializable]
@@ -84,30 +85,30 @@ public class RandomMapGanerater : MonoBehaviour
     public void MapSpawn()
     {
         string difficulty = null;
-        int sum = 0;
-        int r = Random.Range(0, sum);//0~100
-        int tmp = 0;
+        int sum;
+        int r;
+        int tmp;
         for (int i = 0; i < mapScoreCuts.Length - 1; i++)
         {
             if (mapScoreCuts[i].scoreCut <= gm.realScore && gm.realScore < mapScoreCuts[i + 1].scoreCut)
             {
                 sum = 0;
-                for (int j = 0; j < mapScoreCuts[i].percentBlocks.Length; j++)
+                for (int j = 0; j < mapScoreCuts[i].mapPercentBlocks.Length; j++)
                 {
-                    sum += mapScoreCuts[i].percentBlocks[j].percent;
+                    sum += mapScoreCuts[i].mapPercentBlocks[j].percent;
                 }
                 r = Random.Range(0, sum);//0~100
                 tmp = 0;
-                for (int j = 0; j < mapScoreCuts[i].percentBlocks.Length; j++)
+                for (int j = 0; j < mapScoreCuts[i].mapPercentBlocks.Length; j++)
                 {
-                    if (tmp <= r && r < tmp + mapScoreCuts[i].percentBlocks[j].percent)
+                    if (tmp <= r && r < tmp + mapScoreCuts[i].mapPercentBlocks[j].percent)
                     {
-                        difficulty = mapScoreCuts[i].percentBlocks[j].difficulty;
+                        difficulty = mapScoreCuts[i].mapPercentBlocks[j].difficulty;
                         break;
                     }
                     else
                     {
-                        tmp += mapScoreCuts[i].percentBlocks[j].percent;
+                        tmp += mapScoreCuts[i].mapPercentBlocks[j].percent;
                     }
                 }
                 break;
@@ -116,22 +117,22 @@ public class RandomMapGanerater : MonoBehaviour
         if (difficulty == null)
         {
             sum = 0;
-            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks.Length; j++)
+            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks.Length; j++)
             {
-                sum += mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks[j].percent;
+                sum += mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks[j].percent;
             }
             r = Random.Range(0, sum);//0~100
             tmp = 0;
-            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks.Length; j++)
+            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks.Length; j++)
             {
-                if (tmp <= r && r < tmp + mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks[j].percent)
+                if (tmp <= r && r < tmp + mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks[j].percent)
                 {
-                    difficulty = mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks[j].difficulty;
+                    difficulty = mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks[j].difficulty;
                     break;
                 }
                 else
                 {
-                    tmp += mapScoreCuts[mapScoreCuts.Length - 1].percentBlocks[j].percent;
+                    tmp += mapScoreCuts[mapScoreCuts.Length - 1].mapPercentBlocks[j].percent;
                 }
             }
         }
@@ -153,7 +154,7 @@ public class RandomMapGanerater : MonoBehaviour
                 mapInfo.mapgan = this;
                 mapInfo.mapIndex = mapIndex++;
                 //Vector3 tmpVec = spawnPoint;
-                //spawnPoint = mapInfo.endPos.position;
+                spawnPoint = mapInfo.endPos.position;
                 //gm.SetDeathYPosition(tmpVec.y, spawnPoint.y);
                 tmpMap.mapObj = map;
                 tmpMap.invert = mapInfo.IsInvert();
@@ -175,30 +176,30 @@ public class RandomMapGanerater : MonoBehaviour
     public void NeutralSpawn()
     {
         string _difficulty = null;
-        int _sum = 0;
-        int _r = Random.Range(0, _sum);//0~100
-        int _tmp = 0;
-        for (int i = 0; i < neutralScoreCuts.Length - 1; i++)
+        int _sum;
+        int _r;
+        int _tmp;
+        for (int i = 0; i < mapScoreCuts.Length - 1; i++)
         {
-            if (neutralScoreCuts[i].scoreCut <= gm.realScore && gm.realScore < neutralScoreCuts[i + 1].scoreCut)
+            if (mapScoreCuts[i].scoreCut <= gm.realScore && gm.realScore < mapScoreCuts[i + 1].scoreCut)
             {
                 _sum = 0;
-                for (int j = 0; j < neutralScoreCuts[i].percentBlocks.Length; j++)
+                for (int j = 0; j < mapScoreCuts[i].neutralPercentBlocks.Length; j++)
                 {
-                    _sum += neutralScoreCuts[i].percentBlocks[j].percent;
+                    _sum += mapScoreCuts[i].neutralPercentBlocks[j].percent;
                 }
                 _r = Random.Range(0, _sum);//0~100
                 _tmp = 0;
-                for (int j = 0; j < neutralScoreCuts[i].percentBlocks.Length; j++)
+                for (int j = 0; j < mapScoreCuts[i].neutralPercentBlocks.Length; j++)
                 {
-                    if (_tmp <= _r && _r < _tmp + neutralScoreCuts[i].percentBlocks[j].percent)
+                    if (_tmp <= _r && _r < _tmp + mapScoreCuts[i].neutralPercentBlocks[j].percent)
                     {
-                        _difficulty = neutralScoreCuts[i].percentBlocks[j].difficulty;
+                        _difficulty = mapScoreCuts[i].neutralPercentBlocks[j].difficulty;
                         break;
                     }
                     else
                     {
-                        _tmp += neutralScoreCuts[i].percentBlocks[j].percent;
+                        _tmp += mapScoreCuts[i].neutralPercentBlocks[j].percent;
                     }
                 }
                 break;
@@ -207,22 +208,22 @@ public class RandomMapGanerater : MonoBehaviour
         if (_difficulty == null)
         {
             _sum = 0;
-            for (int j = 0; j < neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks.Length; j++)
+            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks.Length; j++)
             {
-                _sum += neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks[j].percent;
+                _sum += mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks[j].percent;
             }
             _r = Random.Range(0, _sum);//0~100
             _tmp = 0;
-            for (int j = 0; j < neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks.Length; j++)
+            for (int j = 0; j < mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks.Length; j++)
             {
-                if (_tmp <= _r && _r < _tmp + neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks[j].percent)
+                if (_tmp <= _r && _r < _tmp + mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks[j].percent)
                 {
-                    _difficulty = neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks[j].difficulty;
+                    _difficulty = mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks[j].difficulty;
                     break;
                 }
                 else
                 {
-                    _tmp += neutralScoreCuts[neutralScoreCuts.Length - 1].percentBlocks[j].percent;
+                    _tmp += mapScoreCuts[mapScoreCuts.Length - 1].neutralPercentBlocks[j].percent;
                 }
             }
         }
