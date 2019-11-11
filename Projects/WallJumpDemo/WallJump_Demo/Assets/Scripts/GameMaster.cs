@@ -65,6 +65,7 @@ public class GameMaster : MonoBehaviour
     public Text coinText;
     public int adToken;
     [SerializeField] private int revivable;
+    [SerializeField] private GameObject newHighScoreText;
 
     [Space]
 
@@ -376,7 +377,18 @@ public class GameMaster : MonoBehaviour
             if (score > highScore)
             {
                 highScoreText.text = score.ToString();
+                HighScored();
             }
+        }
+    }
+
+    bool highscored;
+    void HighScored()
+    {
+        if (!highscored)
+        {
+            highscored = true;
+            newHighScoreText.SetActive(true);
         }
     }
 
