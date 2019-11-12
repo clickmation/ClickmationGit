@@ -281,7 +281,7 @@ public class GameMaster : MonoBehaviour
     {
         for (int i = staminaCount; i < staminaBars.Count; i++)
         {
-            yield return new WaitForSeconds(0.5f/ (float)staminaCount);
+            yield return new WaitForSeconds(0.25f/ (float)staminaCount);
             staminaBars[i].SetActive(true);
         }
         yield return new WaitForSeconds(0.5f);

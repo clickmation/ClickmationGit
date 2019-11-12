@@ -115,6 +115,7 @@ public class MainMenu : MonoBehaviour
     public GameObject prizeTrailObject;
     [SerializeField] GameObject prizeCoinObject;
     [SerializeField] Transform shopTransform;
+    [SerializeField] GameObject buyButton;
 
     [Space]
 
@@ -257,6 +258,11 @@ public class MainMenu : MonoBehaviour
             }
             prizeImage.gameObject.SetActive(false);
             prizeName.text = ls.language.whatsPrize;
+            if (PlayerPrefs.GetInt("NoBuyable") == 1)
+            {
+                buyButton.SetActive(false);
+                prizeName.text = ls.language.noMoreItems;
+            }
         }
         else
         {
@@ -475,6 +481,11 @@ public class MainMenu : MonoBehaviour
             soundObj.SetActive(false);
             adTokenButton.SetActive(false);
             adCoinButton.SetActive(false);
+            howToButton.color = new Color32(255, 255, 255, 255);
+            shopButton.color = new Color32(255, 255, 255, 255);
+            customizationButton.color = new Color32(255, 255, 255, 255);
+            soundButton.color = new Color32(255, 255, 255, 255);
+            gameStartButton.color = new Color32(255, 255, 255, 255);
         }
         else
         {
@@ -493,7 +504,7 @@ public class MainMenu : MonoBehaviour
     public void Buy ()
     {
         AudioManager.PlaySound("touch");
-        if (coin >= 1000)
+        if (coin >= 700)
         {
             List<int> buyableTrails = new List<int>();
             List<int> buyableCharacters = new List<int>();
@@ -508,7 +519,9 @@ public class MainMenu : MonoBehaviour
             }
             if (buyableTrails.Count == 0 && buyableCharacters.Count == 0 && buyableBGMs.Count == 0)
             {
-                Debug.LogError("There's no buyable items.");
+                PlayerPrefs.SetInt("NoBuyable", 1);
+                prizeName.text = ls.language.noMoreItems;
+                buyButton.SetActive(false);
             }
             else
             {
@@ -564,7 +577,7 @@ public class MainMenu : MonoBehaviour
                 //    PlayerPrefs.SetInt("CurBGMIndex", buyableBGMs[index]);
                 //    AudioManager.PlayBGM(bgms[buyableBGMs[index]].bgm);
                 //}
-                coin -= 1000;
+                coin -= 700;
                 coinText.text = coin.ToString();
                 availableTrails.Clear();
                 availableCharacters.Clear();
@@ -599,6 +612,20 @@ public class MainMenu : MonoBehaviour
                     }
                 }
                 Debug.Log("Bought");
+                for (int i = 0; i < trails.Length; i++)
+                {
+                    if (trailsArray[i] == 0) buyableTrails.Add(i);
+                }
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    if (charactersArray[i] == 0) buyableCharacters.Add(i);
+                }
+                if (buyableTrails.Count == 0 && buyableCharacters.Count == 0)
+                {
+                    PlayerPrefs.SetInt("NoBuyable", 1);
+                    prizeName.text = ls.language.noMoreItems;
+                    buyButton.SetActive(false);
+                }
                 SaveLoad.saveload.MainMenuSave();
             }
         }
@@ -884,7 +911,7 @@ public class MainMenu : MonoBehaviour
         getCoinText.text = ls.language.getCoin;
 
         prizeName.text = ls.language.whatsPrize;
-        coinButtonText.text = "1000 " + ls.language.coin;
+        coinButtonText.text = "700 " + ls.language.coin;
         for (int i = 0; i < tutText.Length; i++) tutText[i].text = ls.language.tut[i];
         trailText.text = ls.language.trail;
         skinText.text = ls.language.skin;
@@ -897,6 +924,11 @@ public class MainMenu : MonoBehaviour
 
         yesText.text = ls.language.yes;
         noText.text = ls.language.no;
+    }
+
+    public void GoToMainMenu1()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
     }
 
     public void SetEnglish()

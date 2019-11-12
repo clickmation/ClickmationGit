@@ -9,6 +9,7 @@ public class RandomMapGanerater : MonoBehaviour
 
     [SerializeField] int mapIndex;
     public int mapDir;
+    public int curDir;
     public int wherePlayerIs;
     public string curDifficulty;
 
@@ -153,21 +154,14 @@ public class RandomMapGanerater : MonoBehaviour
                 mapInfo = map.GetComponent<MapInfo>();
                 mapInfo.mapgan = this;
                 mapInfo.mapIndex = mapIndex++;
-                //Vector3 tmpVec = spawnPoint;
                 spawnPoint = mapInfo.endPos.position;
-                //gm.SetDeathYPosition(tmpVec.y, spawnPoint.y);
                 tmpMap.mapObj = map;
                 tmpMap.invert = mapInfo.IsInvert();
                 tmpMap.dir = mapDir;
+                curDir = mapDir;
                 mapList.Add(tmpMap);
-                if (!levels[i].maps[rm].invert)
-                {
-                    NeutralSpawn();
-                }
-                else
-                {
-                    mapDir = mapDir == 1 ? -1 : 1;
-                }
+                if (!levels[i].maps[rm].invert) NeutralSpawn();
+                else mapDir = mapDir == 1 ? -1 : 1;
                 break;
             }
         }

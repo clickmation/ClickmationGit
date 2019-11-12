@@ -11,7 +11,7 @@ public class ADManager : MonoBehaviour
     private string appID = "ca-app-pub-3575537359490368~8192022467";
 
     private BannerView bannerView;
-    private string bannerID = "ca-app-pub-3940256099942544/6300978111";
+    private string bannerID = "ca-app-pub-3575537359490368/7329247375";
 
     private RewardedAd rewardedReviveAd;
     private RewardedAd rewardedTokenAd;
@@ -34,9 +34,9 @@ public class ADManager : MonoBehaviour
     {
         MobileAds.Initialize(appID);
 
-        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/3333419780");
+        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/1504356421");
+        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/5962476183");
 
         this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
         this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
@@ -84,9 +84,9 @@ public class ADManager : MonoBehaviour
     {
         MonoBehaviour.print("HandleRewardedAdClosed event received");
 
-        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
-        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/3333419780");
+        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/1504356421");
+        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/5962476183");
 
         this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
         this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;

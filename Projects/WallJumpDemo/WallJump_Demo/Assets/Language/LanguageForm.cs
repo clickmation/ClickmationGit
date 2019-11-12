@@ -21,6 +21,7 @@ public class LanguageForm : ScriptableObject
     public string getCoin;
     public string untilCoin;
     public string until;
+    public string noMoreItems;
 
     [Space]
 
