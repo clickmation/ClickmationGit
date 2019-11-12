@@ -33,90 +33,87 @@ public class InputController : MonoBehaviour
     void Update()
     {
         //Mouse
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
-        //    Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
-        //    RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
-        //    Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.mousePosition), Quaternion.Euler(0, 0, 0), camera.transform);
-
-        //    if (hit)
-        //    {
-        //        tmpCollider = hit.collider;
-        //        if (tmpCollider == jump)
-        //        {
-        //            mov.jump = true;
-        //            mov.jumpDown.Invoke();
-        //        }
-        //        else if (tmpCollider == attack)
-        //        {
-        //            mov.Attack();
-        //        }
-        //        else if (tmpCollider == touchJump)
-        //        {
-        //            Vector2 vec = GetJumpingDirection();
-        //            touchJump.gameObject.SetActive(false);
-        //            mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
-        //        }
-        //    }
-        //}
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    if (tmpCollider == jump)
-        //    {
-        //        mov.jump = false;
-        //        mov.jumpUp.Invoke();
-        //    }
-        //}
-
-        //MultiTouch (New Version)
-        for (int i = 0; i < Input.touchCount; i++)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetTouch(i).phase == TouchPhase.Began)
-            {
-                Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
-                Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
-                RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
-                Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.GetTouch(i).position), Quaternion.Euler(0, 0, 0), camera.transform);
+            Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.mousePosition));
+            Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x, camera.ScreenToWorldPoint(Input.mousePosition).y);
+            RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
 
-                if (hit)
+            if (hit)
+            {
+                tmpCollider = hit.collider;
+                if (tmpCollider == jump)
                 {
-                    tmpCollider = hit.collider;
-                    if (tmpCollider == jump)
-                    {
-                        mov.jump = true;
-                        mov.jumpDown.Invoke();
-                    }
-                    else if (tmpCollider == attack)
-                    {
-                        mov.Attack();
-                    }
-                    else if (tmpCollider == touchJump)
-                    {
-                        Vector2 vec = GetJumpingDirection();
-                        touchJump.gameObject.SetActive(false);
-                        mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
-                    }
+                    mov.jump = true;
+                    mov.jumpDown.Invoke();
                 }
-            }
-            if (Input.GetTouch(i).phase == TouchPhase.Ended)
-            {
-                Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
-                Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
-                RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
-                Instantiate(touchEffect, camera.ScreenToWorldPoint(Input.GetTouch(i).position), Quaternion.Euler(0, 0, 0), camera.transform);
-
-                if (hit)
+                else if (tmpCollider == attack)
                 {
-                    tmpCollider = hit.collider;
-                    if (tmpCollider == jump)
-                    {
-                        mov.jump = false;
-                        mov.jumpUp.Invoke();
-                    }
+                    mov.Attack();
+                }
+                else if (tmpCollider == touchJump)
+                {
+                    Vector2 vec = GetJumpingDirection();
+                    touchJump.gameObject.SetActive(false);
+                    mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
                 }
             }
         }
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (tmpCollider == jump)
+            {
+                mov.jump = false;
+                mov.jumpUp.Invoke();
+            }
+        }
+
+            //MultiTouch (New Version)
+        //    for (int i = 0; i < Input.touchCount; i++)
+        //{
+        //    if (Input.GetTouch(i).phase == TouchPhase.Began)
+        //    {
+        //        Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
+        //        Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
+        //        RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
+                
+        //        if (hit)
+        //        {
+        //            tmpCollider = hit.collider;
+        //            if (tmpCollider == jump)
+        //            {
+        //                mov.jump = true;
+        //                mov.jumpDown.Invoke();
+        //            }
+        //            else if (tmpCollider == attack)
+        //            {
+        //                mov.Attack();
+        //            }
+        //            else if (tmpCollider == touchJump)
+        //            {
+        //                Vector2 vec = GetJumpingDirection();
+        //                touchJump.gameObject.SetActive(false);
+        //                mov.Jump(-1, col.wall.GetComponent<Wall>().SetVec(-mov.dir, vec.x, vec.y));
+        //            }
+        //        }
+        //    }
+        //    if (Input.GetTouch(i).phase == TouchPhase.Ended)
+        //    {
+        //        Ray ray = camera.ScreenPointToRay(camera.ScreenToWorldPoint(Input.GetTouch(i).position));
+        //        Vector2 mPos = new Vector2(camera.ScreenToWorldPoint(Input.GetTouch(i).position).x, camera.ScreenToWorldPoint(Input.GetTouch(i).position).y);
+        //        RaycastHit2D hit = Physics2D.Raycast(mPos, 0.1f * Vector2.one, 0.1f, 1 << LayerMask.NameToLayer("TouchCollider"));
+                
+        //        if (hit)
+        //        {
+        //            tmpCollider = hit.collider;
+        //            if (tmpCollider == jump)
+        //            {
+        //                mov.jump = false;
+        //                mov.jumpUp.Invoke();
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     Vector2 GetJumpingDirection()
