@@ -50,6 +50,7 @@ public class GameMaster : MonoBehaviour
     public Text noMainMenuText;
 
     [SerializeField] Text tipStringText;
+    [SerializeField] Text coinGameOverText;
 
     [Space]
 
@@ -174,6 +175,8 @@ public class GameMaster : MonoBehaviour
         ls = LanguageSet.ls;
         GameSceneLanguageSet();
         rmg = RandomMapGanerater.randomMapGanerater;
+        //adToken = 1;
+        //realScore = 3000;//onlyforvideo
         adToken = PlayerPrefs.GetInt("AdToken");
         PlayerPrefs.SetInt("AdToken", 0);
         oriFever = fever;
@@ -192,7 +195,7 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
         revivable = 1;
 
-        //ADManager.adManager.RequestBanner();
+        ADManager.adManager.RequestBanner();
     }
 
     public void Jumpcount (int c)
@@ -445,6 +448,7 @@ public class GameMaster : MonoBehaviour
             }
         }
         SetTipText();
+        coinGameOverText.text = coin.ToString();
         deadPanel.SetActive(true);
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
@@ -505,7 +509,6 @@ public class GameMaster : MonoBehaviour
         camFol.SetTarget(mainChar.transform);
         inputController.mov = mov;
         inputController.col = mov.GetComponent<Collision>();
-        //inputController.ColTypesReSet();
         mov.inputController = inputController;
         attackButton.onClick = mov.attackFunction;
         StartCoroutine(ScoreCoroutine());
