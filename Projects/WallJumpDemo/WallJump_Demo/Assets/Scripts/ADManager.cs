@@ -11,11 +11,20 @@ public class ADManager : MonoBehaviour
     private string appID = "ca-app-pub-3575537359490368~8192022467";
 
     private BannerView bannerView;
-    private string bannerID = "ca-app-pub-3575537359490368/7329247375";
+    //private string bannerID = "ca-app-pub-3940256099942544/6300978111";//test
+    private string bannerID = "ca-app-pub-3575537359490368/7329247375";//real
 
     private RewardedAd rewardedReviveAd;
+    //private string rewardedReviveAdID = "ca-app-pub-3940256099942544/5224354917";//test
+    private string rewardedReviveAdID = "ca-app-pub-3575537359490368/3333419780";//real
+
     private RewardedAd rewardedTokenAd;
+    //private string rewardedTokenAdID = "ca-app-pub-3940256099942544/5224354917";//test
+    private string rewardedTokenAdID = "ca-app-pub-3575537359490368/1504356421";//real
+
     private RewardedAd rewardedCoinAd;
+    //private string rewardedCoinAdID = "ca-app-pub-3940256099942544/5224354917";//test
+    private string rewardedCoinAdID = "ca-app-pub-3575537359490368/5962476183";//real
 
     void Awake()
     {
@@ -34,9 +43,9 @@ public class ADManager : MonoBehaviour
     {
         MobileAds.Initialize(appID);
 
-        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/3333419780");
-        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/1504356421");
-        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/5962476183");
+        this.rewardedReviveAd = CreateAndLoadRewardedAd(rewardedReviveAdID);
+        this.rewardedTokenAd = CreateAndLoadRewardedAd(rewardedTokenAdID);
+        this.rewardedCoinAd = CreateAndLoadRewardedAd(rewardedCoinAdID);
 
         this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
         this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
@@ -84,9 +93,9 @@ public class ADManager : MonoBehaviour
     {
         MonoBehaviour.print("HandleRewardedAdClosed event received");
 
-        this.rewardedReviveAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/3333419780");
-        this.rewardedTokenAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/1504356421");
-        this.rewardedCoinAd = CreateAndLoadRewardedAd("ca-app-pub-3575537359490368/5962476183");
+        this.rewardedReviveAd = CreateAndLoadRewardedAd(rewardedReviveAdID);
+        this.rewardedTokenAd = CreateAndLoadRewardedAd(rewardedTokenAdID);
+        this.rewardedCoinAd = CreateAndLoadRewardedAd(rewardedCoinAdID);
 
         this.rewardedReviveAd.OnUserEarnedReward += HandleUserEarnedReviveReward;
         this.rewardedTokenAd.OnUserEarnedReward += HandleUserEarnedTokenReward;
