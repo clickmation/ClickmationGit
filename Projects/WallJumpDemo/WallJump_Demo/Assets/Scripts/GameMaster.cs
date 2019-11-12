@@ -514,13 +514,11 @@ public class GameMaster : MonoBehaviour
         if (!reTryCheckTriggered)
         {
             reTryCheckTriggered = true;
-            pausePanel.SetActive(false);
             reTryCheckPanel.SetActive(true);
         }
         else
         {
             reTryCheckTriggered = false;
-            pausePanel.SetActive(true);
             reTryCheckPanel.SetActive(false);
         }
     }
@@ -540,13 +538,11 @@ public class GameMaster : MonoBehaviour
         if (!mainmenuCheckTriggered)
         {
             mainmenuCheckTriggered = true;
-            pausePanel.SetActive(false);
             mainmenuCheckPanel.SetActive(true);
         }
         else
         {
             mainmenuCheckTriggered = false;
-            pausePanel.SetActive(true);
             mainmenuCheckPanel.SetActive(false);
         }
     }
