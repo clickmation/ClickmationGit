@@ -166,6 +166,6 @@ public class ADManager : MonoBehaviour
 
     public void HideBanner()
     {
-        bannerView.Hide();
+        if (bannerView != null) bannerView.Hide();
     }
 }

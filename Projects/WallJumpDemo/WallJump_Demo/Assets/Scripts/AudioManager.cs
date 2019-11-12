@@ -47,7 +47,7 @@ public class AudioManager : MonoBehaviour
 		jumpPanelSound = Resources.Load<AudioClip> ("Boing2");
 		wallPanelSound = Resources.Load<AudioClip> ("Boing1");
         touchSound = Resources.Load<AudioClip>("Coin5");
-		coinSSound = Resources.Load<AudioClip>("Clap");
+		coinSSound = Resources.Load<AudioClip>("Coin4");
 		coinSFailSound = Resources.Load<AudioClip>("Thump");
     }
 

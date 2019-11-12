@@ -49,6 +49,8 @@ public class GameMaster : MonoBehaviour
     public Text yesMainMenuText;
     public Text noMainMenuText;
 
+    [SerializeField] Text tipStringText;
+
     [Space]
 
     [Header("UI")]
@@ -66,6 +68,7 @@ public class GameMaster : MonoBehaviour
     public int adToken;
     [SerializeField] private int revivable;
     [SerializeField] private GameObject newHighScoreText;
+    [SerializeField] private GameObject newHighScoreGameOverText;
 
     [Space]
 
@@ -86,6 +89,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] Text scoreMultiplierText;
     [SerializeField] int feverIndex;
     [SerializeField] private bool fevered;
+    [SerializeField] GameObject feverLine;
     public GameObject feverEffect;
     [SerializeField] Color32[] feverColor;
     [SerializeField] FeverStruct[] feverStructs;
@@ -175,14 +179,9 @@ public class GameMaster : MonoBehaviour
         oriFever = fever;
         fever = 0;
         SaveLoad.saveload.SoundLoad();
-        //SaveLoad.saveload.TokenLoad();
-        //SaveLoad.saveload.TokenSave('+');
         masterVolumeSlider.onValueChanged = am.setMasterVolume;
         soundEffectVolumeSlider.onValueChanged = am.setSoundEffectVolume;
         bgmVolumeSlider.onValueChanged = am.setBGMVolume;
-        //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-        //soundEffectVolume = PlayerPrefs.GetFloat("SoundEffectVolume");
-        //bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
         masterVolumeSlider.value = masterVolume;
         soundEffectVolumeSlider.value = soundEffectVolume;
         bgmVolumeSlider.value = bgmVolume;
@@ -193,7 +192,7 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
         revivable = 1;
 
-        ADManager.adManager.RequestBanner();
+        //ADManager.adManager.RequestBanner();
     }
 
     public void Jumpcount (int c)
@@ -341,7 +340,11 @@ public class GameMaster : MonoBehaviour
             feverStructs[index].feverImage.GetComponent<Image>().color = feverColor[index];
             scoreMultiplierText.text = "x" + scoreMultiplier.ToString();
             if (scoreMultiplier == 2) am.FeverAudio(true);
-            if (index == 0) feverEffect.SetActive(true);
+            if (index == 0)
+            {
+                feverEffect.SetActive(true);
+                feverLine.SetActive(true);
+            }
         }
     }
 
@@ -358,6 +361,7 @@ public class GameMaster : MonoBehaviour
             if (index == 0)
             {
                 feverEffect.SetActive(false);
+                feverLine.SetActive(false);
                 for (int i = 1; i < feverStructs.Length; i++)
                 {
                     feverStructs[i].fever = 0;
@@ -440,11 +444,16 @@ public class GameMaster : MonoBehaviour
                 tokenReviveButton.SetActive(true);
             }
         }
+        SetTipText();
         deadPanel.SetActive(true);
         scoreText.gameObject.SetActive(false);
         deadPanelScore.text = score.ToString();
         overlayCanvas.alpha = 0.2f;
-        if (score > highScore) highScore = score;
+        if (score > highScore)
+        {
+            highScore = score;
+            newHighScoreGameOverText.SetActive(true);
+        }
         deathCount++;
     }
 
@@ -552,7 +561,6 @@ public class GameMaster : MonoBehaviour
         if (dead) SaveLoad.saveload.GMSave();
         Time.timeScale = 1;
         SaveLoad.saveload.gm = null;
-        ADManager.adManager.HideBanner();
         am.gm = null;
         am.FeverAudioDefaultSet();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -577,6 +585,18 @@ public class GameMaster : MonoBehaviour
         mov.SetDeathYPosition(startY, endY);
     }
 
+    public void SetTipText()
+    {
+        int i = 0;
+        int r = Random.Range(0, 100);
+        if (r < 10) i = 0;
+        else if (r >= 10 && r < 20) i = 1;
+        else if (r >= 20 && r < 30) i = 2;
+        else if (r >= 30 && r < 80) i = 3;
+        else if (r >= 80 && r < 90) i = 4;
+        else if (r >= 90 && r < 100) i = 5;
+        tipStringText.text = "Tip : " + ls.language.tut[i];
+    }
 
     public void GameSceneLanguageSet()
     {
