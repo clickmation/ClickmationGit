@@ -130,8 +130,13 @@ public class RegularReward : MonoBehaviour
 
     private int CoinRanReward()
     {
-        int r = UnityEngine.Random.Range(0, ranCoin.Count);
-        Debug.Log(ranCoin[r]);
+        int i = 0;
+        int r = UnityEngine.Random.Range(0, 100);
+        if (r < 30) i = 0;
+        else if (r >= 30 && r < 70) i = 1;
+        else if (r >= 70 && r < 90) i = 2;
+        else if (r >= 90 && r < 98) i = 3;
+        else if (r >= 98 && r < 100) i = 4;
         return ranCoin[r];
     }
 	
