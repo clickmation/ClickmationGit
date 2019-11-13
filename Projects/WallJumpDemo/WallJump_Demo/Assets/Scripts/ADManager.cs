@@ -164,11 +164,14 @@ public class ADManager : MonoBehaviour
 
     public void RequestBanner()
     {
-        bannerView = new BannerView(bannerID, AdSize.Banner, AdPosition.Bottom);
+        if (bannerView == null)
+        {
+            bannerView = new BannerView(bannerID, AdSize.Banner, AdPosition.Bottom);
 
-        AdRequest request = new AdRequest.Builder().Build();
+            AdRequest request = new AdRequest.Builder().Build();
 
-        bannerView.LoadAd(request);
+            bannerView.LoadAd(request);
+        }
 
         bannerView.Show();
     }
