@@ -17,13 +17,13 @@ public class RegularReward : MonoBehaviour
 	private DateTime currentDateTime;
 	private DateTime refreshDateTime;
 	private TimeSpan _remainingTime;
-	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);
+	private TimeSpan intervalTime = TimeSpan.FromMilliseconds(14400000);//14400000
 	private string dateString;
 	private string TimeFormat;
 	private bool countIsReady;
 	private bool timerSet;
 
-    [SerializeField] List<int> ranCoin = new List<int>();
+    [SerializeField] int[] ranCoin;
 
     public DateTime GetRefreshDateTime()
     {
@@ -124,7 +124,6 @@ public class RegularReward : MonoBehaviour
             SaveLoad.saveload.RegularRewardSave();
             SaveLoad.saveload.RegularRewardLoad();
             ActivateButton(IsButtonActive());
-            //Debug.Log(refreshDateTime);
         }
     }
 
@@ -137,7 +136,7 @@ public class RegularReward : MonoBehaviour
         else if (r >= 70 && r < 90) i = 2;
         else if (r >= 90 && r < 98) i = 3;
         else if (r >= 98 && r < 100) i = 4;
-        return ranCoin[r];
+        return ranCoin[i];
     }
 	
 	private bool IsButtonActive()

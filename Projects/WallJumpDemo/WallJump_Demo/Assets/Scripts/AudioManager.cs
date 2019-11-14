@@ -128,7 +128,6 @@ public class AudioManager : MonoBehaviour
         {
             bgmAudioSrc.clip = clip;
             bgmAudioSrc.Play();
-            Debug.Log("Played");
         }
     }
 

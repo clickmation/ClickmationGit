@@ -11,20 +11,16 @@ public class ADManager : MonoBehaviour
     private string appID = "ca-app-pub-3575537359490368~8192022467";
 
     private BannerView bannerView;
-    //private string bannerID = "ca-app-pub-3940256099942544/6300978111";//test
-    private string bannerID = "ca-app-pub-3575537359490368/7329247375";//real
+    private string bannerID;
 
     private RewardedAd rewardedReviveAd;
-    //private string rewardedReviveAdID = "ca-app-pub-3940256099942544/5224354917";//test
-    private string rewardedReviveAdID; //"ca-app-pub-3575537359490368/3333419780";//real
+    private string rewardedReviveAdID;
 
     private RewardedAd rewardedTokenAd;
-    //private string rewardedTokenAdID = "ca-app-pub-3940256099942544/5224354917";//test
-    private string rewardedTokenAdID; //"ca-app-pub-3575537359490368/1504356421";//real
+    private string rewardedTokenAdID;
 
     private RewardedAd rewardedCoinAd;
-    //private string rewardedCoinAdID = "ca-app-pub-3940256099942544/5224354917";//test
-    private string rewardedCoinAdID; //"ca-app-pub-3575537359490368/5962476183";//real
+    private string rewardedCoinAdID;
 
     void Awake()
     {
@@ -42,6 +38,16 @@ public class ADManager : MonoBehaviour
     private void Start()
     {
         MobileAds.Initialize(appID);
+
+        //test
+        //bannerID = "ca-app-pub-3940256099942544/6300978111";
+
+        //rewardedReviveAdID = "ca-app-pub-3940256099942544/5224354917";
+        //rewardedTokenAdID = "ca-app-pub-3940256099942544/5224354917";
+        //rewardedCoinAdID = "ca-app-pub-3940256099942544/5224354917";
+
+        //real
+        bannerID = "ca-app-pub-3575537359490368/7329247375";
 
         rewardedReviveAdID = "ca-app-pub-3575537359490368/3333419780";
         rewardedTokenAdID = "ca-app-pub-3575537359490368/1504356421";
