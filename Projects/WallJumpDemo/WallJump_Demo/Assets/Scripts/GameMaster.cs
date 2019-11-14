@@ -80,6 +80,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private GameObject staminaBar;
     [SerializeField] private List<GameObject> staminaBars = new List<GameObject>();
     private bool barActivated;
+    [SerializeField] GameObject noMoreStaminaObject;
 
     [Space]
 
@@ -586,6 +587,12 @@ public class GameMaster : MonoBehaviour
     public void SetDeathYPosition(float startY, float endY)
     {
         mov.SetDeathYPosition(startY, endY);
+    }
+
+    public void SpawnNoMoreStamina()
+    {
+        GameObject text = Instantiate(noMoreStaminaObject, inGameUI);
+        text.GetComponent<Text>().text = ls.language.noMoreStamina;
     }
 
     public void SetTipText()

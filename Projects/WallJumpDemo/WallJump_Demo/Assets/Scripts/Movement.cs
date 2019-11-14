@@ -237,7 +237,7 @@ public class Movement : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Not enough Stamina");
+                gm.SpawnNoMoreStamina();
             }
         }
     }

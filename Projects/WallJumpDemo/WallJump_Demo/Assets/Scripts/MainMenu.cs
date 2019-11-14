@@ -38,6 +38,10 @@ public class MainMenu : MonoBehaviour
     public Text yesText;
     public Text noText;
 
+    public Text tutCheckYesText;
+    public Text tutCheckNoText;
+    public Text tutCheckText;
+
     [Space]
 
     [Header("UI")]
@@ -76,7 +80,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] bool customization;
     [SerializeField] bool sound;
     [SerializeField] bool credit;
-    [SerializeField] bool popUp;
+    [SerializeField] bool adTokenPopUp;
+    [SerializeField] bool coinPopUp;
     [SerializeField] bool quitCheck;
 
     [Space]
@@ -91,8 +96,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject creditObj;
     [SerializeField] GameObject adTokenButton;
     [SerializeField] GameObject adCoinButton;
-    [SerializeField] GameObject popUpUI;
+    [SerializeField] GameObject adTokenPopUpUI;
+    [SerializeField] GameObject coinPopUpUI;
     [SerializeField] GameObject quitChenkUI;
+    [SerializeField] GameObject checkTutorial;
 
     [Space]
 
@@ -302,6 +309,7 @@ public class MainMenu : MonoBehaviour
             adTokenButton.SetActive(false);
             adCoinButton.SetActive(false);
             creditObj.SetActive(false);
+            checkTutorial.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32 (200, 200, 200, 128);
             customizationButton.color = new Color32 (200, 200, 200, 128);
@@ -329,6 +337,23 @@ public class MainMenu : MonoBehaviour
     public void GameStart()
     {
         AudioManager.PlaySound("touch");
+        if (PlayerPrefs.GetInt("FirstPlayed") == 1) StartGame();
+        else
+        {
+            mainMenu.SetActive(true);
+            howToObj.SetActive(false);
+            shopObj.SetActive(false);
+            cusObj.SetActive(false);
+            soundObj.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
+            creditObj.SetActive(false);
+            checkTutorial.SetActive(true);
+        }
+    }
+
+    public void StartGame()
+    {
         SaveLoad.saveload.mainMenu = null;
         PlayerPrefs.SetInt("CurTrailIndex", curTrailIndex);
         PlayerPrefs.SetInt("CurCharacterIndex", curCharacterIndex);
@@ -504,7 +529,7 @@ public class MainMenu : MonoBehaviour
     public void Buy ()
     {
         AudioManager.PlaySound("touch");
-        if (coin >= 700)
+        if (coin >= 500)
         {
             List<int> buyableTrails = new List<int>();
             List<int> buyableCharacters = new List<int>();
@@ -577,7 +602,8 @@ public class MainMenu : MonoBehaviour
                 //    PlayerPrefs.SetInt("CurBGMIndex", buyableBGMs[index]);
                 //    AudioManager.PlayBGM(bgms[buyableBGMs[index]].bgm);
                 //}
-                coin -= 700;
+                if (prizeCoinObject != null) Destroy(prizeCoinObject);
+                coin -= 500;
                 coinText.text = coin.ToString();
                 availableTrails.Clear();
                 availableCharacters.Clear();
@@ -835,17 +861,31 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void PopUpUIActivate()
+    public void AdTokenPopUpUIActivate()
     {
-        if (!popUp)
+        if (!adTokenPopUp)
         {
-            popUp = true;
-            popUpUI.SetActive(true);
+            adTokenPopUp = true;
+            adTokenPopUpUI.SetActive(true);
         }
         else
         {
-            popUp = false;
-            popUpUI.SetActive(false);
+            adTokenPopUp = false;
+            adTokenPopUpUI.SetActive(false);
+        }
+    }
+
+    public void CoinPopUpUIActivate()
+    {
+        if (!coinPopUp)
+        {
+            coinPopUp = true;
+            coinPopUpUI.SetActive(true);
+        }
+        else
+        {
+            coinPopUp = false;
+            coinPopUpUI.SetActive(false);
         }
     }
 
@@ -911,7 +951,7 @@ public class MainMenu : MonoBehaviour
         getCoinText.text = ls.language.getCoin;
 
         prizeName.text = ls.language.whatsPrize;
-        coinButtonText.text = "700 " + ls.language.coin;
+        coinButtonText.text = "500 " + ls.language.coin;
         for (int i = 0; i < tutText.Length; i++) tutText[i].text = ls.language.tut[i];
         trailText.text = ls.language.trail;
         skinText.text = ls.language.skin;
@@ -924,11 +964,16 @@ public class MainMenu : MonoBehaviour
 
         yesText.text = ls.language.yes;
         noText.text = ls.language.no;
+
+        tutCheckYesText.text = ls.language.yes;
+        tutCheckNoText.text = ls.language.no;
+        tutCheckText.text = ls.language.tutCheck;
     }
 
     public void GoToMainMenu1()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+        PlayerPrefs.SetInt("NoBuyable", 0);
+        PlayerPrefs.SetInt("FirstPlayed", 0); ;
     }
 
     public void SetEnglish()

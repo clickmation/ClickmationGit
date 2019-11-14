@@ -35,6 +35,7 @@ public class LanguageForm : ScriptableObject
     [Header("Tutorial")]
 
     public string[] tut;
+    public string tutCheck;
 
     [Space]
 
@@ -75,6 +76,7 @@ public class LanguageForm : ScriptableObject
     public string mainmenu;
     public string gameOver;
     public string revive;
+    public string noMoreStamina;
 
     [Space]
 
