@@ -35,7 +35,8 @@ public class LanguageForm : ScriptableObject
     [Header("Tutorial")]
 
     public string[] tut;
-    public string tutCheck;
+    public string tutCheck1;
+    public string tutCheck2;
 
     [Space]
 

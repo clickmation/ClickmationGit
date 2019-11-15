@@ -39,7 +39,6 @@ public class MainMenu : MonoBehaviour
     public Text noText;
 
     public Text tutCheckYesText;
-    public Text tutCheckNoText;
     public Text tutCheckText;
 
     [Space]
@@ -301,6 +300,7 @@ public class MainMenu : MonoBehaviour
             sound = false;
             if (curTrail != null) Destroy(curTrail);
             prizeObject.gameObject.SetActive(false);
+            PlayerPrefs.SetInt("TutChecked", 1);
             mainMenu.SetActive(false);
             howToObj.SetActive(true);
             shopObj.SetActive(false);
@@ -337,7 +337,7 @@ public class MainMenu : MonoBehaviour
     public void GameStart()
     {
         AudioManager.PlaySound("touch");
-        if (PlayerPrefs.GetInt("FirstPlayed") == 1) StartGame();
+        if (PlayerPrefs.GetInt("TutChecked") == 1) StartGame();
         else
         {
             mainMenu.SetActive(true);
@@ -966,13 +966,13 @@ public class MainMenu : MonoBehaviour
         noText.text = ls.language.no;
 
         tutCheckYesText.text = ls.language.yes;
-        tutCheckNoText.text = ls.language.no;
-        tutCheckText.text = ls.language.tutCheck;
+        tutCheckText.text = ls.language.tutCheck1 + "\n" + ls.language.tutCheck2;
     }
 
     public void GoToMainMenu1()
     {
         PlayerPrefs.SetInt("NoBuyable", 0);
+        PlayerPrefs.SetInt("TutChecked", 0);
         PlayerPrefs.SetInt("FirstPlayed", 0); ;
     }
 
