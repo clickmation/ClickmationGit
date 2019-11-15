@@ -238,6 +238,7 @@ public class MainMenu : MonoBehaviour
             shop = true;
             customization = false;
             sound = false;
+            credit = false;
             if (curTrail != null) Destroy(curTrail);
             mainMenu.SetActive(false);
             shopObj.SetActive(true);
@@ -298,6 +299,7 @@ public class MainMenu : MonoBehaviour
             shop = false;
             customization = false;
             sound = false;
+            credit = false;
             if (curTrail != null) Destroy(curTrail);
             prizeObject.gameObject.SetActive(false);
             PlayerPrefs.SetInt("TutChecked", 1);
@@ -369,6 +371,7 @@ public class MainMenu : MonoBehaviour
             shop = false;
             customization = true;
             sound = false;
+            credit = false;
             prizeObject.gameObject.SetActive(false);
             SaveLoad.saveload.MainMenuLoad();
             for (int i = 0; i < availableTrails.Count; i++)
@@ -443,6 +446,7 @@ public class MainMenu : MonoBehaviour
             shop = false;
             customization = false;
             sound = true;
+            credit = false;
             SaveLoad.saveload.SoundLoad();
             if (curTrail != null) Destroy(curTrail);
             if (curBGMIndex == 0) bgmBackButton.color = new Color32(200, 200, 200, 128);
@@ -497,6 +501,10 @@ public class MainMenu : MonoBehaviour
     {
         if (!credit)
         {
+            howTo = false;
+            shop = false;
+            customization = false;
+            sound = false;
             credit = true;
             creditObj.SetActive(true);
             mainMenu.SetActive(false);
@@ -899,6 +907,7 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
+            creditObj.SetActive(false);
             adTokenButton.SetActive(false);
             adCoinButton.SetActive(false);
             quitChenkUI.SetActive(true);
@@ -925,6 +934,11 @@ public class MainMenu : MonoBehaviour
             {
                 sound = false;
                 Sound();
+            }
+            else if (credit)
+            {
+                credit = false;
+                Credit();
             }
             else if (mainMenu)
             {
