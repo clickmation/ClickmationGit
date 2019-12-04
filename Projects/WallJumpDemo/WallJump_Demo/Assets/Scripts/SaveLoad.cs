@@ -93,6 +93,7 @@ public class SaveLoad : MonoBehaviour
 
             gm.highScore = saver.highScore;
             gm.adToken = saver.adToken;
+            gm.mmCoin = saver.coin;
             tmpSaver = saver;
         }
     }
@@ -288,6 +289,33 @@ public class SaveLoad : MonoBehaviour
 
         binary.Serialize(fstream, saver);
         fstream.Close();
+    }
+
+    public void ForCoinReviveSave()
+    {
+        BinaryFormatter binary = new BinaryFormatter();
+        FileStream fstream = File.Create(Application.persistentDataPath + "/saveFile.WJM");
+
+        SaveManager saver = new SaveManager();
+
+        saver = tmpSaver;
+        saver.coin = tmpSaver.coin - 15;
+
+        binary.Serialize(fstream, saver);
+        fstream.Close();
+    }
+
+    public void ForCoinReviveLoad()
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveFile.WJM"))
+        {
+            BinaryFormatter binary = new BinaryFormatter();
+            FileStream fstream = File.Open(Application.persistentDataPath + "/saveFile.WJM", FileMode.Open);
+            SaveManager saver = (SaveManager)binary.Deserialize(fstream);
+            fstream.Close();
+
+            tmpSaver = saver;
+        }
     }
 }
 
