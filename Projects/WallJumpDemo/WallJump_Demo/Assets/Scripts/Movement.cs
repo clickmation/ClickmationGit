@@ -37,6 +37,8 @@ public class Movement : MonoBehaviour
     public Transform cam;
     public float cameraMovingTime;
     [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpAddForce;
+    private float _jumpAddForce;
     private Collision col;
     public float wallSlideSpeed;
     public bool attacking;
@@ -54,7 +56,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private bool jumpButtonDown;
     Vector2 jumpingDir;
     public GameObject jumpingArrow;
-    private bool rezero;
+    [SerializeField] private bool rezero;
     private float rotZ;
     private float yVel;
     [SerializeField] private Transform rotTransform;
@@ -66,8 +68,8 @@ public class Movement : MonoBehaviour
 
     [Header("BetterJumping")]
 
-    public float fallMultiplier = 2.5f;
-    public float lowJumpMultiplier = 2f;
+    //public float fallMultiplier = 2.5f;
+    public float fallMultiplier = 2f;
     public bool jumpable;
     public bool panelJumped;
 
@@ -120,6 +122,14 @@ public class Movement : MonoBehaviour
         {
             Attack();
         }
+        if (Input.GetButtonDown("Jump"))
+        {
+            JumpButtonDown();
+        }
+        if (Input.GetButtonUp("Jump"))
+        {
+            JumpButtonUp();
+        }
         if (!col.onWall)
         {
 
@@ -127,12 +137,18 @@ public class Movement : MonoBehaviour
             if (rezero) rotTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, rotZ, rb.velocity.y / yVel));
             if (!jumping && rb.velocity.y > 0 && !touchJumped && !attacking)
             {
-                rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+                rb.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
             }
-            else if (rb.velocity.y < 0)
+            //if (jumping && _jumpAddForce > 0 && !touchJumped && !attacking)
+            //{
+            //    rb.velocity += Vector2.up * _jumpAddForce;
+            //    _jumpAddForce -= _jumpAddForce * Time.deltaTime * 9.8f;
+            //}
+            if (rb.velocity.y < 0)
             {
                 if (jumping) jumping = false;
-                rezero = false;
+                //rezero = false;
+                RezeroStop();
             }
         }
         else
@@ -263,6 +279,7 @@ public class Movement : MonoBehaviour
                     wallJumped = true;
                     _speed = speed;
                     rb.velocity = new Vector2(dir * _speed, 0);
+                    _jumpAddForce = jumpAddForce;
                     rb.velocity += jumpForce * Vector2.up;
                     rotCon.SetRotation(0.1f, rb.velocity,true);
                 }
@@ -294,6 +311,7 @@ public class Movement : MonoBehaviour
                     {
                         _speed = speed;
                         rb.velocity = new Vector2(dir * _speed, 0);
+                        _jumpAddForce = jumpAddForce;
                         rb.velocity += jumpForce * Vector2.up;
                     }
                     else
@@ -339,10 +357,12 @@ public class Movement : MonoBehaviour
         if (touchJumped) touchJumped = false;
         _speed = speed;
         gm.StaminaActiveFalse();
+        rotCon.StopRotation();
     }
     public void OnGroundExitFunction()
     {
         lastSpeed = _speed;
+        if (!jumping) camFol.dir = dir;
     }
     public void OnWallEnterFunction()
     {

@@ -11,7 +11,7 @@ public class RotationController : MonoBehaviour
 
     public void SetRotation (float time, Vector2 vec, bool zeroStart)
     {
-        if (setRotationCoroutine != null) StopCoroutine(setRotationCoroutine);
+        StopRotation();
         setRotationCoroutine = SetRotationCoroutine(time, vec, zeroStart);
         StartCoroutine(setRotationCoroutine);
     }
@@ -39,5 +39,10 @@ public class RotationController : MonoBehaviour
             movSprite.rotation = Quaternion.Euler(0, 0, r);
             mov.Rezero();
         }
+    }
+
+    public void StopRotation()
+    {
+        if (setRotationCoroutine != null) StopCoroutine(setRotationCoroutine);
     }
 }

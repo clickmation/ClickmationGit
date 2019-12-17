@@ -62,7 +62,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject soundPanel;
     [SerializeField] GameObject adReviveButton;
     [SerializeField] GameObject tokenReviveButton;
-    [SerializeField] GameObject coinReviveButton;
+    //[SerializeField] GameObject coinReviveButton;
     [SerializeField] List<GameObject> shockWaves = new List<GameObject>();
     public CanvasGroup overlayCanvas;
     public int coin;
@@ -197,7 +197,7 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
         revivable = 1;
 
-        //ADManager.adManager.RequestBanner();
+        ADManager.adManager.RequestBanner();
     }
 
     public void Jumpcount (int c)
@@ -439,17 +439,17 @@ public class GameMaster : MonoBehaviour
         yield return new WaitForSeconds(2f);
         if (revivable == 1)
         {
-            //if (adToken == 0)
-            //{
-            //    adReviveButton.SetActive(true);
-            //    tokenReviveButton.SetActive(false);
-            //}
-            //else
-            //{
-            //    adReviveButton.SetActive(false);
-            //    tokenReviveButton.SetActive(true);
-            //}
-            if (mmCoin >= 15) coinReviveButton.SetActive(true);
+            if (adToken == 0)
+            {
+                adReviveButton.SetActive(true);
+                tokenReviveButton.SetActive(false);
+            }
+            else
+            {
+                adReviveButton.SetActive(false);
+                tokenReviveButton.SetActive(true);
+            }
+            //if (mmCoin >= 15) coinReviveButton.SetActive(true);
         }
         SetTipText();
         coinGameOverText.text = coin.ToString();
@@ -510,7 +510,7 @@ public class GameMaster : MonoBehaviour
         revivable--;
         adReviveButton.SetActive(false);
         tokenReviveButton.SetActive(false);
-        coinReviveButton.SetActive(false);
+        //coinReviveButton.SetActive(false);
         inputController.gameObject.SetActive(true);
         for (int i = 0; i < triggerFunctions.Count; i++) triggerFunctions[i].Trigger();
         rmg.StartSpawn();

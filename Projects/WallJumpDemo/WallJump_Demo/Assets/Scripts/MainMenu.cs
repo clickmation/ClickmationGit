@@ -94,8 +94,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject soundObj;
     [SerializeField] GameObject creditObj;
     [SerializeField] GameObject adTokenButton;
-    //[SerializeField] GameObject adCoinButton;
-    //[SerializeField] GameObject adTokenPopUpUI;
+    [SerializeField] GameObject adCoinButton;
+    [SerializeField] GameObject adTokenPopUpUI;
     [SerializeField] GameObject coinPopUpUI;
     [SerializeField] GameObject quitChenkUI;
     [SerializeField] GameObject checkTutorial;
@@ -226,7 +226,7 @@ public class MainMenu : MonoBehaviour
         am.SetBGMVolume();
 
         AudioManager.PlayBGM(bgms[curBGMIndex].bgm);
-        //ADManager.adManager.HideBanner();
+        ADManager.adManager.HideBanner();
     }
 
     public void Shop ()
@@ -245,8 +245,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(true);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(true);
             creditObj.SetActive(false);
             howToButton.color = new Color32 (200, 200, 200, 128);
             shopButton.color = new Color32(255, 255, 255, 255);
@@ -280,8 +280,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             howToButton.color = new Color32 (255, 255, 255, 255);
             customizationButton.color = new Color32 (255, 255, 255, 255);
@@ -308,8 +308,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             checkTutorial.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
@@ -326,8 +326,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             shopButton.color = new Color32 (255, 255, 255, 255);
             customizationButton.color = new Color32(255, 255, 255, 255);
@@ -347,8 +347,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             checkTutorial.SetActive(true);
         }
@@ -409,8 +409,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(true);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             howToButton.color = new Color32 (200, 200, 200, 128);
             shopButton.color = new Color32(200, 200, 200, 128);
@@ -427,8 +427,8 @@ public class MainMenu : MonoBehaviour
             shopObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32 (255, 255, 255, 255);
@@ -457,8 +457,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(true);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             for (int i = 0; i < availableBGMs.Count; i++)
             {
@@ -487,8 +487,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
             creditObj.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32(255, 255, 255, 255);
@@ -512,8 +512,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             howToButton.color = new Color32(255, 255, 255, 255);
             shopButton.color = new Color32(255, 255, 255, 255);
             customizationButton.color = new Color32(255, 255, 255, 255);
@@ -529,8 +529,8 @@ public class MainMenu : MonoBehaviour
             howToObj.SetActive(false);
             cusObj.SetActive(false);
             soundObj.SetActive(false);
-            //adTokenButton.SetActive(true);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(true);
+            adCoinButton.SetActive(false);
         }
     }
 
@@ -874,12 +874,12 @@ public class MainMenu : MonoBehaviour
         if (!adTokenPopUp)
         {
             adTokenPopUp = true;
-            //adTokenPopUpUI.SetActive(true);
+            adTokenPopUpUI.SetActive(true);
         }
         else
         {
             adTokenPopUp = false;
-            //adTokenPopUpUI.SetActive(false);
+            adTokenPopUpUI.SetActive(false);
         }
     }
 
@@ -908,8 +908,8 @@ public class MainMenu : MonoBehaviour
             cusObj.SetActive(false);
             soundObj.SetActive(false);
             creditObj.SetActive(false);
-            //adTokenButton.SetActive(false);
-            //adCoinButton.SetActive(false);
+            adTokenButton.SetActive(false);
+            adCoinButton.SetActive(false);
             quitChenkUI.SetActive(true);
         }
         else
