@@ -259,12 +259,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1242333048}
     m_Modifications:
-    - target: {fileID: 5328226711786703892, guid: 127c211490dd993408f44a17883aec1c,
-        type: 3}
-      propertyPath: card
-      value: 
-      objectReference: {fileID: 11400000, guid: 418e676226971aa4ba9d3c47e4ac3c15,
-        type: 2}
     - target: {fileID: 6219306897132779691, guid: 127c211490dd993408f44a17883aec1c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -375,12 +369,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card
       objectReference: {fileID: 0}
-    - target: {fileID: 8143182783666817334, guid: 127c211490dd993408f44a17883aec1c,
-        type: 3}
-      propertyPath: currentLogic
-      value: 
-      objectReference: {fileID: 11400000, guid: 830ff3c128177614a9ee640ed0eae25f,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 127c211490dd993408f44a17883aec1c, type: 3}
 --- !u!1 &353567605
@@ -1869,8 +1857,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c212f90d37f6a409ae85afaec3e841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vis: {fileID: 0}
-  currentLogic: {fileID: 0}
+  vis: {fileID: 410239852080699417}
+  currentLogic: {fileID: 11400000, guid: 7aefc89d17db19b4e90ba9d6e148fd17, type: 2}
 --- !u!114 &5245793525686602693
 MonoBehaviour:
   m_ObjectHideFlags: 0
