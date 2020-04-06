@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bdf9853aed7c2b44bcbd7565c95e364, type: 3}
+  m_Name: DefaultMagic
+  m_EditorClassIdentifier: 
+  cardType: {fileID: 11400000, guid: 8083314ba313f7c42a0bd51dd9d27ab7, type: 2}
+  properties:
+  - stringValue: 
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: fd5999508761de049a94b1975339f0f9, type: 2}
+  - stringValue: 
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 02c0b1f9a831a6f428e6d212c893881a, type: 2}
+  - stringValue: 
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 6d0c1bf163db71a408b952d5fa54ac38, type: 2}
