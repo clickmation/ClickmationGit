@@ -62,6 +62,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject soundPanel;
     [SerializeField] GameObject adReviveButton;
     [SerializeField] GameObject tokenReviveButton;
+    //[SerializeField] GameObject coinReviveButton;
     [SerializeField] List<GameObject> shockWaves = new List<GameObject>();
     public CanvasGroup overlayCanvas;
     public int coin;
@@ -432,6 +433,7 @@ public class GameMaster : MonoBehaviour
         StartCoroutine(DeadCoroutine());
     }
 
+    public int mmCoin;
     IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(2f);
@@ -447,6 +449,7 @@ public class GameMaster : MonoBehaviour
                 adReviveButton.SetActive(false);
                 tokenReviveButton.SetActive(true);
             }
+            //if (mmCoin >= 15) coinReviveButton.SetActive(true);
         }
         SetTipText();
         coinGameOverText.text = coin.ToString();
@@ -493,12 +496,21 @@ public class GameMaster : MonoBehaviour
         ADManager.adManager.ShowReviveRewardedAd();
     }
 
+    public void CoinRevive()
+    {
+        SaveLoad.saveload.ForCoinReviveSave();
+        SaveLoad.saveload.ForCoinReviveLoad();
+        mmCoin -= 15;
+        Revive();
+    }
+
     public void Revive()
     {
         dead = false;
         revivable--;
         adReviveButton.SetActive(false);
         tokenReviveButton.SetActive(false);
+        //coinReviveButton.SetActive(false);
         inputController.gameObject.SetActive(true);
         for (int i = 0; i < triggerFunctions.Count; i++) triggerFunctions[i].Trigger();
         rmg.StartSpawn();

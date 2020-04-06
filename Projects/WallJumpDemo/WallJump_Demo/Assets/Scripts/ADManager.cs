@@ -72,7 +72,11 @@ public class ADManager : MonoBehaviour
         rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
         rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
-        AdRequest request = new AdRequest.Builder().Build();
+        AdRequest.Builder builder = new AdRequest.Builder();
+        builder.AddTestDevice("E3027F43ACE3C2AF");
+        builder.AddTestDevice("3BE331FCE1FD2843");
+
+        AdRequest request = builder.Build();
         rewardedAd.LoadAd(request);
         return rewardedAd;
     }
