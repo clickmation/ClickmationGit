@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cdd4320ce0da94591d746f14d7044d, type: 3}
   m_Name: PlayerStateHoldingCard
   m_EditorClassIdentifier: 
-  actions: []
+  actions:
+  - {fileID: 11400000, guid: 221ef1d0fa5dd47409b6f540cb346149, type: 2}

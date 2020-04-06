@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Mouse Hold
   m_EditorClassIdentifier: Assembly-CSharp:CM.GameStates:MouseHold
-  playerControlState: {fileID: 0}
-  onPlayerControlState: {fileID: 0}
+  playerControlState: {fileID: 11400000, guid: 59719ede273761342a34acbd581f1d27, type: 2}
+  onPlayerControlState: {fileID: 11400000, guid: 8bc377c40219cd24298eecba8b790e39,
+    type: 2}
