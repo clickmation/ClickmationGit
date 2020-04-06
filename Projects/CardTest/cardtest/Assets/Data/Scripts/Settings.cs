@@ -9,13 +9,13 @@ public static class Settings
 	
 	public static List<RaycastResult> GetUIObjs()
 	{
-	PointerEventData pointerData = new PointerEventData(EventSystem.current)
-	{
-		position = Input.mousePosition
-	};
+		PointerEventData pointerData = new PointerEventData(EventSystem.current)
+		{
+			position = Input.mousePosition
+		};
 	
-	List<RaycastResult> results = new List<RaycastResult>();
-	EventSystem.current.RaycastAll(pointerData, results);
-	return results;
+		List<RaycastResult> results = new List<RaycastResult>();
+		EventSystem.current.RaycastAll(pointerData, results);
+		return results;
 	}
 }

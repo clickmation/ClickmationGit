@@ -616,7 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b71ce239e436514f89ad50ac42f4f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 11400000, guid: d79566e92ac742a4493e4fb5ad920ba4, type: 2}
+  card: {fileID: 11400000, guid: 418e676226971aa4ba9d3c47e4ac3c15, type: 2}
   properties:
   - text: {fileID: 7444832381038823733}
     img: {fileID: 0}
@@ -645,7 +645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c212f90d37f6a409ae85afaec3e841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLogic: {fileID: 0}
+  vis: {fileID: 5328226711786703892}
+  currentLogic: {fileID: 11400000, guid: 830ff3c128177614a9ee640ed0eae25f, type: 2}
 --- !u!1 &8780884885694324750
 GameObject:
   m_ObjectHideFlags: 0
