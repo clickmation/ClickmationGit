@@ -19,10 +19,15 @@ public class CurrentSelected : MonoBehaviour
 		cardVis.gameObject.SetActive(true);
 	}
 	
+	public void CloseCard()
+	{
+		cardVis.gameObject.SetActive(false);
+	}
+	
 	private void Start()
 	{
 		mTransform = this.transform;
-		cardVis.gameObject.SetActive(false);
+		CloseCard();
 	}
 	
 	void Update()
