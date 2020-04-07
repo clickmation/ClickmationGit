@@ -22,7 +22,11 @@ public class CurrentSelected : MonoBehaviour
 	public void CloseCard()
 	{
 		cardVis.gameObject.SetActive(false);
-		currentCard.value.gameObject.SetActive(true);
+		if (currentCard.value != null)
+		{
+			currentCard.value.gameObject.SetActive(true);
+			currentCard.Reset();
+		}
 	}
 	
 	private void Start()
