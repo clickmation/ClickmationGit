@@ -12,9 +12,4 @@ public class CardVariable : ScriptableObject
 	{
 		value = v;
 	}
-
-	public void Reset ()
-	{
-		value = null;
-	}
 }

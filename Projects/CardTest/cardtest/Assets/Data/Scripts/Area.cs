@@ -1,12 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Area : MonoBehaviour, IDropableArea
+
+namespace CM.GameElements
 {
-    
-
-    public void OnDrop()
+    public class Area : MonoBehaviour
     {
+        public Area_Logic logic;
+        public int laneNum;
 
+        public void OnDrop()
+        {
+            logic.Execute(laneNum);
+        }
     }
 }
+

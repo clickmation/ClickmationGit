@@ -6,9 +6,10 @@ using UnityEngine.EventSystems;
 
 namespace CM.GameStates
 {
-	[CreateAssetMenu(menuName = "Actions/MouseHold")]
-	public class MouseHold : Action
+	[CreateAssetMenu(menuName = "Actions/MouseHoldCard")]
+	public class MouseHoldCard : Action
 	{
+		public CardVariable currentCard;
 		public GameState playerControlState;
 		public SO.GameEvent onPlayerControlState;
 		
@@ -19,11 +20,19 @@ namespace CM.GameStates
 			if (!mouseIsDown)
 			{
 				List<RaycastResult> results = Settings.GetUIObjs();
-				
+
 				foreach (RaycastResult r in results)
 				{
-					
+					GameElements.Area a = r.gameObject.GetComponentInParent<GameElements.Area>();
+					if (a != null)
+					{
+						a.OnDrop();
+						break;
+					}
 				}
+
+				currentCard.value.gameObject.SetActive(true);
+				currentCard.value = null;
 				
 				Settings.gameManager.SetState(playerControlState);
 				onPlayerControlState.Raise();

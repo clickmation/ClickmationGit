@@ -10,11 +10,6 @@ public class CardVis : MonoBehaviour
 	public Image typeImage;
 	public Image cardTemplate;
 	
-	private void Start()
-	{
-		LoadCard(card);
-	}
-	
 	public void LoadCard(Card c)
 	{
 		if (c == null)
