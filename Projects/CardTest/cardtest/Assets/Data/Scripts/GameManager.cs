@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
 	public GameObject cardPrefab;
 	public AreaManager areaManager;
 
+	public int turnIndex;
+	public Turn[] turns;
+
 	public int numOfLane;
 	
 	private void Start()
@@ -36,7 +39,19 @@ public class GameManager : MonoBehaviour
 	
 	private void Update()
 	{
-		currentState.Tick(Time.deltaTime);
+		bool isComplete = turns[turnIndex].Execute();
+
+		if (isComplete)
+		{
+			turnIndex++;
+			if (turnIndex > turns.Length - 1)
+			{
+				turnIndex = 0;
+			}
+		}
+
+		if (currentState != null)
+			currentState.Tick(Time.deltaTime);
 	}
 	
 	public void SetState(GameState state)
