@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Phase : ScriptableObject
 {
+    public string phaseUIText;
     public bool forceExit;
 
     public abstract bool IsComplete();

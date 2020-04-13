@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f4543af36052e42aa2876eab4504c3, type: 3}
   m_Name: Player Control Phase
   m_EditorClassIdentifier: 
+  phaseUIText: Control Phase
   forceExit: 0
   PlayerControlState: {fileID: 11400000, guid: 59719ede273761342a34acbd581f1d27, type: 2}

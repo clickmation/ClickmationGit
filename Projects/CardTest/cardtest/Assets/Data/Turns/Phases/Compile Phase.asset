@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b4d66b8975934409eda4eaa26e2c8c, type: 3}
   m_Name: Compile Phase
   m_EditorClassIdentifier: 
+  phaseUIText: Compiling...
   forceExit: 0

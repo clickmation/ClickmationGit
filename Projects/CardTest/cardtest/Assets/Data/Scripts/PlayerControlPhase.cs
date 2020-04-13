@@ -22,7 +22,9 @@ public class PlayerControlPhase : Phase
     {
         if (!isInit)
         {
+            Debug.Log(this.phaseUIText + "starts");
             Settings.gameManager.SetState(PlayerControlState);
+            Settings.gameManager.onPhaseChanged.Raise();
             isInit = true;
         }
     }

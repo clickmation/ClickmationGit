@@ -18,11 +18,21 @@ public class CompilePhase : Phase
 
     public override void OnStartPhase()
     {
-
+        if (!isInit)
+        {
+            Debug.Log(this.phaseUIText + "starts");
+            Settings.gameManager.SetState(null);
+            Settings.gameManager.onPhaseChanged.Raise();
+            isInit = true;
+        }
     }
 
     public override void OnEndPhase()
     {
-
+        if (isInit)
+        {
+            Settings.gameManager.SetState(null);
+            isInit = false;
+        }
     }
 }

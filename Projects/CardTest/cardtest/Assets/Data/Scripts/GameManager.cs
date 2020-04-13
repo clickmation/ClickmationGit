@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
 
 	public int turnIndex;
 	public Turn[] turns;
+	public SO.GameEvent onTurnChanged;
+	public SO.GameEvent onPhaseChanged;
+	public SO.StringVariable turnText;
 
 	public int numOfLane;
 	
@@ -19,7 +22,10 @@ public class GameManager : MonoBehaviour
 	{
 		Settings.gameManager = this;
 		CreateStartingCards();
+
 		areaManager.SetLane(numOfLane);
+		turnText.value = turns[turnIndex].turnUIText;
+		onTurnChanged.Raise();
 	}
 
 	void CreateStartingCards()
@@ -48,6 +54,9 @@ public class GameManager : MonoBehaviour
 			{
 				turnIndex = 0;
 			}
+
+			turnText.value = turns[turnIndex].turnUIText;
+			onTurnChanged.Raise();
 		}
 
 		if (currentState != null)

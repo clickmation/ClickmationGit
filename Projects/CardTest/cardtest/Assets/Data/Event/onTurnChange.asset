@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59288446359a80845bbd47a9c0f8cb50, type: 3}
-  m_Name: EnemyTurn
+  m_Script: {fileID: 11500000, guid: dd5d985c973a87d47bde6f4345f7debe, type: 3}
+  m_Name: onTurnChange
   m_EditorClassIdentifier: 
-  turnUIText: Enemy Turn
-  currentPhase: {fileID: 11400000, guid: fda9aef51c2530942bbd6ed8ed6ab502, type: 2}
-  phases:
-  - {fileID: 11400000, guid: dde68fa08f501fe48920989a835d20d6, type: 2}
