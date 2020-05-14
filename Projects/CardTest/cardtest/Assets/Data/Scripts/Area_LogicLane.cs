@@ -18,9 +18,17 @@ public class Area_LogicLane : Area_Logic
 
         if (card.value.vis.card.cardType == cardTypeMonster)
         {
-            Settings.SetParentForCard(card.value.transform, areaGridTransform.value[laneNum].transform);
-            card.value.currentLogic = cardDownLogic;
-            card.value.gameObject.SetActive(true);
+            if (Settings.gameManager.currentPlayer.canUseCard == true)
+            {
+                Settings.SetParentForCard(card.value.transform, areaGridTransform.value[laneNum].transform);
+                card.value.currentLogic = cardDownLogic;
+                card.value.gameObject.SetActive(true);
+                Settings.gameManager.currentPlayer.canUseCard = false;
+            }
+            else
+            {
+                Debug.Log("You Already Played a Card This Turn");
+            }
         }
     }
 }

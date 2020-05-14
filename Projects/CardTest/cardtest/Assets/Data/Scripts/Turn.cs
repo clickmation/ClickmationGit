@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Turns&Phases/Turn")]
 public class Turn : ScriptableObject
 {
-    public string turnUIText;
+    public PlayerHolder player;
     [System.NonSerialized]
     public int index = 0;
     public PhaseVariable currentPhase;
@@ -33,5 +33,10 @@ public class Turn : ScriptableObject
         }
 
         return result;
+    }
+
+    public void EndCurrentPhase()
+    {
+        phases[index].forceExit = true;
     }
 }

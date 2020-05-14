@@ -5,7 +5,11 @@ using CM.GameStates;
 
 public class GameManager : MonoBehaviour
 {
+	public PlayerHolder[] allPlayers;
 	public PlayerHolder currentPlayer;
+	public CardHolders playerOneHolder;
+	public CardHolders playerTwoHolder;
+
     public GameState currentState;
 	public GameObject cardPrefab;
 	public AreaManager areaManager;
@@ -21,30 +25,65 @@ public class GameManager : MonoBehaviour
 	private void Start()
 	{
 		Settings.gameManager = this;
+
+		SetupPlayers();
+
 		CreateStartingCards();
 
 		areaManager.SetLane(numOfLane);
-		turnText.value = turns[turnIndex].turnUIText;
+		
+		currentPlayer = turns[turnIndex].player;
+
+		turnText.value = currentPlayer.userName + " Turn";
 		onTurnChanged.Raise();
+	}
+
+	void SetupPlayers()
+	{
+		foreach (PlayerHolder p in allPlayers)
+		{
+			if (p.first)
+			{
+				p.currentHolder = playerOneHolder;
+			}
+			else
+			{
+				p.currentHolder = playerTwoHolder;
+			}
+		}
 	}
 
 	void CreateStartingCards()
 	{
 		ResourcesManager rm = Settings.GetResourcesManager();
 		
-		for (int i = 0; i < currentPlayer.startingCards.Length; i++)
+		for (int p = 0; p < allPlayers.Length; p++)
 		{
-			GameObject go = Instantiate(cardPrefab) as GameObject;
-			CardVis v = go.GetComponent<CardVis>();
-			v.LoadCard(rm.GetCardInstance(currentPlayer.startingCards[i]));
-			CardInstance inst = go.GetComponent<CardInstance>();
-			inst.currentLogic = currentPlayer.handLogic;
-			Settings.SetParentForCard(go.transform, currentPlayer.handGrid.value);
+			for (int i = 0; i < allPlayers[p].startingCards.Length; i++)
+			{
+				GameObject go = Instantiate(cardPrefab) as GameObject;
+				CardVis v = go.GetComponent<CardVis>();
+				v.LoadCard(rm.GetCardInstance(allPlayers[p].startingCards[i]));
+				CardInstance inst = go.GetComponent<CardInstance>();
+				inst.currentLogic = allPlayers[p].handLogic;
+				Settings.SetParentForCard(go.transform, allPlayers[p].currentHolder.handGrid.value);
+			}
 		}
+		
 	}
+
+	public bool switchPlayer;
 	
 	private void Update()
 	{
+		if (switchPlayer)
+		{
+			switchPlayer = false;
+
+			playerOneHolder.LoadPlayer(allPlayers[0]);
+			playerTwoHolder.LoadPlayer(allPlayers[1]);
+		}
+
 		bool isComplete = turns[turnIndex].Execute();
 
 		if (isComplete)
@@ -55,7 +94,9 @@ public class GameManager : MonoBehaviour
 				turnIndex = 0;
 			}
 
-			turnText.value = turns[turnIndex].turnUIText;
+			currentPlayer = turns[turnIndex].player;
+
+			turnText.value = currentPlayer.userName + " Turn";
 			onTurnChanged.Raise();
 		}
 
@@ -66,5 +107,10 @@ public class GameManager : MonoBehaviour
 	public void SetState(GameState state)
 	{
 		currentState = state;
+	}
+
+	public void EndCurrentPhase()
+	{
+		turns[turnIndex].EndCurrentPhase();
 	}
 }

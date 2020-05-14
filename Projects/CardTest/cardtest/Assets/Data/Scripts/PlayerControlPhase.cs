@@ -25,6 +25,7 @@ public class PlayerControlPhase : Phase
             Debug.Log(this.phaseUIText + "starts");
             Settings.gameManager.SetState(PlayerControlState);
             Settings.gameManager.onPhaseChanged.Raise();
+            Settings.gameManager.currentPlayer.canUseCard = true;
             isInit = true;
         }
     }

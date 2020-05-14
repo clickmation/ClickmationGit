@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59288446359a80845bbd47a9c0f8cb50, type: 3}
   m_Name: EnemyTurn
   m_EditorClassIdentifier: 
-  turnUIText: Enemy Turn
+  player: {fileID: 11400000, guid: ece6dd89948ed69458d3c97459fb21c5, type: 2}
   currentPhase: {fileID: 11400000, guid: fda9aef51c2530942bbd6ed8ed6ab502, type: 2}
   phases:
   - {fileID: 11400000, guid: dde68fa08f501fe48920989a835d20d6, type: 2}

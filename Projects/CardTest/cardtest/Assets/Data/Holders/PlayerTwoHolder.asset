@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfdb1995913ad5e46a1d9ad1c38f5f9e, type: 3}
+  m_Name: PlayerTwoHolder
+  m_EditorClassIdentifier: 
+  handGrid: {fileID: 11400000, guid: 5e3ba32810672e548a74a08d80c71021, type: 2}
+  laneGrid: {fileID: 11400000, guid: 7340058f80630dd4eb3d0db233252dc4, type: 2}

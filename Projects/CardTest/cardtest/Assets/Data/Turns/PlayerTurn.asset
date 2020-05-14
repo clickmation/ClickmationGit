@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59288446359a80845bbd47a9c0f8cb50, type: 3}
   m_Name: PlayerTurn
   m_EditorClassIdentifier: 
-  turnUIText: Player Turn
+  player: {fileID: 11400000, guid: 2e092a8edf8c7e949b8802a791432976, type: 2}
   currentPhase: {fileID: 11400000, guid: fda9aef51c2530942bbd6ed8ed6ab502, type: 2}
   phases:
   - {fileID: 11400000, guid: 80b8a7bf18563f046890e2d069225888, type: 2}
