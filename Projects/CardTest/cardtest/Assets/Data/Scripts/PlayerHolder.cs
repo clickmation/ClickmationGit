@@ -24,8 +24,8 @@ public class PlayerHolder : ScriptableObject
 
     public bool first;
 
-    public void CardToLane (int laneNum, CardInstance c)
+    public void AddLane ()
     {
-        laneCards[laneNum].Add(c);
+        laneCards.Add(new List<CardInstance>());
     }
 }

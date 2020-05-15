@@ -50,6 +50,11 @@ public class GameManager : MonoBehaviour
 			{
 				p.currentHolder = playerTwoHolder;
 			}
+
+			for (int i = 0; i < numOfLane; i++)
+			{
+				p.AddLane();
+			}
 		}
 	}
 
@@ -67,6 +72,7 @@ public class GameManager : MonoBehaviour
 				CardInstance inst = go.GetComponent<CardInstance>();
 				inst.currentLogic = allPlayers[p].handLogic;
 				Settings.SetParentForCard(go.transform, allPlayers[p].currentHolder.handGrid.value);
+				allPlayers[p].handCards.Add(inst);
 			}
 		}
 		
