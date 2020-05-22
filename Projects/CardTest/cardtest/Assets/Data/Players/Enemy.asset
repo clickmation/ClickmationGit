@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   userName: Enemy
+  playerColor: {r: 1, g: 0.6745283, b: 0.6745283, a: 1}
   startingCards:
   - Pangolin
   - Winter
   - Leopard
   - Growth
-  handGrid: {fileID: 11400000, guid: 467aaa693d5b4ac46b6bf830bb2c18e7, type: 2}
-  laneGrid: {fileID: 11400000, guid: 87aa902f6fadbac40925472e9775d5f2, type: 2}
   handLogic: {fileID: 11400000, guid: 7aefc89d17db19b4e90ba9d6e148fd17, type: 2}
   laneLogic: {fileID: 11400000, guid: 830ff3c128177614a9ee640ed0eae25f, type: 2}
+  first: 0

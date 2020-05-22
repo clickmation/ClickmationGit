@@ -15,6 +15,7 @@ namespace CM.GameElements
 		{
 			currentCard.Set(inst);
 			Settings.gameManager.SetState(holdingCard);
+			//여기를 inst에 있는 타겟 에리어로 정해줘야함
 			onCurrentCardSelected.Raise();
 		}
 		

@@ -74,22 +74,33 @@ public class GameManager : MonoBehaviour
 				Settings.SetParentForCard(go.transform, allPlayers[p].currentHolder.handGrid.value);
 				allPlayers[p].handCards.Add(inst);
 			}
+
+			Settings.RegisterEvent("Created starting cards for " + allPlayers[p].userName, allPlayers[p].playerColor);
 		}
 		
 	}
 
-	public bool switchPlayer;
+	bool isSwitched = false;
+
+	public void SwitchPlayer()
+	{
+		int i;
+		if(isSwitched)
+		{
+			i = 1;
+		} 
+		else
+		{
+			i = 0;
+		}
+		isSwitched = !isSwitched;
+
+		playerOneHolder.LoadPlayer(allPlayers[1-i]);
+		playerTwoHolder.LoadPlayer(allPlayers[i]);
+	}
 	
 	private void Update()
 	{
-		if (switchPlayer)
-		{
-			switchPlayer = false;
-
-			playerOneHolder.LoadPlayer(allPlayers[0]);
-			playerTwoHolder.LoadPlayer(allPlayers[1]);
-		}
-
 		bool isComplete = turns[turnIndex].Execute();
 
 		if (isComplete)
@@ -117,6 +128,8 @@ public class GameManager : MonoBehaviour
 
 	public void EndCurrentPhase()
 	{
+		Settings.RegisterEvent(currentPlayer.userName + "'s " + turns[turnIndex].currentPhase.value.phaseUIText + " has ended.", currentPlayer.playerColor);
+
 		turns[turnIndex].EndCurrentPhase();
 	}
 }

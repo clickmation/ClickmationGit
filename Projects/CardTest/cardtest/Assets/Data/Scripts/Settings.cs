@@ -6,8 +6,18 @@ using UnityEngine.EventSystems;
 public static class Settings
 {
     public static GameManager gameManager;
-
 	private static ResourcesManager _resourcesManager;
+	private static ConsoleHook _consoleManager;
+
+	public static void RegisterEvent(string e, Color color = default(Color))
+	{
+		if (_consoleManager == null)
+		{
+			_consoleManager = Resources.Load("ConsoleHook") as ConsoleHook;
+		}
+
+		_consoleManager.RegisterEvent(e, color);
+	}
 
 	public static ResourcesManager GetResourcesManager()
 	{
@@ -30,6 +40,16 @@ public static class Settings
 		List<RaycastResult> results = new List<RaycastResult>();
 		EventSystem.current.RaycastAll(pointerData, results);
 		return results;
+	}
+
+	public static void DropCreatureCard(Transform c, Transform p, CardInstance cardInst, int laneNum)
+	{
+		SetParentForCard(c, p);
+
+		gameManager.currentPlayer.DropCard(cardInst, laneNum);
+
+		int convLaneNum = laneNum + 1;
+		RegisterEvent(gameManager.currentPlayer.userName + " played " + cardInst.vis.card.name + " on lane " + convLaneNum.ToString(), Color.white);
 	}
 
 	public static void SetParentForCard(Transform c, Transform p)

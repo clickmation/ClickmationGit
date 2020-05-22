@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Local Player
   m_EditorClassIdentifier: 
   userName: Player
+  playerColor: {r: 0.6745283, g: 0.7416291, b: 1, a: 1}
   startingCards:
   - Pangolin
   - Winter

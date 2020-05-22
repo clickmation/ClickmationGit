@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerHolder : ScriptableObject
 {
     public string userName;
+    public Color playerColor;
     public string[] startingCards;
 
     public CM.GameElements.GE_Logic handLogic;
@@ -23,6 +24,14 @@ public class PlayerHolder : ScriptableObject
     public bool canUseCard = false;
 
     public bool first;
+
+    public void DropCard(CardInstance inst, int laneNum)
+    {
+        if (handCards.Contains(inst))
+            handCards.Remove(inst);
+        
+        laneCards[laneNum].Add(inst);
+    }
 
     public void AddLane ()
     {

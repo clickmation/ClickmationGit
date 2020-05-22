@@ -16,11 +16,13 @@ public class Area_LogicLane : Area_Logic
         if (card.value == null)
             return;
 
-        if (card.value.vis.card.cardType == cardTypeMonster)
+        Card c = card.value.vis.card;
+
+        if (c.cardType == cardTypeMonster)
         {
             if (Settings.gameManager.currentPlayer.canUseCard == true)
             {
-                Settings.SetParentForCard(card.value.transform, areaGridTransform.value[laneNum].transform);
+                Settings.DropCreatureCard(card.value.transform, areaGridTransform.value[laneNum].transform, card.value, laneNum);
                 card.value.currentLogic = cardDownLogic;
                 card.value.gameObject.SetActive(true);
                 Settings.gameManager.currentPlayer.canUseCard = false;
