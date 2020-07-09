@@ -1,0 +1,4 @@
+FindMatches에서 match찾고 match가 없으면 null을 return하는데
+어차피 이 null값을 따로 사용하는곳도 없고
+다른데서 if(null) matches = new List<GamePiece>(); 이런식으로 사용하니
+그냥 new List<GamePiece>()를 return 하자
