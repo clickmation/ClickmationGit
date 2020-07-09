@@ -1,4 +1,43 @@
+294번 line
+if (matches.Count >= minLength)
+{
+	return matches;
+}
+
+return null;
+을
+if (matches.Count >= minLength)
+{
+	return matches;
+}
+
+return new List<GamePiece>();
+로 바꿀 수 있다
+
 FindMatches에서 match찾고 match가 없으면 null을 return하는데
 어차피 이 null값을 따로 사용하는곳도 없고
 다른데서 if(null) matches = new List<GamePiece>(); 이런식으로 사용하니
 그냥 new List<GamePiece>()를 return 하자
+
+399번 line
+GamePiece pieceToClear = m_allGamePieces[x, y];
+
+if (pieceToClear != null)
+{
+	m_allGamePieces[x, y] = null;
+	Destroy(pieceToClear.gameObject);
+}
+를
+if (m_allGamePieces[x, y] != null)
+{
+	Destroy(m_allGamePieces[x, y].gameObject);
+	m_allGamePieces[x, y] = null;
+}
+로 바꿀 수 있다
+
+가이아에서는 처음에 그냥 다 채우고 Fill이라는 함수로 모든 블록의 match를 확인
+문제는 블록을 바꿀 때마다 Fill로 체크를 하면서 매 swap때마다 모든 블록을 확인하므로 매우 비효율적이었음
+(코드를 까보니 더 실감;; 아무리 게임관련된 코드가 추가됐다 하더라도 이건 너무했음)
+반면 새로운 코드는 처음 세팅하는 과정에서 블록하나당 체크한번이기 때문에
+결과적으로는 처음 게임을 시작할 때만 모든 블록을 검사하고 그 다음에는 swap한 두 블록만 match 체크
+
