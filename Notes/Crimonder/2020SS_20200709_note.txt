@@ -3,3 +3,13 @@ fill board의 max iteration정하는 방식 말고 모든 색을 시도해보고
 
 당연히 그냥 넘어가는 변수는 거의 없겠지만 만약 그 상황이 된다면 그냥 넘어갈게 아니라 그 전 피스를 바꾸던지
 아예 판을 갈아 엎던지 해야할거 같음
+
+collapse column 쥰내 별론거 같은디?? 잉
+
+clear and collapse routine에 함수형 bool 써서 while문 안에 저렇게 활용하는거 이야 저거 쩌네
+
+차라리 iscollapsed같은걸 move에 두면 더 효율적이지 않을지 지금 그거 안해서 버그 투성이임 아 이거 개 똥 강의네
+
+만약 후에 내가 말한 게임 만들거면 matching piece들 중에서도 matching piece 한번 더 확인해야함 ( 안하는게 더 나으려나 그건 잘 모르겠음)
+
+while 이랑 do while 차이?
