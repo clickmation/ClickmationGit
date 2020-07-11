@@ -1,10 +1,12 @@
 1부
-[ ]	김정민은 fill board max itertation 없애는거 힘써보고
-[ ]	move 함수 중요하니께 최대한 고쳐보고
+[o]	김정민은 fill board max itertation 없애는거 힘써보고
+[o]	move 함수 중요하니께 최대한 고쳐보고
 
-[ ] 임경민은 collapse 위주로 좀 고쳐보기 (Fill)
+[o] 임경민은 collapse 위주로 좀 고쳐보기(Fill)
+
+[ ] 임경민은 pull해서 IsCollapsed 수정된거 내 코드에 적용시켜보기
 
 2부
-[ ] 김정민은 복습
+[ ] 김정민은 BinaryTree.c 266line부터 maximumNode를 minimumNode로 바꿔서 구현해보기
 
-[ ] 임경민은 수업파일 준비
+[o] 임경민은 수업파일 준비
