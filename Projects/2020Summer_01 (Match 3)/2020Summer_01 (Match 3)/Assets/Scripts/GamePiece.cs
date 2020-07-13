@@ -6,7 +6,7 @@ public class GamePiece : MonoBehaviour
     public int xIndex;
     public int yIndex;
 
-    bool m_isMoving = false;
+    public bool isMoving = false;
 
     Board m_board;
 
@@ -62,7 +62,7 @@ public class GamePiece : MonoBehaviour
 
     public void Move (int destX, int destY, float timeToMove)
     {
-        if (!m_isMoving)
+        if (!isMoving)
         {
             StartCoroutine(MoveRoutine(new Vector3(destX, destY, 0), timeToMove));
         }
@@ -76,7 +76,7 @@ public class GamePiece : MonoBehaviour
 
         float elapsedTime = 0f;
 
-        m_isMoving = true;
+        isMoving = true;
 
         while (!reachedDestination)
         {
@@ -118,6 +118,6 @@ public class GamePiece : MonoBehaviour
             yield return null;
         }
 
-        m_isMoving = false;
+        isMoving = false;
     }
 }

@@ -23,8 +23,6 @@ public class Board : MonoBehaviour
     Tile m_clickedTile;
     Tile m_targetTile;
 
-    bool m_playerInputEnabled = true;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -69,16 +67,16 @@ public class Board : MonoBehaviour
         Camera.main.orthographicSize = (verticalSize > horizontalSize) ? verticalSize: horizontalSize;
     }
 
-    GameObject GetRandomGamePiece()
+    GameObject GetRandomGamePiece(List<GameObject> pool)
     {
-        int randomIdx = Random.Range(0, gamePiecePrefabs.Length);
+        int randomIdx = Random.Range(0, pool.Count);
 
-        if (gamePiecePrefabs[randomIdx] == null)
+        if (pool[randomIdx] == null)
         {
             Debug.LogWarning("BOARD:    " + randomIdx + "does not contain a valid GamePiece prefab!");
         }
 
-        return gamePiecePrefabs[randomIdx];
+        return pool[randomIdx];
     }
 
     public void PlaceGamePiece(GamePiece gamePiece, int x, int y)
@@ -103,9 +101,9 @@ public class Board : MonoBehaviour
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    GamePiece FillRandomAt(int x, int y, int falseYOffset = 0, float moveTime = shortTick)
+    GamePiece FillRandomAt(int x, int y, List<GameObject> pool, int falseYOffset = 0, float moveTime = shortTick)
     {
-        GameObject randomPiece = Instantiate(GetRandomGamePiece(), Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject randomPiece = Instantiate(GetRandomGamePiece(pool), Vector3.zero, Quaternion.identity) as GameObject;
 
         if (randomPiece != null)
         {
@@ -126,8 +124,10 @@ public class Board : MonoBehaviour
 
     void FillBoard(int falseYOffset = 0, float moveTime = shortTick)
     {
-        int maxIterations = 100;
-        int iterations = 0;
+        if (gamePiecePrefabs.Length < 4)
+        {
+            Debug.LogWarning("BOARD:   Color count below minimum! High chance of unintentional match on Board!!!!");
+        }
 
         for (int i = 0; i < width; i++)
         {
@@ -135,20 +135,28 @@ public class Board : MonoBehaviour
             {
                 if (m_allGamePieces[i, j] == null)
                 {
-                    GamePiece piece = FillRandomAt(i, j, falseYOffset, moveTime);
-                    iterations = 0;
+                    List<GameObject> pool = new List<GameObject>(gamePiecePrefabs);
+
+                    GamePiece piece = FillRandomAt(i, j, pool, falseYOffset, moveTime);
 
                     while (HasMatchOnFill(i, j))
                     {
-                        ClearPieceAt(i, j);
-                        piece = FillRandomAt(i, j, falseYOffset, moveTime);
-                        iterations++;
+                        Debug.Log("match on fill!");
+                        var removeIdx = pool.FindIndex(k => k == piece);
+                        if (removeIdx >= 0) 
+                        {
+                            Debug.Log("removed pool");
+                            pool.RemoveAt(removeIdx);
+                        }
 
-                        if (iterations >= maxIterations)
+                        if (pool.Count == 0)
                         {
                             Debug.Log("break =====================");
                             break;
                         }
+
+                        ClearPieceAt(i, j);
+                        piece = FillRandomAt(i, j, pool, falseYOffset, moveTime);
                     }
                 }
             }
@@ -208,7 +216,7 @@ public class Board : MonoBehaviour
 
     IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
     {
-        if (m_playerInputEnabled)
+        if (IsStill(AllGamePieces()))
         {
             GamePiece clickedPiece = m_allGamePieces[clickedTile.xIndex, clickedTile.yIndex];
             GamePiece targetPiece = m_allGamePieces[targetTile.xIndex, targetTile.yIndex];
@@ -276,7 +284,7 @@ public class Board : MonoBehaviour
         } 
         else
         {
-            return null;
+            return new List<GamePiece>();
         }
 
         int nextX;
@@ -554,7 +562,6 @@ public class Board : MonoBehaviour
 
     IEnumerator ClearAndRefillBoardRoutine(List<GamePiece> gamePieces)
     {
-        m_playerInputEnabled = false;
         List<GamePiece> matches = gamePieces;
 
         do
@@ -568,8 +575,6 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(normTick);
         }
         while (matches.Count != 0); 
-
-        m_playerInputEnabled = true;
     }
 
     IEnumerator RefillRoutine()
@@ -595,7 +600,7 @@ public class Board : MonoBehaviour
             // yield return new WaitForSeconds(normTick);
             movingPieces = CollapseColumn(gamePieces);
 
-            while (!IsCollapsed(movingPieces))
+            while (!IsStill(movingPieces))
             {
                 yield return null;
             }
@@ -616,13 +621,13 @@ public class Board : MonoBehaviour
         yield return null;
     }
 
-    bool IsCollapsed(List<GamePiece> gamePieces)
+    bool IsStill(List<GamePiece> gamePieces)
     {
         foreach (GamePiece piece in gamePieces)
         {
             if (piece != null)
             {
-                if (piece.transform.position.y - (float)piece.yIndex > 0.001f)
+                if (piece.isMoving)
                 {
                     return false;
                 }
@@ -630,6 +635,23 @@ public class Board : MonoBehaviour
         }
 
         return true;
+    }
+
+    List<GamePiece> AllGamePieces()
+    {
+        List<GamePiece> allPieces = new List<GamePiece>();
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (m_allGamePieces[i, j] != null)
+                {
+                    allPieces.Add(m_allGamePieces[i, j]);
+                }
+            }
+        }
+        
+        return allPieces;
     }
 }
 
