@@ -60,11 +60,11 @@ public class GamePiece : MonoBehaviour
         yIndex = y;
     }
 
-    public void Move (int destX, int destY, float timeToMove)
+    public void Move (int destX, int destY, float timeToMove, float hexYOffset = 0f)
     {
         if (!m_isMoving)
         {
-            StartCoroutine(MoveRoutine(new Vector3(destX, destY, 0), timeToMove));
+            StartCoroutine(MoveRoutine(new Vector3(destX, destY + hexYOffset, 0), timeToMove));
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Board : MonoBehaviour
+public class BoardBackup : MonoBehaviour
 {
     public int width;
     public int height;
@@ -11,7 +11,7 @@ public class Board : MonoBehaviour
     public int borderSize;
 
     public GameObject tilePrefab;
-    public GameObject [] gamePiecePrefabs;
+    public GameObject[] gamePiecePrefabs;
 
     const float longTick = 0.5f;
     const float normTick = 0.25f;
@@ -39,39 +39,24 @@ public class Board : MonoBehaviour
     {
         for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j< height; j++)
+            for (int j = 0; j < height; j++)
             {
-                GameObject tile = Instantiate(tilePrefab, new Vector3(i, j, 0) + HexOffset(i), Quaternion.identity) as GameObject;
+                GameObject tile = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
 
                 tile.name = "Tile (" + i + "," + j + ")";
 
-                m_allTiles [i, j] = tile.GetComponent<Tile>();
+                m_allTiles[i, j] = tile.GetComponent<Tile>();
 
                 tile.transform.parent = transform;
 
-                m_allTiles[i, j].Init(i, j, this);
+                //m_allTiles[i, j].Init(i, j, this);
             }
         }
     }
 
-    int OffColumn(int x)
-    {
-        return (x % 2 > 0) ? 1 : -1;
-    }
-
-    float HexYOffset(int x)
-    {
-        return (x % 2 > 0) ? 0.5f : 0f;
-    }
-
-    Vector3 HexOffset(int x)
-    {
-        return new Vector3(0, HexYOffset(x), 0);
-    }
-
     void SetupCamera()
     {
-        Camera.main.transform.position = new Vector3((float)(width-1)/2f, (float)(height-1)/2f, -10f);
+        Camera.main.transform.position = new Vector3((float)(width - 1) / 2f, (float)(height - 1) / 2f, -10f);
 
         float aspectRatio = (float)Screen.width / (float)Screen.height;
 
@@ -79,7 +64,7 @@ public class Board : MonoBehaviour
 
         float horizontalSize = ((float)width / 2f + (float)borderSize) / aspectRatio;
 
-        Camera.main.orthographicSize = (verticalSize > horizontalSize) ? verticalSize: horizontalSize;
+        Camera.main.orthographicSize = (verticalSize > horizontalSize) ? verticalSize : horizontalSize;
     }
 
     GameObject GetRandomGamePiece(List<GameObject> pool)
@@ -102,7 +87,7 @@ public class Board : MonoBehaviour
             return;
         }
 
-        gamePiece.transform.position = new Vector3(x, y, 0) + HexOffset(x);
+        gamePiece.transform.position = new Vector3(x, y, 0);
         gamePiece.transform.rotation = Quaternion.identity;
         if (IsWithinBounds(x, y))
         {
@@ -122,13 +107,13 @@ public class Board : MonoBehaviour
 
         if (randomPiece != null)
         {
-            randomPiece.GetComponent<GamePiece>().Init(this);
+            //randomPiece.GetComponent<GamePiece>().Init(this);
             PlaceGamePiece(randomPiece.GetComponent<GamePiece>(), x, y);
 
             if (falseYOffset != 0)
             {
-                randomPiece.transform.position = new Vector3(x, y + falseYOffset + HexYOffset(x), 0);
-                randomPiece.GetComponent<GamePiece>().Move(x, y, moveTime, HexYOffset(x));
+                randomPiece.transform.position = new Vector3(x, y + falseYOffset, 0);
+                randomPiece.GetComponent<GamePiece>().Move(x, y, moveTime);
             }
 
             randomPiece.transform.parent = transform;
@@ -192,7 +177,7 @@ public class Board : MonoBehaviour
         // {
         //     leftMatches = new List<GamePiece>();
         // }
-        
+
         // if (downwardMatches == null)
         // {
         //     downwardMatches = new List<GamePiece>();
@@ -243,8 +228,8 @@ public class Board : MonoBehaviour
 
             if (targetPiece != null && clickedPiece != null)
             {
-                clickedPiece.Move(targetTile.xIndex, targetTile.yIndex, longTick, HexYOffset(targetTile.xIndex));
-                targetPiece.Move(clickedTile.xIndex, clickedTile.yIndex, longTick, HexYOffset(clickedTile.xIndex));
+                clickedPiece.Move(targetTile.xIndex, targetTile.yIndex, longTick);
+                targetPiece.Move(clickedTile.xIndex, clickedTile.yIndex, longTick);
 
                 yield return new WaitForSeconds(longTick);
 
@@ -253,8 +238,8 @@ public class Board : MonoBehaviour
 
                 if (targetPieceMatches.Count == 0 && clickedPieceMatches.Count == 0)
                 {
-                    clickedPiece.Move(clickedTile.xIndex, clickedTile.yIndex, longTick, HexYOffset(clickedTile.xIndex));
-                    targetPiece.Move(targetTile.xIndex, targetTile.yIndex, longTick, HexYOffset(targetTile.xIndex));
+                    clickedPiece.Move(clickedTile.xIndex, clickedTile.yIndex, longTick);
+                    targetPiece.Move(targetTile.xIndex, targetTile.yIndex, longTick);
                 }
                 else
                 {
@@ -285,11 +270,6 @@ public class Board : MonoBehaviour
             return true;
         }
 
-        if (Mathf.Abs(start.xIndex - end.xIndex) == 1 && (start.yIndex + OffColumn(start.xIndex)) == end.yIndex)
-        {
-            return true;
-        }
-
         return false;
     }
 
@@ -306,7 +286,7 @@ public class Board : MonoBehaviour
         if (startPiece != null)
         {
             matches.Add(startPiece);
-        } 
+        }
         else
         {
             return new List<GamePiece>();
@@ -315,7 +295,7 @@ public class Board : MonoBehaviour
         int nextX;
         int nextY;
 
-        int maxValue = (width > height) ? width: height;
+        int maxValue = (width > height) ? width : height;
 
         for (int i = 1; i < maxValue - 1; i++)
         {
@@ -454,8 +434,8 @@ public class Board : MonoBehaviour
     void HightlightMatchesAt(int x, int y)
     {
         HighlightTileOff(x, y);
-                
-        var combinedMatches = FindMatchesAt (x, y);
+
+        var combinedMatches = FindMatchesAt(x, y);
 
         if (combinedMatches.Count > 0)
         {
@@ -533,7 +513,7 @@ public class Board : MonoBehaviour
                 {
                     if (m_allGamePieces[column, j] != null)
                     {
-                        m_allGamePieces[column, j].Move(column, i, collapseTime * (j - i), HexYOffset(column));
+                        m_allGamePieces[column, j].Move(column, i, collapseTime * (j - i));
                         m_allGamePieces[column, i] = m_allGamePieces[column, j];
                         m_allGamePieces[column, i].SetCoord(column, i);
 
@@ -599,7 +579,7 @@ public class Board : MonoBehaviour
 
             yield return new WaitForSeconds(normTick);
         }
-        while (matches.Count != 0); 
+        while (matches.Count != 0);
     }
 
     IEnumerator RefillRoutine()
@@ -675,7 +655,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
-        
+
         return allPieces;
     }
 }
