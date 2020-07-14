@@ -3,10 +3,10 @@
 [o]	move 함수 중요하니께 최대한 고쳐보고
 
 [o] 임경민은 collapse 위주로 좀 고쳐보기(Fill)
-
 [ ] 임경민은 pull해서 IsCollapsed 수정된거 내 코드에 적용시켜보기
 
 2부
-[ ] 김정민은 BinaryTree.c 266line부터 maximumNode를 minimumNode로 바꿔서 구현해보기
+[o] 김정민은 BinaryTree.c 266line부터 maximumNode를 minimumNode로 바꿔서 구현해보기
+[o] 김정민은 AVLTree.c main code 따라가서 어캐되는지 확인하기
 
 [o] 임경민은 수업파일 준비

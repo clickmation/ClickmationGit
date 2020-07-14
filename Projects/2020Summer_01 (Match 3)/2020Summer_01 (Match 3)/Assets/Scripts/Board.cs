@@ -141,12 +141,17 @@ public class Board : MonoBehaviour
 
                     while (HasMatchOnFill(i, j))
                     {
-                        Debug.Log("match on fill!");
-                        var removeIdx = pool.FindIndex(k => k == piece);
-                        if (removeIdx >= 0) 
+                        for (int k = 0; k < pool.Count; k++)
                         {
-                            Debug.Log("removed pool");
-                            pool.RemoveAt(removeIdx);
+                            if (piece != null)
+                            {
+                                if (piece.matchValue == pool[k].GetComponent<GamePiece>().matchValue)
+                                {
+                                    Debug.Log("removed pool");
+                                    pool.RemoveAt(k);
+                                    break;
+                                }
+                            }
                         }
 
                         if (pool.Count == 0)
@@ -627,7 +632,7 @@ public class Board : MonoBehaviour
         {
             if (piece != null)
             {
-                if (piece.isMoving)
+                if (piece.isMoving())
                 {
                     return false;
                 }
