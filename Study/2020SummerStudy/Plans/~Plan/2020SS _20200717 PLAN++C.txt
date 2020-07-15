@@ -1,0 +1,12 @@
+1부 
+[ ] 김정민은 육각 코드 좀더 다듬어보기
+[ ]	김정민은 card게임 복습하기
+
+[ ] 임경민은 육각 코드 좀더 다듬어보기
+[ ]	임경민은 (https://www.youtube.com/watch?v=YLHqKj9FvBs&list=PL1mv_09BK8vYsMbcTmrEKwPpg1Wjdv0w-) 슬슬보면서 따라하는게 다가 아닌
+	흡수하기 Scriptable Object 위주로
+	
+2부
+[ ]	김정민은 좀더 btree 공부해두기
+
+[ ]	임경민도 복습하기
