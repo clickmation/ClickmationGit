@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
     Tile m_clickedTile;
     Tile m_targetTile;
 
-    bool inputable = true;
+    bool isClickable = true;
 
     const float hexOffset = 0.5f;
 
@@ -228,7 +228,7 @@ public class Board : MonoBehaviour
 
     IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
     {
-        if (inputable)
+        if (isClickable)
         {
             GamePiece clickedPiece = m_allGamePieces[clickedTile.xIndex, clickedTile.yIndex];
             GamePiece targetPiece = m_allGamePieces[targetTile.xIndex, targetTile.yIndex];
@@ -299,6 +299,7 @@ public class Board : MonoBehaviour
         return false;
     }
     */
+
     List<GamePiece> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
         List<GamePiece> matches = new List<GamePiece>();
@@ -590,7 +591,7 @@ public class Board : MonoBehaviour
 
     IEnumerator ClearAndRefillBoardRoutine(List<GamePiece> gamePieces)
     {
-        inputable = false;
+        isClickable = false;
         List<GamePiece> matches = gamePieces;
 
         do
@@ -602,7 +603,7 @@ public class Board : MonoBehaviour
         }
         while (matches.Count != 0); 
 
-        inputable = true;
+        isClickable = true;
     }
 
     IEnumerator ClearCollapseFillRoutine(List<GamePiece> gamePieces)
