@@ -3,13 +3,14 @@
 #include <stack>
 #include <queue>
 #include <string.h>
+#include <algorithm>
 
 using namespace std;
 
 int n, m, v, a, b;
 vector<vector<int>> arr;
 
-int visit[1005] = { 0 };
+int visit[1005] = {0};
 
 void DFS()
 {
@@ -18,7 +19,7 @@ void DFS()
 	s.push(now);
 	visit[now] = 1;
 	cout << now + 1 << " ";
-	while(!s.empty())
+	while (!s.empty())
 	{
 		now = s.top();
 		s.pop();
@@ -35,12 +36,24 @@ void DFS()
 		}
 	}
 }
+/* //Recursion
+void DFS(int s)
+{
+	cout << s+1;
+	visit[s] = 1;
 
+	for (int i = 0; i < arr[s].size(); i++)
+	{
+		if (!visit[arr[s][i]]) DFS(arr[s][i]);
+	}
+}
+*/
 void BFS()
 {
 	queue<int> q;
 	int now = v - 1;
-	for (int i = 0; i < 1005; i++) visit[i] = 0;
+	for (int i = 0; i < 1005; i++)
+		visit[i] = 0;
 	q.push(now);
 	visit[now] = 1;
 
@@ -49,7 +62,7 @@ void BFS()
 		now = q.front();
 		for (int i = 0; i < arr[now].size(); i++)
 		{
-			if (!visit[arr[now][i]]) 
+			if (!visit[arr[now][i]])
 			{
 				visit[arr[now][i]] = 1;
 				q.push(arr[now][i]);
@@ -60,7 +73,8 @@ void BFS()
 	}
 }
 
-int main() {
+int main()
+{
 
 	cin >> n >> m >> v;
 
@@ -91,4 +105,3 @@ int main() {
 }
 
 // dfs, bfs의 기본형
-
