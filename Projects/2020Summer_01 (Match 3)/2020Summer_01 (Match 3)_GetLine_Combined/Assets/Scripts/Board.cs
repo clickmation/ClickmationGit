@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
     const float longTick = 0.5f;
     const float normTick = 0.25f;
     const float shortTick = 0.1f;
+    float maxMovingTime;
 
     Tile[,] m_allTiles;
     GamePiece[,] m_allGamePieces;
@@ -574,7 +575,7 @@ public class Board : MonoBehaviour
         HighlightTileOff(x, y);
     }
 
-    void ClearPieceAt(List<GamePiece> gamePieces)
+    public void ClearPieceAt(List<GamePiece> gamePieces)
     {
         foreach (GamePiece piece in gamePieces)
         {
@@ -618,7 +619,7 @@ public class Board : MonoBehaviour
             }
         }
 
-        for (int i = height - 1; i > 0; i--)
+        for (int i = height - 1; i >= 0; i--)
         {
             if (m_allGamePieces[column, i] != null) break;
             cnt++;
@@ -627,6 +628,11 @@ public class Board : MonoBehaviour
         for (int i = cnt; i > 0; i--)
         {
             m_allGamePieces[column, height - i] = FillRandomAt(column, height - i, new List<PieceColor>(pieceColors), cnt, collapseTime * cnt);
+        }
+
+        if (collapseTime * cnt > maxMovingTime)
+        {
+            maxMovingTime = collapseTime * cnt;
         }
     }
 
@@ -666,10 +672,11 @@ public class Board : MonoBehaviour
 
         do
         {
+            maxMovingTime = 0;
             yield return StartCoroutine(ClearCollapseFillRoutine(matches));
             matches = FindAllMatches();
 
-            yield return new WaitForSeconds(longTick);
+            yield return new WaitForSeconds(maxMovingTime + normTick);
         }
         while (matches.Any());
 

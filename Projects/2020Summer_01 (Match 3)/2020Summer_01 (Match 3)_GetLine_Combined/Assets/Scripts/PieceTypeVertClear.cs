@@ -11,7 +11,7 @@ public class PieceTypeVertClear : PieceType
         List<GamePiece> upwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, 2));
         List<GamePiece> downwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, -1));
 
-        board.ClearAndRefillBoard(upwardPieces.Union(downwardPieces).ToList());
+        board.ClearPieceAt(upwardPieces.Union(downwardPieces).ToList());
 
         Destroy(piece.GetGameObject());
     }
