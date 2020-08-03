@@ -21,43 +21,26 @@ public class GamePiece : MonoBehaviour
         SmootherStep,
     };
 
-    public MatchValue matchValue;
-
-    public enum MatchValue
-    {
-        Yellow,
-        Blue,
-        Purple,
-        Indigo,
-        Green,
-        Teal,
-        Red,
-        Cyan,
-        Wild
-    };
-
-    void Update ()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Move((int)transform.position.x + 3, (int)transform.position.y, 0.5f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Move((int)transform.position.x - 3, (int)transform.position.y, 0.5f);
-        }
-    }
+    public PieceColor pieceColor;
+    public PieceType pieceType;
 
     public void Init(Board board)
     {
         m_board = board;
+        UpdateVis();
     }
 
     public void SetCoord(int x, int y)
     {
         xIndex = x;
         yIndex = y;
+    }
+
+    public void UpdateVis()
+    {
+        SpriteRenderer spriteRenderer = this.GetComponent<SpriteRenderer>();
+        spriteRenderer.color = pieceColor.col;
+        spriteRenderer.sprite = pieceType.pieceImage;
     }
 
     public void Move (int destX, int destY, float timeToMove, float hexYOffset = 0f)

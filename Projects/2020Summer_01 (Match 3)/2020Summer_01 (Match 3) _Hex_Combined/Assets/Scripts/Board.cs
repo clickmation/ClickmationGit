@@ -11,6 +11,9 @@ public class Board : MonoBehaviour
     public int borderSize;
 
     public GameObject tilePrefab;
+    public GameObject gamePiecePrefab;
+    public PieceColor [] pieceColors;
+    public PieceType [] pieceTypes;
     public GameObject [] gamePiecePrefabs;
 
     const float longTick = 0.5f;
@@ -85,7 +88,7 @@ public class Board : MonoBehaviour
         Camera.main.orthographicSize = (verticalSize > horizontalSize) ? verticalSize: horizontalSize;
     }
 
-    GameObject GetRandomGamePiece(List<GameObject> pool)
+    PieceColor GetRandomColor(List<PieceColor> pool)
     {
         int randomIdx = Random.Range(0, pool.Count);
 
@@ -119,23 +122,25 @@ public class Board : MonoBehaviour
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    GamePiece FillRandomAt(int x, int y, List<GameObject> pool, int falseYOffset = 0, float moveTime = shortTick)
+    GamePiece FillRandomAt(int x, int y, List<PieceColor> pool, int falseYOffset = 0, float moveTime = shortTick)
     {
-        GameObject randomPiece = Instantiate(GetRandomGamePiece(pool), Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject piece = Instantiate(gamePiecePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        piece.GetComponent<GamePiece>().pieceColor = GetRandomColor(pool);
+        piece.GetComponent<GamePiece>().pieceType = pieceTypes[0];
 
-        if (randomPiece != null)
+        if (piece != null)
         {
-            randomPiece.GetComponent<GamePiece>().Init(this);
-            PlaceGamePiece(randomPiece.GetComponent<GamePiece>(), x, y);
+            piece.GetComponent<GamePiece>().Init(this);
+            PlaceGamePiece(piece.GetComponent<GamePiece>(), x, y);
 
             if (falseYOffset != 0)
             {
-                randomPiece.transform.position = new Vector3(x, y + falseYOffset + HexYOffset(x), 0);
-                randomPiece.GetComponent<GamePiece>().Move(x, y, moveTime, HexYOffset(x));
+                piece.transform.position = new Vector3(x, y + falseYOffset + HexYOffset(x), 0);
+                piece.GetComponent<GamePiece>().Move(x, y, moveTime, HexYOffset(x));
             }
 
-            randomPiece.transform.parent = transform;
-            return randomPiece.GetComponent<GamePiece>();
+            piece.transform.parent = transform;
+            return piece.GetComponent<GamePiece>();
         }
         return null;
     }
@@ -153,7 +158,7 @@ public class Board : MonoBehaviour
             {
                 if (m_allGamePieces[i, j] == null)
                 {
-                    List<GameObject> pool = new List<GameObject>(gamePiecePrefabs);
+                    List<PieceColor> pool = new List<PieceColor>(pieceColors);
 
                     GamePiece piece = FillRandomAt(i, j, pool, falseYOffset, moveTime);
 
@@ -163,7 +168,7 @@ public class Board : MonoBehaviour
                         {
                             if (piece != null)
                             {
-                                if (piece.matchValue == pool[k].GetComponent<GamePiece>().matchValue)
+                                if (piece.pieceColor == pool[k])
                                 {
                                     Debug.Log("removed pool");
                                     pool.RemoveAt(k);
@@ -178,8 +183,9 @@ public class Board : MonoBehaviour
                             break;
                         }
 
-                        ClearPieceAt(i, j);
-                        piece = FillRandomAt(i, j, pool, falseYOffset, moveTime);
+                        
+                        piece.GetComponent<GamePiece>().pieceColor = GetRandomColor(pool);
+                        piece.GetComponent<GamePiece>().UpdateVis();
                     }
                 }
             }
@@ -300,6 +306,53 @@ public class Board : MonoBehaviour
     }
     */
 
+    public List<GamePiece> GetLine(int startX, int startY, Vector2 searchDirection)
+    {
+        List<GamePiece> pieces = new List<GamePiece>();
+        GamePiece startPiece = null;
+
+        Debug.Log("getting line");
+
+        if (IsWithinBounds(startX, startY))
+        {
+            Debug.Log("got startpiece");
+            startPiece = m_allGamePieces[startX, startY];
+        }
+
+        if (startPiece == null)
+        {
+            Debug.Log("no startpiece");
+            return new List<GamePiece>();
+        }
+
+        int nextX = startX;
+        int nextY = startY;
+
+        int maxValue = (width > height) ? width : height;
+
+        for (int i = 1; i < maxValue - 1; i++)
+        {
+            nextY = nextY + (int)Mathf.Clamp(OffColumn(nextX), -1 + searchDirection.y, searchDirection.y);
+            nextX = nextX + (int)Mathf.Clamp(searchDirection.x, -1, 1);
+
+            if (!IsWithinBounds(nextX, nextY))
+            {
+                break;
+            }
+
+            GamePiece nextPiece = m_allGamePieces[nextX, nextY];
+
+            if (nextPiece != null)
+            {
+                pieces.Add(nextPiece);
+            }
+        }
+
+        Debug.Log("got line");
+
+        return pieces;
+    }
+
     List<GamePiece> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
         List<GamePiece> matches = new List<GamePiece>();
@@ -342,7 +395,7 @@ public class Board : MonoBehaviour
             }
             else
             {
-                if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece))
+                if (nextPiece.pieceColor.colorName == startPiece.pieceColor.colorName && !matches.Contains(nextPiece))
                 {
                     matches.Add(nextPiece);
                 }
@@ -483,7 +536,7 @@ public class Board : MonoBehaviour
     {
         if (m_allGamePieces[x, y] != null)
         {
-            Destroy(m_allGamePieces[x, y].gameObject);
+            m_allGamePieces[x, y].pieceType.OnClear(m_allGamePieces[x, y], this);
             m_allGamePieces[x, y] = null;
         }
 
@@ -549,7 +602,7 @@ public class Board : MonoBehaviour
 
         for (int i = cnt; i > 0; i--)
         {
-            m_allGamePieces[column, height - i] = FillRandomAt(column, height - i, new List<GameObject>(gamePiecePrefabs), cnt, collapseTime * cnt);
+            m_allGamePieces[column, height - i] = FillRandomAt(column, height - i, new List<PieceColor>(pieceColors), cnt, collapseTime * cnt);
             movingPieces.Add(m_allGamePieces[column, height - i]);
         }
 
@@ -584,7 +637,7 @@ public class Board : MonoBehaviour
         return columns;
     }
 
-    void ClearAndRefillBoard(List<GamePiece> gamePieces)
+    public void ClearAndRefillBoard(List<GamePiece> gamePieces)
     {
         StartCoroutine(ClearAndRefillBoardRoutine(gamePieces));
     }
