@@ -1,3 +1,6 @@
 7576
 	토마토 정석 : https://sihyungyou.github.io/baekjoon-7576/
 	토마토 묘수 : https://murra.tistory.com/60
+	
+2206
+	벽뚫 변수 타입에 의한 시간 단축 : https://jdselectron.tistory.com/61

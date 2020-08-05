@@ -22,6 +22,26 @@ void bfs() {
         for (int i = 0; i < 4; i++) {
             nx = current.second + dx[i];
             ny = current.first + dy[i];
+
+            if (0 <= nx && nx < M && 0 <= ny && ny < N && maze[ny][nx] == 1)
+            {
+                q.push(make_pair(ny, nx));
+                maze[ny],[nx] = maze[current.first][current.second] + 1;
+            }
         }
     }
+}
+
+int main(void) {
+    cin >> N >> M;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            scanf_s("%1d", &maze[i][j]);
+        }
+    }
+
+    bfs();
+    cout << maze[N - 1][M - 1];
+    return 0;
 }

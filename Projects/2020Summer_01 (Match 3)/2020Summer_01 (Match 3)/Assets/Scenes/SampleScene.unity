@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 7
-  height: 9
+  height: 7
   borderSize: 2
   tilePrefab: {fileID: 3762174176557642540, guid: 263ef1f3060ee3940a41b978f5f87213,
     type: 3}
@@ -409,7 +409,7 @@ MonoBehaviour:
   - {fileID: 4143794521332277218, guid: 5985342f7743fe549af60d1ef51877ea, type: 3}
   - {fileID: 4564898612482872511, guid: 9a9e7b69fd9ad3e43a9c3edfc0418eac, type: 3}
   - {fileID: 8548280945351875602, guid: fe4dad1a5b7b744458cfc00f95adbf37, type: 3}
-  swapTime: 0.3
+  - {fileID: 4270680476395432671, guid: 5ef16a231ce9fcb4b872b30f5b3f491f, type: 3}
 --- !u!4 &1026832222
 Transform:
   m_ObjectHideFlags: 0
