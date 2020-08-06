@@ -1,3 +1,4 @@
+/*
 #include <cstdio>
 #include <queue>
 #include <utility>
@@ -14,6 +15,7 @@ int main() {
 
     scanf("%d %d", &m, &n);
 
+    //이건 왜 +1한걸까
     int arr[n+1][m+1];
     bool v[n+1][m+1];
 
@@ -67,3 +69,4 @@ int main() {
     printf("%d\n", ans);
     return 0;
 }
+*/

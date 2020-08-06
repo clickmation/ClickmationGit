@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1596720897 source:d:\github\clickmationgit\study\2020summerstudy\section2\test\crimonder\7576 토마토 2d\7576-1.cpp
+	<cstdio>
+	<queue>
+	<utility>
+
+1596720831 source:d:\github\clickmationgit\study\2020summerstudy\section2\test\crimonder\7576 토마토 2d\7576-2.cpp
+	<cstdio>
+	<utility>
+	<queue>
+	<iostream>
+
