@@ -32,6 +32,8 @@ public class Board : MonoBehaviour
     Tile m_clickedTile;
     Tile m_targetTile;
 
+    ParticleManager m_particleManager;
+
     public GameState currentState;
     public GameState defaultState;
     public GameState movingState;
@@ -82,6 +84,14 @@ public class Board : MonoBehaviour
 
         SetupTiles();
         SetupCamera();
+
+        m_particleManager = GameObject.FindWithTag("ParticleManager").GetComponent<ParticleManager>();
+        
+        if (m_particleManager == null)
+        {
+            Debug.Log("Board    : Particle Manager Missing!!");
+        }
+
         FillBoard(height + 2, longTick);
         StartCoroutine(StateSetCoroutine(longTick));
     }
@@ -527,9 +537,9 @@ public class Board : MonoBehaviour
         spriteRenderer.color = col;
     }
 
-    void HightlightMatchesAt(int x, int y)
+    void HighlightMatchesAt(int x, int y)
     {
-        HighlightTileOff(x, y);
+        //HighlightTileOff(x, y);
                 
         var combinedMatches = FindMatchesAt (x, y);
 
@@ -548,7 +558,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                HightlightMatchesAt(i, j);
+                HighlightMatchesAt(i, j);
             }
         }
     }
@@ -572,7 +582,7 @@ public class Board : MonoBehaviour
             m_allGamePieces[x, y] = null;
         }
 
-        HighlightTileOff(x, y);
+        //HighlightTileOff(x, y);
     }
 
     public void ClearPieceAt(List<GamePiece> gamePieces)
@@ -582,6 +592,10 @@ public class Board : MonoBehaviour
             if (piece != null)
             {
                 ClearPieceAt(piece.xIndex, piece.yIndex);
+                if (m_particleManager != null)
+                {
+                    m_particleManager.ClearParticleAt(piece.xIndex, piece.yIndex + HexYOffset(piece.xIndex));
+                }
             }
         }
     }
@@ -685,11 +699,11 @@ public class Board : MonoBehaviour
 
     IEnumerator ClearCollapseFillRoutine(List<GamePiece> gamePieces)
     {
-        HighlightPieces(gamePieces);
+        //HighlightPieces(gamePieces);
 
-        yield return new WaitForSeconds(normTick);
+        yield return new WaitForSeconds(shortTick);
         ClearPieceAt(gamePieces);
-
+        yield return new WaitForSeconds(normTick);
         CollapseColumn(gamePieces);
     }
 
