@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad5177f37e08414ea025b274ac89331, type: 3}
   m_Name: SurroundClear
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 04f1072475d19b0498162a610b7718e2, type: 3}

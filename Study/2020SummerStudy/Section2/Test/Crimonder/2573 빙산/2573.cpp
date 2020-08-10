@@ -17,7 +17,7 @@ int DFS(int x, int y)
 
     for (int t = 0; t < 4; t++) {
         int nx = x + dx[t];
-        int ny = y + dx[t];
+        int ny = y + dy[t];
 
         if (0 <= nx && nx < m && 0 <= ny && ny < n) {
             if (d[nx][ny] == 0) {
