@@ -8,9 +8,9 @@ int d[51][51];
 int dx[4] = {1, -1, 0, 0};
 int dy[4] = {0, 0, 1, -1};
 
-const int LARGENUM = 100;
+const int LARGENUM = 5000;
 
-int gx, gy;
+int gx, gy, body = 0;
 
 using namespace std;
 
@@ -33,6 +33,7 @@ int main()
             else if (b[i][j] == '*') {
                 d[i][j] = 0;
                 wq.push({i, j});
+                body++;
             }
             else if (b[i][j] == 'X') {
                 d[i][j] = 0;
@@ -48,6 +49,9 @@ int main()
         }
     }
 
+
+
+
     while (!wq.empty()) {
         int xd = wq.front().first;
         int yd = wq.front().second;
@@ -62,6 +66,15 @@ int main()
                     d[nx][ny] = d[xd][yd] + 1;
                     wq.push({nx, ny});
                 }
+            }
+        }
+    }
+
+
+    for (int j = 0; j < r; j++) {
+        for (int i = 0; i < c; i++) {
+            if (d[i][j] == -1) {
+                d[i][j] = LARGENUM;
             }
         }
     }
