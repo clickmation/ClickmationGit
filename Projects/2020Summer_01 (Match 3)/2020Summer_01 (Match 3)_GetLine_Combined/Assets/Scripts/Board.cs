@@ -130,6 +130,14 @@ public class Board : MonoBehaviour
         return new Vector3(0, HexYOffset(x), 0);
     }
 
+    struct MatchGroup
+    {
+        public HashSet<GamePiece> set;
+        public bool vert;
+        public bool horU;
+        public bool horD;
+    }
+
     void SetupCamera()
     {
         Camera.main.transform.position = new Vector3((float)(width-1)/2f, (float)(height-1)/2f, -10f);
@@ -395,6 +403,31 @@ public class Board : MonoBehaviour
         return pieces;
     }
 
+    public List<GamePiece> GetSurrounding(int startX, int startY)
+    {
+        List<GamePiece> pieces = new List<GamePiece>();
+
+        if (IsWithinBounds(startX, startY))
+        {
+            int[] dx = {0, 0, 1, 1, -1, -1};
+            int[] dy = {1, -1, 0, OffColumn(startX), 0, OffColumn(startX)};
+
+            for (int i = 0; i < 6; i++) {
+                int nx = startX + dx[i];
+                int ny = startY + dy[i];
+                if (IsWithinBounds(nx, ny))
+                {
+                    if (m_allGamePieces[nx, ny] != null)
+                    {
+                        pieces.Add(m_allGamePieces[nx, ny]);
+                    }
+                }
+            }
+        }
+
+        return pieces;
+    }
+
     List<GamePiece> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
         List<GamePiece> matches = new List<GamePiece>();
@@ -488,11 +521,11 @@ public class Board : MonoBehaviour
 
     List<GamePiece> FindMatchesAt(int x, int y, int minLength = 3)
     {
-        List<GamePiece> horizUpMatches = FindHorizontalUpMatches(x, y, 3);
-        List<GamePiece> horizDownMatches = FindHorizontalDownMatches(x, y, 3);
+        List<GamePiece> horUpMatches = FindHorizontalUpMatches(x, y, 3);
+        List<GamePiece> horDownMatches = FindHorizontalDownMatches(x, y, 3);
         List<GamePiece> vertMatches = FindVerticalMatches(x, y, 3);
 
-        var combinedHorMatches = horizUpMatches.Union(horizDownMatches).ToList();
+        var combinedHorMatches = horUpMatches.Union(horDownMatches).ToList();
         var combinedMatches = combinedHorMatches.Union(vertMatches).ToList();
         return combinedMatches;
     }
@@ -570,6 +603,26 @@ public class Board : MonoBehaviour
             if (piece != null)
             {
                 HighlightTileOn(piece.xIndex, piece.yIndex, piece.GetComponent<SpriteRenderer>().color);
+            }
+        }
+    }
+
+    void CheckForSubset (List<MatchGroup> set, MatchGroup sub)
+    {
+        for (int i = 0; i < set.count(); i++)
+        {
+            if (set[i].set.IsSubsetOf(sub.set))
+            {
+                set[i].set = sub.set;
+                set[i].vert = set[i].vert | sub.vert;
+                set[i].horU = set[i].horU | sub.horU;
+                set[i].horD = set[i].horD | sub.horD;
+            }
+            else if (sub.set.IsSubsetOf(s.set))
+            {
+                set[i].vert = set[i].vert | sub.vert;
+                set[i].horU = set[i].horU | sub.horU;
+                set[i].horD = set[i].horD | sub.horD;
             }
         }
     }
