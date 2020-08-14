@@ -83,26 +83,15 @@ int main()
 
         year++;
 
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < m; i++) {
-                cout << d[i][j] << " ";
-            }
-            cout << endl;
-        }
-
 
         for (int j = 0; j < n; j++) {
             for (int i = 0; i < m; i++) {
                 if (d[i][j] == 0) {
                     DFS(i, j);
-                    printf("%d %d", i, j);
                     cnt++;
                 }
             }
         }
-
-        printf("count is %d", cnt);
-        scanf("%d", x);
     }
 
     cout << year;

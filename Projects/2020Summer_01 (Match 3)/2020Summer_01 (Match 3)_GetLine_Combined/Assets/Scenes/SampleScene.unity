@@ -543,12 +543,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b46cc0894c2636846a94c6a61cca76a7, type: 2}
   - {fileID: 11400000, guid: fac2c78a30580a041bc5eced82b0c932, type: 2}
   - {fileID: 11400000, guid: 9a65d715868c4584d9280c2edef5215d, type: 2}
-  pieceTypes:
-  - {fileID: 11400000, guid: a0bd06bb677925d4386b65c289d10f14, type: 2}
-  - {fileID: 11400000, guid: a1e89812f23fdf84692438a7db54a8d4, type: 2}
-  - {fileID: 11400000, guid: 1616ec458cb29ef42ac6f1e9e28ebc6b, type: 2}
-  - {fileID: 11400000, guid: 1355fa5f95a781f459d5854bd41556ba, type: 2}
+  pieceTypeNormal: {fileID: 11400000, guid: a0bd06bb677925d4386b65c289d10f14, type: 2}
+  pieceTypeVert: {fileID: 11400000, guid: a1e89812f23fdf84692438a7db54a8d4, type: 2}
+  pieceTypeHorU: {fileID: 11400000, guid: 1616ec458cb29ef42ac6f1e9e28ebc6b, type: 2}
+  pieceTypeHorD: {fileID: 11400000, guid: 1355fa5f95a781f459d5854bd41556ba, type: 2}
+  pieceTypeSurround: {fileID: 11400000, guid: 07a9ca42fa6706648a6f029f73045661, type: 2}
   clearingPieces: []
+  bombsToClear: []
   currentState: {fileID: 11400000, guid: 38c64937af3cf71488051555e30b15b2, type: 2}
   defaultState: {fileID: 11400000, guid: f52cb0cfb4777e94c8a645d481ec9934, type: 2}
   movingState: {fileID: 11400000, guid: 38c64937af3cf71488051555e30b15b2, type: 2}

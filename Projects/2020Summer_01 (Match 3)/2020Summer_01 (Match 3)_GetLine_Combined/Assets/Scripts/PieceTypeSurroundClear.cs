@@ -8,9 +8,9 @@ public class PieceTypeSurroundClear : PieceType
 {
     public override void OnClear(GamePiece piece, Board board)
     {
-        List<GamePiece> surroundingPieces = board.GetSurrounding(piece.xIndex, piece.yIndex);
+        List<Vector2Int> surroundingPieces = board.GetSurrounding(piece.xIndex, piece.yIndex);
 
-        board.ClearPieceAt(surroundingPieces);
+        board.AddToGroup(surroundingPieces);
 
         Destroy(piece.GetGameObject());
     }

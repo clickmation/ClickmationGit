@@ -70,7 +70,6 @@ int main()
         }
     }
 
-
     for (int j = 0; j < r; j++) {
         for (int i = 0; i < c; i++) {
             if (d[i][j] == -1) {

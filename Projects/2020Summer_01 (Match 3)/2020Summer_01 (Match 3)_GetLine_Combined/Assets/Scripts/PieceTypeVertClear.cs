@@ -8,10 +8,10 @@ public class PieceTypeVertClear : PieceType
 {
     public override void OnClear(GamePiece piece, Board board)
     {
-        List<GamePiece> upwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, 2));
-        List<GamePiece> downwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, -1));
+        List<Vector2Int> upwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, 2));
+        List<Vector2Int> downwardPieces = board.GetLine(piece.xIndex, piece.yIndex, new Vector2(0, -1));
 
-        board.ClearPieceAt(upwardPieces.Union(downwardPieces).ToList());
+        board.AddToGroup(upwardPieces.Union(downwardPieces).ToList());
 
         Destroy(piece.GetGameObject());
     }

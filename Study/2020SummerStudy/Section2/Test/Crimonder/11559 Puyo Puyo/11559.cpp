@@ -53,6 +53,11 @@ void BFS() {
             b[tx][ty] = '.';
         }
     }
+    else {
+        while (!tmp.empty()) {
+            tmp.pop();
+        }
+    }
 
     cnt = 0;
 }
@@ -70,47 +75,43 @@ int main()
     for (int j = 0; j < HEIGHT; j++) {
         for (int i = 0; i < WIDTH; i++) {
             scanf(" %c", &b[i][j]);
-            if(b[i][j] == '.') {
-                d[i][j] = 1;
+        }
+    }
+
+    do {
+        for (int j = HEIGHT - 1; j >= 0; j--) {
+            for (int i = 0; i < WIDTH; i++) {
+                Collapse(i, j);
             }
         }
-    }
 
-    for (int j = 0; j < HEIGHT; j++) {
-        for (int i = 0; i < WIDTH; i++) {
-            if (b[i][j] != '.' && d[i][j] == 0) {
-                q.push({i, j});
-                BFS();
+        for (int j = 0; j < HEIGHT; j++) {
+            for (int i = 0; i < WIDTH; i++) {
+                if (b[i][j] == '.') {
+                    d[i][j] = 1;
+                } else {
+                    d[i][j] = 0;
+                }
             }
         }
-    }
 
-    if (boom == 0) {
+        boom = 0;
 
-        cout << combo;
-
-        return 0;
-    }
-
-    for (int j = 0; j < HEIGHT; j++) {
-        for (int i = 0; i < WIDTH; i++) {
-            cout << b[i][j];
+        for (int j = 0; j < HEIGHT; j++) {
+            for (int i = 0; i < WIDTH; i++) {
+                if (b[i][j] != '.' && d[i][j] == 0) {
+                    q.push({i, j});
+                    BFS();
+                }
+            }
         }
-        cout << endl;
-    }
 
-    for (int j = HEIGHT - 1; j >= 0; j--) {
-        for (int i = 0; i < WIDTH; i++) {
-            Collapse(i, j);
-        }
-    }
 
-    for (int j = 0; j < HEIGHT; j++) {
-        for (int i = 0; i < WIDTH; i++) {
-            cout << b[i][j];
-        }
-        cout << endl;
-    }
+        combo++;
+
+    } while (boom != 0);
+
+    cout << combo - 1;
 
     return 0;
 }
