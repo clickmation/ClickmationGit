@@ -16,6 +16,7 @@ public class ClientSend : MonoBehaviour
         Client.instance.udp.SendData(_packet);
     }
 
+    #region Packets
     public static void WelcomeReceived()
     {
         using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived))
@@ -27,13 +28,29 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void UDPTestReceived()
+    public static void PlayerMovement(bool[] _inputs)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.udpTestReceive))
+        using (Packet _packet = new Packet((int)ClientPackets.playerMovement))
         {
-            _packet.Write("Received the UDT test packet");
+            _packet.Write(_inputs.Length);
+            foreach (bool _input in _inputs)
+            {
+                _packet.Write(_input);
+            }
+            _packet.Write(GameManager.players[Client.instance.myId].transform.rotation);
 
             SendUDPData(_packet);
         }
     }
+
+    public static void PlayerShoot(Vector3 _facing)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.playerShoot))
+        {
+            _packet.Write(_facing);
+
+            SendUDPData(_packet);
+        }
+    }
+    #endregion
 }
