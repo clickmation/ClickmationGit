@@ -5,24 +5,31 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>Sent from server to client.</summary>
-    public enum ServerPackets
-    {
-        welcome = 1,
-        spawnPlayer,
-        playerPosition,
-        playerRotation,
-        playerDisconnected,
-        playerHealth,
-        playerRespawned
-    }
+public enum ServerPackets
+{
+    welcome = 1,
+    spawnPlayer,
+    playerPosition,
+    playerRotation,
+    playerDisconnected,
+    playerHealth,
+    playerRespawned,
+    createItemSpawner,
+    itemSpawned,
+    itemPickedUp,
+    spawnProjectile,
+    projectilePosition,
+    projectileExploded
+}
 
-    /// <summary>Sent from client to server.</summary>
-    public enum ClientPackets
-    {
-        welcomeReceived = 1,
-        playerMovement,
-        playerShoot
-    }
+/// <summary>Sent from client to server.</summary>
+public enum ClientPackets
+{
+    welcomeReceived = 1,
+    playerMovement,
+    playerShoot,
+    playerThrowItem
+}
 
 public class Packet : IDisposable
 {

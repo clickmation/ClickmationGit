@@ -10,7 +10,7 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int dataBufferSize = 4096;
 
-    public string ip = "127.0.0.1";
+    private string ip = "127.0.0.1";
     public int port = 26950;
     public int myId = 0;
     public TCP tcp;
@@ -33,12 +33,6 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        tcp = new TCP();
-        udp = new UDP();
-    }
-
     private void OnApplicationQuit()
     {
         Disconnect();
@@ -46,6 +40,11 @@ public class Client : MonoBehaviour
 
     public void ConnectToServer()
     {
+        ip = UIManager.instance.ipField.text;
+        
+        tcp = new TCP();
+        udp = new UDP();
+
         InitializeClientData();
 
         isConnected = true;
@@ -106,24 +105,24 @@ public class Client : MonoBehaviour
         private void ReceiveCallback(IAsyncResult _result)
         {
             try
+            {
+                int _byteLength = stream.EndRead(_result);
+                if (_byteLength <= 0)
                 {
-                    int _byteLength = stream.EndRead(_result);
-                    if (_byteLength <= 0)
-                    {
-                        instance.Disconnect();
-                        return;
-                    }
-
-                    byte[] _data = new byte[_byteLength];
-                    Array.Copy(receiveBuffer, _data, _byteLength);
-
-                    receivedData.Reset(HandleData(_data));
-                    stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+                    instance.Disconnect();
+                    return;
                 }
-                catch
-                {
-                    Disconnect();
-                }
+
+                byte[] _data = new byte[_byteLength];
+                Array.Copy(receiveBuffer, _data, _byteLength);
+
+                receivedData.Reset(HandleData(_data));
+                stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+            }
+            catch
+            {
+                Disconnect();
+            }
         }
 
         private bool HandleData(byte[] _data)
@@ -274,13 +273,20 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            {(int)ServerPackets.welcome, ClientHandle.Welcome},
-            {(int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer},
-            {(int)ServerPackets.playerPosition, ClientHandle.PlayerPosition},
-            {(int)ServerPackets.playerRotation, ClientHandle.PlayerRotation},
-            {(int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected},
-            {(int)ServerPackets.playerHealth, ClientHandle.PlayerHealth},
-            {(int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned}
+            { (int)ServerPackets.welcome, ClientHandle.Welcome },
+            { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
+            { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
+            { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
+            { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
+            { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
+            { (int)ServerPackets.createItemSpawner, ClientHandle.CreateItemSpawner },
+            { (int)ServerPackets.itemSpawned, ClientHandle.ItemSpawned },
+            { (int)ServerPackets.itemPickedUp, ClientHandle.ItemPickedUp },
+            { (int)ServerPackets.spawnProjectile, ClientHandle.SpawnProjectile },
+            { (int)ServerPackets.projectilePosition, ClientHandle.ProjectilePosition },
+            { (int)ServerPackets.projectileExploded, ClientHandle.ProjectileExploded }
+
         };
 
         Debug.Log("Initialized packets");
