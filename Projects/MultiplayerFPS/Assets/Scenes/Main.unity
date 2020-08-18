@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPlayerPrefab: {fileID: 5747631243969331175, guid: 6b5205f4f4e60a34cbff04c9bdb54a5a, type: 3}
   playerPrefab: {fileID: 5747631243969331175, guid: 3a845ad49d179d3448aaf8fe186bf48b, type: 3}
+  EnemyPrefab: {fileID: 5747631243969331175, guid: cba724696864a304c8750487c1bc07d3, type: 3}
   ItemSpawnerPrefab: {fileID: 6326899973714681639, guid: be9aac725b9fdd344a97a8f742d24306, type: 3}
   projectilePrefab: {fileID: 7253788042855870798, guid: 128f79bbc848449418cc25fe630643a3, type: 3}
 --- !u!4 &223974228

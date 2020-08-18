@@ -31,18 +31,24 @@ public class ClientHandle : MonoBehaviour
 
     public static void PlayerPosition(Packet _packet)
     {
-        int _id = _packet.ReadInt();
+        int _playerId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        GameManager.players[_id].transform.position = _position;
+        if (GameManager.players.TryGetValue(_playerId, out PlayerManager _player))
+        {
+            _player.transform.position = _position;
+        }
     }
 
     public static void PlayerRotation(Packet _packet)
     {
-        int _id = _packet.ReadInt();
+        int _playerId = _packet.ReadInt();
         Quaternion _rotation = _packet.ReadQuaternion();
 
-        GameManager.players[_id].transform.rotation = _rotation;
+        if (GameManager.players.TryGetValue(_playerId, out PlayerManager _player))
+        {
+            _player.transform.rotation = _rotation;
+        }
     }
 
     public static void PlayerDisconnected(Packet _packet)
@@ -108,7 +114,10 @@ public class ClientHandle : MonoBehaviour
         int _projectileId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        GameManager.projectiles[_projectileId].transform.position = _position;
+        if (GameManager.projectiles.TryGetValue(_projectileId, out ProjectileManager _projectile))
+        {
+            _projectile.transform.position = _position;
+        }
     }
 
     public static void ProjectileExploded(Packet _packet)
@@ -117,5 +126,32 @@ public class ClientHandle : MonoBehaviour
         Vector3 _position = _packet.ReadVector3();
 
         GameManager.projectiles[_projectileId].Explode(_position);
+    }
+
+    public static void SpawnEnemy(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.instance.SpawnEnemy(_enemyId, _position);
+    }
+    
+    public static void EnemyPosition(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        if (GameManager.enemies.TryGetValue(_enemyId, out EnemyManager _enemy))
+        {
+            _enemy.transform.position = _position;
+        }
+    }
+    
+    public static void EnemyHealth(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        float _health = _packet.ReadFloat();
+
+        GameManager.enemies[_enemyId].SetHealth(_health);
     }
 }

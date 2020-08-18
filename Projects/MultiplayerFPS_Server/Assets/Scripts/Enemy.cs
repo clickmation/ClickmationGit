@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public static int maxEnemies = 10;
+    public static int maxEnemies = 1;
     public static Dictionary<int, Enemy> enemies = new Dictionary<int, Enemy>();
     private static int nextEnemyId = 1;
 
@@ -31,8 +31,11 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         id = nextEnemyId;
+        health = maxHealth;
         nextEnemyId++;
         enemies.Add(id, this);
+
+        ServerSend.SpawnEnemy(this);
 
         state = EnemyState.patrol;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
@@ -181,6 +184,8 @@ public class Enemy : MonoBehaviour
 
         _movement.y = yVelocity;
         controller.Move(_movement);
+
+        ServerSend.EnemyPosition(this);
     }
 
     private void Shoot (Vector3 _shootDirection)
@@ -199,6 +204,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
+        Debug.Log($"enemy {id} took {_damage} damage!");
         health -= _damage;
         if (health <= 0f)
         {
@@ -207,6 +213,8 @@ public class Enemy : MonoBehaviour
             enemies.Remove(id);
             Destroy(gameObject);
         }
+
+        ServerSend.EnemyHealth(this);
     }
 
     public bool CanSeeTarget()

@@ -7,11 +7,13 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
+    public static Dictionary<int, EnemyManager> enemies = new Dictionary<int, EnemyManager>();
     public static Dictionary<int, ItemSpawner> itemSpawners = new Dictionary<int, ItemSpawner>();
     public static Dictionary<int, ProjectileManager> projectiles = new Dictionary<int, ProjectileManager>();
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
+    public GameObject EnemyPrefab;
     public GameObject ItemSpawnerPrefab;
     public GameObject projectilePrefab;
 
@@ -42,6 +44,13 @@ public class GameManager : MonoBehaviour
 
         _player.GetComponent<PlayerManager>().Initialize(_id, _username);
         players.Add(_id, _player.GetComponent<PlayerManager>());
+    }
+
+    public void SpawnEnemy(int _id, Vector3 _position)
+    {
+        GameObject _enemy = Instantiate(EnemyPrefab, _position, Quaternion.identity);
+        _enemy.GetComponent<EnemyManager>().Initialize(_id);
+        enemies.Add(_id, _enemy.GetComponent<EnemyManager>());
     }
 
     public void CreateItemSpawner(int _spawnerId, Vector3 _position, bool _hasItem)

@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public float throwForce = 600f;
     public float health;
     public float maxHealth = 100f;
+    public float damage = 25f;
     public int itemAmount = 0;
     public int maxItemAmount = 3; 
 
@@ -103,8 +104,11 @@ public class Player : MonoBehaviour
         {
             if (_hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Hit player");
-                _hit.collider.GetComponent<Player>().TakeDamage(50f);
+                _hit.collider.GetComponent<Player>().TakeDamage(damage);
+            }
+            else if (_hit.collider.CompareTag("Enemy"))
+            {
+                _hit.collider.GetComponent<Enemy>().TakeDamage(damage);
             }
         }
     }

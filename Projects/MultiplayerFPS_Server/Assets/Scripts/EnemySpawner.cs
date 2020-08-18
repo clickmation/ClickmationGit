@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float frequency = 3f;
+
+    private void Start()
     {
-        
+        StartCoroutine(SpawnEnemy());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator SpawnEnemy()
     {
-        
+        yield return new WaitForSeconds(frequency);
+
+        if (Enemy.enemies.Count < Enemy.maxEnemies)
+        {
+            NetworkManager.instance.InstantiateEnemy(transform.position);
+        }
+        StartCoroutine(SpawnEnemy());
     }
 }
