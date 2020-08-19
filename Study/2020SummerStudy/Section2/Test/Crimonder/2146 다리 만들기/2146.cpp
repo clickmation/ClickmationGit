@@ -3,6 +3,8 @@
 #include <queue>
 #include <iostream>
 
+using namespace std;
+
 int b[101][101];
 int d[101][101];
 int dx[4] = {1, -1, 0, 0};
@@ -12,8 +14,6 @@ int smallnum, n, isle = 0;
 
 queue<pair<int, int>> q;
 
-
-using namespace std;
 
 void BFS()
 {
