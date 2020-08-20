@@ -1,0 +1,15 @@
+https://www.youtube.com/watch?v=qqOAzn05fvk : IK UNITY
+
+https://www.youtube.com/watch?v=xKz90PhU2tw : Mixamo to UNITY
+
+https://www.youtube.com/watch?v=9rr1Oc0pvLA : Combined Animation
+
+https://www.youtube.com/watch?v=e6Gjhr1IP6w : IK animal
+
+https://www.youtube.com/watch?v=rGB1ipH6DrM : Realistic Foot Placement
+
+
+Things to look into
+	https://www.youtube.com/watch?v=j7XZ3Q8JNfM : Root Motion Explanation
+		https://www.youtube.com/watch?v=b0PvJ4AWvWQ&list=PLKFvhfT4QOqlEReJ2lSZJk_APVq5sxZ-x
+		https://www.youtube.com/watch?v=SsHCkK4iou0
