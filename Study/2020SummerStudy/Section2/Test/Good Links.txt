@@ -4,3 +4,6 @@
 	
 2206
 	벽뚫 변수 타입에 의한 시간 단축 : https://jdselectron.tistory.com/61
+	
+1194
+	비트 마스크 https://yabmoons.tistory.com/102
