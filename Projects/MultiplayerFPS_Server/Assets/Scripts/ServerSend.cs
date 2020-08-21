@@ -91,6 +91,8 @@ public class ServerSend
             {
                 _packet.Write(_player.id);
                 _packet.Write(_player.transform.position);
+                _packet.Write(_player.transform.InverseTransformDirection(_player.controller.velocity));
+                _packet.Write(_player.controller.isGrounded);
 
                 SendUDPDataToAll(_packet);
             }

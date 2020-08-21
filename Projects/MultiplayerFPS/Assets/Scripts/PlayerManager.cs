@@ -9,13 +9,21 @@ public class PlayerManager : MonoBehaviour
     public float health;
     public float maxHealth = 100f;
     public int itemCount = 0;
-    public MeshRenderer model;
+    public Animator animator;
+    public GameObject model;
 
+    private void LateUpdate()
+    {
+        animator.transform.localPosition = Vector3.zero;
+        animator.transform.localRotation = Quaternion.identity;
+    }
     public void Initialize(int _id, string _username)
     {
         id = _id;
         username = _username;
         health = maxHealth;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void SetHealth(float _health)
@@ -30,12 +38,12 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
-        model.enabled = false;
+        model.SetActive(false);
     }
 
     public void Respawn()
     {
-        model.enabled = true;
+        model.SetActive(true);
         SetHealth(maxHealth);
     }
 }

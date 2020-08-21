@@ -33,10 +33,19 @@ public class ClientHandle : MonoBehaviour
     {
         int _playerId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
+        Vector3 _velocity = _packet.ReadVector3();
+        bool _isGrounded = _packet.ReadBool();
 
         if (GameManager.players.TryGetValue(_playerId, out PlayerManager _player))
         {
             _player.transform.position = _position;
+            if (_player.animator != null)
+            {
+                _player.animator.SetFloat("VelX", _velocity.x);
+                _player.animator.SetFloat("VelY", _velocity.y);
+                _player.animator.SetFloat("VelZ", _velocity.z);
+                _player.animator.SetBool("Grounded", _isGrounded);
+            }
         }
     }
 
