@@ -49,13 +49,9 @@ public class Projectile : MonoBehaviour
         Collider[] _colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider _collider in _colliders)
         {
-            if (_collider.CompareTag("Player"))
+            if (_collider.GetComponent<HealthManager>() != null)
             {
-                _collider.GetComponent<Player>().TakeDamage(explosionDamage);
-            }
-            else if (_collider.CompareTag("Enemy"))
-            {
-                _collider.GetComponent<Enemy>().TakeDamage(explosionDamage);
+                _collider.GetComponent<HealthManager>().TakeDamage(explosionDamage);
             }
         }
 

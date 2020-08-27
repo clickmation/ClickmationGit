@@ -8,23 +8,30 @@ public class Player : MonoBehaviour
     public string username;
     public CharacterController controller;
     public Transform shootOrigin;
+    public Health_Player playerHealth;
     public float gravity = -9.81f;
-    public float moveSpeed = 2.5f;
+    private float moveSpeed;
+    public float walkSpeed = 2.5f;
+    public float runSpeed = 5f;
     public float jumpSpeed = 5f;
     public float throwForce = 600f;
-    public float health;
-    public float maxHealth = 100f;
     public float damage = 25f;
     public int itemAmount = 0;
     public int maxItemAmount = 3; 
 
+    public Gun curGun;
+    private int currentAmmo;
+    private float nextTimeToFire = 0f;
+
     private bool[] inputs;
+    private Vector3 viewDirection;
     private float yVelocity = 0;
 
     private void Start()
     {
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
-        moveSpeed *= Time.fixedDeltaTime;
+        walkSpeed *= Time.fixedDeltaTime;
+        runSpeed *= Time.fixedDeltaTime;
         jumpSpeed *= Time.fixedDeltaTime;
     }
 
@@ -32,14 +39,23 @@ public class Player : MonoBehaviour
     {
         id = _id;
         username = _username;
-        health = maxHealth;
+        playerHealth.Init();
+        playerHealth.InputPlayer(this);
 
-        inputs = new bool[5];
+        inputs = new bool[7];
+    }
+
+    void Update()
+    {
+        if (inputs[6] && Time.time >= nextTimeToFire)
+        {
+            Shoot(viewDirection);
+        }
     }
 
     public void FixedUpdate()
     {
-        if (health <= 0f)
+        if (playerHealth.IsDead())
         {
             return;
         }
@@ -67,6 +83,15 @@ public class Player : MonoBehaviour
 
     private void Move(Vector2 _inputDirection)
     {
+        if (inputs[5])
+        {
+            moveSpeed = runSpeed;
+        }
+        else
+        {
+            moveSpeed = walkSpeed;
+        }
+
         Vector3 _moveDirection = transform.right * _inputDirection.x + transform.forward * _inputDirection.y;
         _moveDirection *= moveSpeed;
 
@@ -87,35 +112,27 @@ public class Player : MonoBehaviour
         ServerSend.PlayerRotation(this);
     }
 
-    public void SetInput(bool[] _inputs, Quaternion _rotation)
+    public void SetInput(bool[] _inputs, Quaternion _rotation, Vector3 _viewDirection)
     {
+        viewDirection = _viewDirection;
         inputs = _inputs;
         transform.rotation = _rotation;
     }
 
     public void Shoot(Vector3 _viewDirection)
     {
-        if (health <= 0f)
+        if (playerHealth.IsDead() || curGun == null)
         {
             return;
         }
 
-        if (Physics.Raycast(shootOrigin.position, _viewDirection, out RaycastHit _hit, 25f))
-        {
-            if (_hit.collider.CompareTag("Player"))
-            {
-                _hit.collider.GetComponent<Player>().TakeDamage(damage);
-            }
-            else if (_hit.collider.CompareTag("Enemy"))
-            {
-                _hit.collider.GetComponent<Enemy>().TakeDamage(damage);
-            }
-        }
+        nextTimeToFire = Time.time + 1f / curGun.GetFireRate();
+        curGun.Shoot(this, _viewDirection);
     }
 
     public void ThrowItem(Vector3 _viewDirection)
     {
-        if (health <= 0f)
+        if (playerHealth.IsDead())
         {
             return;
         }
@@ -127,32 +144,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float _damage)
+    public void Respawn()
     {
-        if (health <= 0f)
-        {
-            return;
-        }
-
-        health -= _damage;
-
-        if (health <= 0f)
-        {
-            health = 0f;
-            controller.enabled = false;
-            transform.position = new Vector3(0f, 25f, 0f);
-            ServerSend.PlayerPosition(this);
-            StartCoroutine(Respawn());
-        }
-
-        ServerSend.PlayerHealth(this);
+        StartCoroutine(RespawnRoutine());
     }
 
-    private IEnumerator Respawn()
+    private IEnumerator RespawnRoutine()
     {
-        yield return new WaitForSeconds(5f);
+        transform.position = new Vector3(0f, 25f, 0f);
+        ServerSend.PlayerPosition(this);
 
-        health = maxHealth;
+        yield return new WaitForSeconds(5f);
+        
+        playerHealth.Init();
         controller.enabled = true;
         ServerSend.PlayerRespawned(this);
     }

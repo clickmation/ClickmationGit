@@ -192,11 +192,11 @@ public class Enemy : MonoBehaviour
     {
         if (Physics.Raycast(shootOrigin.position, _shootDirection, out RaycastHit _hit, shootRange))
         {
-            if (_hit.collider.CompareTag("Player"))
+            if (_hit.collider.GetComponent<HealthManager>() != null)
             {
                 if (Random.value <= shootAccuracy)
                 {
-                    _hit.collider.GetComponent<Player>().TakeDamage(shootDamage);
+                    _hit.collider.GetComponent<HealthManager>().TakeDamage(shootDamage);
                 }
             }
         }

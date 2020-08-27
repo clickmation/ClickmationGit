@@ -83,6 +83,15 @@ public class ClientHandle : MonoBehaviour
         GameManager.players[_id].Respawn();
     }
 
+    public static void MessageToAll(Packet _packet)
+    {
+        int _senderId = _packet.ReadInt();
+        int _index = _packet.ReadInt(); 
+        string _msg = _packet.ReadString();
+
+        OverlayManager.instance.AddChat(_senderId, _index, _msg);
+    }
+
     public static void CreateItemSpawner(Packet _packet)
     {
         int _spawnerId = _packet.ReadInt();
@@ -134,7 +143,10 @@ public class ClientHandle : MonoBehaviour
         int _projectileId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        GameManager.projectiles[_projectileId].Explode(_position);
+        if (GameManager.projectiles.TryGetValue(_projectileId, out ProjectileManager _projectile))
+        {
+           GameManager.projectiles[_projectileId].Explode(_position);
+        }
     }
 
     public static void SpawnEnemy(Packet _packet)

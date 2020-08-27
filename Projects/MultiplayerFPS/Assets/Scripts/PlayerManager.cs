@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     public int itemCount = 0;
     public Animator animator;
     public GameObject model;
+    public PlayerUI playerUI;
 
     private void LateUpdate()
     {
@@ -23,12 +24,25 @@ public class PlayerManager : MonoBehaviour
         username = _username;
         health = maxHealth;
 
+        playerUI = GetComponentInChildren<PlayerUI>();
+
+        if (playerUI != null)
+        {
+            playerUI.SetName(username);
+            playerUI.UpdateHealth(health / maxHealth);
+        }
+
         animator = GetComponentInChildren<Animator>();
     }
 
     public void SetHealth(float _health)
     {
         health = _health;
+
+        if (playerUI != null)
+        {
+            playerUI.UpdateHealth(health / maxHealth);
+        }
 
         if (health <= 0f)
         {

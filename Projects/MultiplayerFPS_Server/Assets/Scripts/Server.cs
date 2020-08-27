@@ -119,6 +119,7 @@ public class Server
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
             {(int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
+            {(int)ClientPackets.sendChatMessage, ServerHandle.SendChatMessage },
             {(int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
             {(int)ClientPackets.playerShoot, ServerHandle.PlayerShoot },
             {(int)ClientPackets.playerThrowItem, ServerHandle.PlayerThrowItem }

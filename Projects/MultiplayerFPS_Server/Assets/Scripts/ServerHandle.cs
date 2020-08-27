@@ -18,6 +18,13 @@ public class ServerHandle
         Server.clients[_fromClient].SendIntoGame(_username);
     }
 
+    public static void SendChatMessage(int _fromClient, Packet _packet)
+    {
+        string _msg = _packet.ReadString();
+
+        ServerSend.MessageToAll(_fromClient, _msg);
+    }
+
     public static void PlayerMovement(int _fromClient, Packet _packet)
     {
         bool[] _inputs = new bool[_packet.ReadInt()];
@@ -26,8 +33,9 @@ public class ServerHandle
             _inputs[i] = _packet.ReadBool();
         }
         Quaternion _rotation = _packet.ReadQuaternion();
+        Vector3 _viewDirection = _packet.ReadVector3();
 
-        Server.clients[_fromClient].player.SetInput(_inputs, _rotation);
+        Server.clients[_fromClient].player.SetInput(_inputs, _rotation, _viewDirection);
     }
 
     public static void PlayerShoot(int _fromClient, Packet _packet)

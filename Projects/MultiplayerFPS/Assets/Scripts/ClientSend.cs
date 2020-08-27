@@ -28,7 +28,17 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerMovement(bool[] _inputs)
+    public static void SendChatMessage(string _msg)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.sendChatMessage))
+        {
+            _packet.Write(_msg);
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void PlayerMovement(bool[] _inputs, Vector3 _viewDirection)
     {
         using (Packet _packet = new Packet((int)ClientPackets.playerMovement))
         {
@@ -38,6 +48,7 @@ public class ClientSend : MonoBehaviour
                 _packet.Write(_input);
             }
             _packet.Write(GameManager.players[Client.instance.myId].transform.rotation);
+            _packet.Write(_viewDirection);
 
             SendUDPData(_packet);
         }

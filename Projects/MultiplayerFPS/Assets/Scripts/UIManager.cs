@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public GameObject startMenu;
+    public GameObject overlayUI;
     public InputField usernameField;
     public InputField ipField;
 
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     public void ConnectToServer()
     {
         startMenu.SetActive(false);
+        overlayUI.SetActive(true);
         usernameField.interactable = false;
         ipField.interactable = false;
         Client.instance.ConnectToServer();

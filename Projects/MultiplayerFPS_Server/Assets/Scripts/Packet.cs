@@ -14,12 +14,16 @@ public enum ServerPackets
     playerDisconnected,
     playerHealth,
     playerRespawned,
+    messageToAll,
     createItemSpawner,
     itemSpawned,
     itemPickedUp,
     spawnProjectile,
     projectilePosition,
     projectileExploded,
+    spawnGun,
+    objectPosition,
+    destroyObject,
     spawnEnemy,
     enemyPosition,
     enemyHealth
@@ -29,8 +33,10 @@ public enum ServerPackets
 public enum ClientPackets
 {
     welcomeReceived = 1,
+    sendChatMessage,
     playerMovement,
     playerShoot,
+    //change player shoot to player interact
     playerThrowItem
 }
 
@@ -172,8 +178,8 @@ public class Packet : IDisposable
     /// <param name="_value">The string to add.</param>
     public void Write(string _value)
     {
-        Write(_value.Length); // Add the length of the string to the packet
-        buffer.AddRange(Encoding.ASCII.GetBytes(_value)); // Add the string itself
+        Write(Encoding.Default.GetByteCount(_value)); // Add the length of the string to the packet
+        buffer.AddRange(Encoding.UTF8.GetBytes(_value)); // Add the string itself
     }
     /// <summary>Adds a Vector3 to the packet.</summary>
     /// <param name="_value">The Vector3 to add.</param>
@@ -350,7 +356,7 @@ public class Packet : IDisposable
         try
         {
             int _length = ReadInt(); // Get the length of the string
-            string _value = Encoding.ASCII.GetString(readableBuffer, readPos, _length); // Convert the bytes to a string
+            string _value = Encoding.UTF8.GetString(readableBuffer, readPos, _length); // Convert the bytes to a string
             if (_moveReadPos && _value.Length > 0)
             {
                 // If _moveReadPos is true string is not empty

@@ -8,10 +8,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             ClientSend.PlayerShoot(camTransform.forward);
         }
+        */
 
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -32,9 +34,11 @@ public class PlayerController : MonoBehaviour
             Input.GetKey(KeyCode.S),
             Input.GetKey(KeyCode.A),
             Input.GetKey(KeyCode.D),
-            Input.GetKey(KeyCode.Space)
+            Input.GetKey(KeyCode.Space),
+            Input.GetKey(KeyCode.LeftShift),
+            Input.GetKey(KeyCode.Mouse0)
         };
 
-        ClientSend.PlayerMovement(_inputs);
+        ClientSend.PlayerMovement(_inputs, camTransform.forward);
     }
 }

@@ -280,6 +280,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
             { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
+            { (int)ServerPackets.messageToAll, ClientHandle.MessageToAll },
             { (int)ServerPackets.createItemSpawner, ClientHandle.CreateItemSpawner },
             { (int)ServerPackets.itemSpawned, ClientHandle.ItemSpawned },
             { (int)ServerPackets.itemPickedUp, ClientHandle.ItemPickedUp },

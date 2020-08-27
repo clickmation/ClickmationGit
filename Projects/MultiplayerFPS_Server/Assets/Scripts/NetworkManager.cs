@@ -9,6 +9,9 @@ public class NetworkManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject projectilePrefab;
+    
+
+    private int _chatIndex = 0;
 
     private void Awake()
     {
@@ -49,5 +52,17 @@ public class NetworkManager : MonoBehaviour
     public Projectile InstantiateProjectile(Transform _shootOrigin)
     {
         return Instantiate(projectilePrefab, _shootOrigin.position + _shootOrigin.forward * 0.7f, Quaternion.identity).GetComponent<Projectile>();
+    }
+
+    public Projectile InstantiateGun(Transform _shootOrigin, string _gunName)
+    {
+        return null;
+    }
+
+    public int ChatIndex()
+    {
+        _chatIndex++;
+
+        return _chatIndex;
     }
 }

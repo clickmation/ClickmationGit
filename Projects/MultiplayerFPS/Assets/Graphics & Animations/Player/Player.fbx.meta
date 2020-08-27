@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 8402504da12cdc845975223c912f23db
+guid: 2bb3cf9c83467224bae15f771ef0e488
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: T-pose
+    second: mixamo.com
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -26,7 +26,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -35,7 +35,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: T-pose
+      name: mixamo.com
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
@@ -46,7 +46,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -95,7 +95,7 @@ ModelImporter:
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -105,11 +105,17 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips:
-  - 6ac38bf4ca9468f458a0a137bd375bfe
-  - ecb8c66b81520cb49b2452b26388e83c
-  - fe97189b9350b6c4099f192a2a7e03ba
-  - 761075f229b2a7a4b874beb8f7288576
-  - 223580e1312e79043935d79aea37d1ad
+  - a1b2246e8fbd9e04083227a543d7729f
+  - acb397d42890f0d4191a0b1dc0291203
+  - a51a8b99a907b6f41bf7fe7e378152a5
+  - a204de63464329749a6d0cf7ed68188e
+  - 2640dccffa4365d4db40ca19219523ef
+  - a3394ea579b8abd4299f3a4cfcbcc3fd
+  - 8f33bed22396e9048a368f5a90675be2
+  - 0b03296d4c29c644cb9d69554a0947f4
+  - 2699b5e781d475144b09030babbadfdf
+  - e7e713ebc1010fe40945be82ed87a2f6
+  - bb0418fc11309fe429cab3d5920c0311
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -125,13 +131,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
