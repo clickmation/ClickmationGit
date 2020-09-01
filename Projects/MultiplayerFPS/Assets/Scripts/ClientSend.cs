@@ -54,9 +54,9 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerShoot(Vector3 _facing)
+    public static void PlayerInteract(Vector3 _facing)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.playerShoot))
+        using (Packet _packet = new Packet((int)ClientPackets.playerInteract))
         {
             _packet.Write(_facing);
 

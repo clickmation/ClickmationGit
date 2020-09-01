@@ -219,9 +219,49 @@ public class ServerSend
         }
     }
 
-    public static void SpawnGun(Object_Gun _gun, int _spawnByPlayer)
+    public static void SpawnGun(Object_Gun _gun)
     {
+        using (Packet _packet = new Packet((int)ServerPackets.spawnGun))
+        {
+            _packet.Write(_gun.id);
+            _packet.Write(_gun.thisGun.gunName)
+            _packet.Write(_gun.transform.position);
 
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void GunPosition(Object_Gun _gun)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.gunPosition))
+        {
+            _packet.Write(_gun.id);
+            _packet.Write(_gun.transform.position);
+            _packet.Write(_gun.transform.rotation);
+
+            SendUDPDataToAll(_packet);
+        }
+    }
+
+    public static void EquipGun(Object_Gun _gun, Player _player)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.equipGun))
+        {
+            _packet.Write(_gun.id);
+            _packet.Write(_player.id);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void UnEquipGun(Player _player)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.unEquipGun))
+        {
+            _packet.Write(_player.id);
+
+            SendTCPDataToAll(_packet);
+        }
     }
 
     public static void SpawnEnemy(Enemy _enemy)

@@ -149,6 +149,38 @@ public class ClientHandle : MonoBehaviour
         }
     }
 
+    public static void SpawnGun(Packet _packet)
+    {
+        int _gunId = _packet.ReadInt();
+        string _gunName = _packet.ReadString();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.instance.SpawnGun(_gunId, _gunName, _position);
+    }
+
+    public static void GunPosition(Packet _packet)
+    {
+        int _gunId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+        Quaternion _rotation = _packet.ReadQuaternion();
+
+        if (GameManager.guns.TryGetValue(_gunId, out GunManager _gun))
+        {
+            _gun.transform.position = _position;
+            _gun.transform.rotation = _rotation;
+        }
+    }
+
+    public static void EquipGun(Packet _packet)
+    {
+        
+    }
+
+    public static void UnEquipGun(Packet _packet)
+    {
+        
+    }
+
     public static void SpawnEnemy(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();

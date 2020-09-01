@@ -121,7 +121,7 @@ public class Server
             {(int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
             {(int)ClientPackets.sendChatMessage, ServerHandle.SendChatMessage },
             {(int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
-            {(int)ClientPackets.playerShoot, ServerHandle.PlayerShoot },
+            {(int)ClientPackets.playerInteract, ServerHandle.PlayerInteract },
             {(int)ClientPackets.playerThrowItem, ServerHandle.PlayerThrowItem }
         };
 

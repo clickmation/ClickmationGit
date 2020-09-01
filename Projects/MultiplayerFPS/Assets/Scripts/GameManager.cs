@@ -9,12 +9,15 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
     public static Dictionary<int, EnemyManager> enemies = new Dictionary<int, EnemyManager>();
     public static Dictionary<int, ItemSpawner> itemSpawners = new Dictionary<int, ItemSpawner>();
+    public static Dictionary<int, GunManager> guns = new Dictionary<int, GunManager>();
     public static Dictionary<int, ProjectileManager> projectiles = new Dictionary<int, ProjectileManager>();
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
     public GameObject EnemyPrefab;
     public GameObject ItemSpawnerPrefab;
+    public Dictionary<string, GameObject> gunPrefabs;
+    public GunList gunList;
     public GameObject projectilePrefab;
 
     private void Awake()
@@ -22,6 +25,11 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            
+            for (int i = 0; i < gunList.gunArray.Length; i++)
+            {
+                gunPrefabs.Add(gunList.gunArray[i].gunName, gunList.gunArray[i].gunPrefab);
+            }
         }
         else if (instance != this)
         {
@@ -58,6 +66,13 @@ public class GameManager : MonoBehaviour
         GameObject _spawner = Instantiate(ItemSpawnerPrefab, _position, ItemSpawnerPrefab.transform.rotation);
         _spawner.GetComponent<ItemSpawner>().Initialize(_spawnerId, _hasItem);
         itemSpawners.Add(_spawnerId, _spawner.GetComponent<ItemSpawner>());
+    }
+
+    public void SpawnGun(int _id, string _name, Vector3 _position)
+    {
+        GameObject _gun = Instantiate(gunPrefabs[_name], _position, Quaternion.identity);
+        _gun.GetComponent<GunManager>().Initialize(_id);
+        guns.Add(_id, _gun.GetComponent<GunManager>());
     }
 
     public void SpawnProjectile(int _id, Vector3 _position)

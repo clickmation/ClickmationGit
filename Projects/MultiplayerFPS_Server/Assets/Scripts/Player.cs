@@ -19,12 +19,12 @@ public class Player : MonoBehaviour
     public int itemAmount = 0;
     public int maxItemAmount = 3; 
 
-    public Gun curGun;
+    public Object_Gun curGun;
     private int currentAmmo;
     private float nextTimeToFire = 0f;
 
     private bool[] inputs;
-    private Vector3 viewDirection;
+    public Vector3 viewDirection;
     private float yVelocity = 0;
 
     private void Start()
@@ -119,6 +119,22 @@ public class Player : MonoBehaviour
         transform.rotation = _rotation;
     }
 
+    public void Interact(Vector3 _viewDirection)
+    {
+        if (playerHealth.IsDead())
+        {
+            return;
+        }
+
+        if (Physics.Raycast(shootOrigin.position, _viewDirection, out RaycastHit _hit, 3f))
+        {
+            if (_hit.collider.GetComponent<Interactable>() != null)
+            {
+                _hit.collider.GetComponent<Interactable>().Interact(this);
+            }
+        }
+    }
+
     public void Shoot(Vector3 _viewDirection)
     {
         if (playerHealth.IsDead() || curGun == null)
@@ -126,8 +142,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-        nextTimeToFire = Time.time + 1f / curGun.GetFireRate();
-        curGun.Shoot(this, _viewDirection);
+        nextTimeToFire = Time.time + 1f / curGun.thisGun.GetFireRate();
+        curGun.thisGun.Shoot(this, _viewDirection);
     }
 
     public void ThrowItem(Vector3 _viewDirection)

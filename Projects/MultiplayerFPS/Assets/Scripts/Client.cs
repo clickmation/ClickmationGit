@@ -287,6 +287,10 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnProjectile, ClientHandle.SpawnProjectile },
             { (int)ServerPackets.projectilePosition, ClientHandle.ProjectilePosition },
             { (int)ServerPackets.projectileExploded, ClientHandle.ProjectileExploded },
+            { (int)ServerPackets.spawnGun, ClientHandle.SpawnGun },
+            { (int)ServerPackets.gunPosition, ClientHandle.GunPosition },
+            { (int)ServerPackets.equipGun, ClientHandle.EquipGun },
+            { (int)ServerPackets.unEquipGun, ClientHandle.UnEquipGun },
             { (int)ServerPackets.spawnEnemy, ClientHandle.SpawnEnemy },
             { (int)ServerPackets.enemyPosition, ClientHandle.EnemyPosition },
             { (int)ServerPackets.enemyHealth, ClientHandle.EnemyHealth }

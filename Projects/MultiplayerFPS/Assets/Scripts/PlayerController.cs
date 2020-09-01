@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
         /*
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            ClientSend.PlayerShoot(camTransform.forward);
+            ClientSend.PlayerInteract(camTransform.forward);
         }
         */
 

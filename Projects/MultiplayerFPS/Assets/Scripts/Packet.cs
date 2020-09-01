@@ -21,6 +21,10 @@ public enum ServerPackets
     spawnProjectile,
     projectilePosition,
     projectileExploded,
+    spawnGun,
+    gunPosition,
+    equipGun,
+    unEquipGun,
     spawnEnemy,
     enemyPosition,
     enemyHealth
@@ -32,7 +36,7 @@ public enum ClientPackets
     welcomeReceived = 1,
     sendChatMessage,
     playerMovement,
-    playerShoot,
+    playerInteract,
     playerThrowItem
 }
 

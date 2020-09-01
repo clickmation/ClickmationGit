@@ -50,6 +50,16 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void EquipGun()
+    {
+
+    }
+
+    public void UnEquipGun()
+    {
+        
+    }
+
     public void Die()
     {
         model.SetActive(false);
